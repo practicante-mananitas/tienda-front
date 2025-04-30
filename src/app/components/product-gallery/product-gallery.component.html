@@ -1,0 +1,18 @@
+<app-slider></app-slider>
+<h2 style="text-align: center; margin: 20px 0;">Tienda</h2>
+
+<div class="gallery">
+  <div
+    class="card"
+    *ngFor="let product of products"
+    [routerLink]="['/tienda', product.id]"
+    tabindex="0"
+    role="link"
+  >
+    <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen">
+    <div class="info">
+      <h3>{{ product.name }}</h3>
+      <p class="price">$ {{ product.price }}</p>
+    </div>
+  </div>
+</div>

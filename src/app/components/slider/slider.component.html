@@ -1,0 +1,7 @@
+<div class="slider" (mouseenter)="stopAutoSlide()" (mouseleave)="startAutoSlide()">
+    <img [src]="images[currentIndex]" alt="Banner">
+  
+    <button class="prev" (click)="prev()">‹</button>
+    <button class="next" (click)="next()">›</button>
+  </div>
+  

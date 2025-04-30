@@ -1,0 +1,29 @@
+<h2>Crear Producto</h2>
+
+<form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <label>
+    Nombre:
+    <input type="text" [(ngModel)]="product.name" name="name" required>
+  </label>
+  <br>
+
+  <label>
+    Descripción:
+    <textarea [(ngModel)]="product.description" name="description"></textarea>
+  </label>
+  <br>
+
+  <label>
+    Precio:
+    <input type="number" [(ngModel)]="product.price" name="price" required>
+  </label>
+  <br>
+
+  <label>
+    Imagen:
+    <input type="file" (change)="onFileChange($event)">
+  </label>
+  <br>
+
+  <button type="submit">Guardar</button>
+</form>

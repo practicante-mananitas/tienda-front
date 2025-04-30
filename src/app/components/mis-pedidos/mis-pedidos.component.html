@@ -1,0 +1,25 @@
+<h2 class="title">Mis pedidos</h2>
+
+<div *ngIf="orders.length > 0; else sinPedidos">
+  <div *ngFor="let order of orders" class="order-card">
+    <div class="order-header">
+      <strong>Fecha:</strong> {{ order.created_at | date:'mediumDate' }}<br>
+      <strong>Total:</strong> ${{ order.total }}
+    </div>
+
+    <div class="order-items">
+      <ul>
+        <li *ngFor="let item of order.items">
+          {{ item.quantity }} × {{ item.product.name }} – ${{ item.price }}
+        </li>
+      </ul>
+      <button (click)="repeat(order.id)">Volver a comprar</button>
+    </div>
+  </div>
+  
+
+</div>
+
+<ng-template #sinPedidos>
+  <p style="text-align: center; font-style: italic;">No tienes pedidos aún.</p>
+</ng-template>

@@ -1,0 +1,28 @@
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+  }
+  
+  .detail-container img {
+    max-width: 300px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .info {
+    text-align: center;
+  }
+  
+  .price {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #1a8917;
+  }
+  
+  .desc {
+    margin-top: 10px;
+    color: #555;
+  }
+  

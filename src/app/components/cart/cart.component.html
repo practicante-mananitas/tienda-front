@@ -1,0 +1,35 @@
+<h2 style="text-align: center;">Tu carrito</h2>
+
+<div *ngIf="cartItems.length > 0; else vacio">
+  <table border="1" cellpadding="10" width="100%">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of cartItems">
+        <td><img [src]="'http://127.0.0.1:8000/storage/' + item.product.image" width="60"></td>
+        <td>{{ item.product.name }}</td>
+        <td>$ {{ item.product.price }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>$ {{ item.product.price * item.quantity }}</td>
+        <td><button (click)="removeItem(item.product.id)">Quitar</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="text-align: right;">Total: $ {{ getTotal() }}</h3>
+  <button (click)="clearCart()">Vaciar carrito</button>
+  <button (click)="finalizeOrder()" *ngIf="cartItems.length > 0">Finalizar pedido</button>
+
+</div>
+
+<ng-template #vacio>
+  <p style="text-align: center;">El carrito está vacío.</p>
+</ng-template>

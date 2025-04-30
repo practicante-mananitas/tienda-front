@@ -1,0 +1,35 @@
+<h2>Lista de Productos</h2>
+
+<table *ngIf="products.length > 0; else sinProductos" border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>
+        <img *ngIf="product.image"
+             [src]="'http://127.0.0.1:8000/storage/' + product.image"
+             alt="Producto"
+             width="80"
+             height="80">
+      </td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.description }}</td>
+      <td>$ {{ product.price }}</td>
+      <td>
+        <button [routerLink]="['/productos/editar', product.id]">Editar</button>
+        <button (click)="deleteProduct(product.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #sinProductos>
+  <p>No hay productos disponibles.</p>
+</ng-template>

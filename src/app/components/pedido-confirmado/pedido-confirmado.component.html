@@ -1,0 +1,22 @@
+<h2 style="text-align: center;">¡Gracias por tu pedido!</h2>
+
+<div *ngIf="resumen">
+  <p><strong>Total:</strong> ${{ resumen.total }}</p>
+
+  <table border="1" cellpadding="10">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of resumen.items">
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ item.price }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

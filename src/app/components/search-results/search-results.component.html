@@ -1,0 +1,23 @@
+<button class="back-btn" (click)="volver()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+  Volver
+</button>
+  
+<div class="search-results-container" *ngIf="resultados.length > 0; else noResults">
+    <div class="product-card" *ngFor="let product of resultados" [routerLink]="['/tienda', product.id]">
+      <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="{{ product.name }}" />
+      <div class="info">
+        <h3>{{ product.name }}</h3>
+        <div class="price">$ {{ product.price }}</div>
+        <div class="cta">Ver más detalles</div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #noResults>
+    <p class="empty-message">No se encontraron productos.</p>
+  </ng-template>
+  

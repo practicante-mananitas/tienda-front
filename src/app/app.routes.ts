@@ -11,6 +11,7 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
 import { CartComponent } from './components/cart/cart.component';
 import { PedidoConfirmadoComponent } from './components/pedido-confirmado/pedido-confirmado.component';
 import { MisPedidosComponent } from './components/mis-pedidos/mis-pedidos.component';
+import { SearchResultsComponent } from './components/search-results/search-results.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,5 +25,6 @@ export const routes: Routes = [
   { path: 'carrito', component: CartComponent},
   { path: 'pedido-confirmado', component: PedidoConfirmadoComponent},
   { path: 'mis-pedidos', component: MisPedidosComponent, canActivate: [authGuard] },
+  { path: 'buscar', component: SearchResultsComponent},
   { path: '**', redirectTo: 'login' }
 ];

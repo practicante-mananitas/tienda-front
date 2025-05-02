@@ -10,9 +10,9 @@ import { CommonModule } from '@angular/common';
 })
 export class SliderComponent implements OnInit {
   images = [
-    'assets/banners/prueba1.png',
-    'assets/banners/banner2.jpg',
-    'assets/banners/banner3.jpg'
+    'assets/banners/prueba4.png',
+    'assets/banners/prueba2.png',
+    'assets/banners/prueba3.png'
   ];
   currentIndex = 0;
   intervalId: any;

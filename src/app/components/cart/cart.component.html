@@ -1,35 +1,40 @@
-<h2 style="text-align: center;">Tu carrito</h2>
+<button class="back-btn" (click)="volver()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+  Volver
+</button>
 
-<div *ngIf="cartItems.length > 0; else vacio">
-  <table border="1" cellpadding="10" width="100%">
-    <thead>
-      <tr>
-        <th>Imagen</th>
-        <th>Producto</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Subtotal</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of cartItems">
-        <td><img [src]="'http://127.0.0.1:8000/storage/' + item.product.image" width="60"></td>
-        <td>{{ item.product.name }}</td>
-        <td>$ {{ item.product.price }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>$ {{ item.product.price * item.quantity }}</td>
-        <td><button (click)="removeItem(item.product.id)">Quitar</button></td>
-      </tr>
-    </tbody>
-  </table>
+<h2 class="cart-title">Tu carrito</h2>
 
-  <h3 style="text-align: right;">Total: $ {{ getTotal() }}</h3>
-  <button (click)="clearCart()">Vaciar carrito</button>
-  <button (click)="finalizeOrder()" *ngIf="cartItems.length > 0">Finalizar pedido</button>
+<div *ngIf="cartItems.length > 0; else vacio" class="cart-container">
+  <div class="cart-items">
+    <div class="cart-item" *ngFor="let item of cartItems">
+      <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+      <div class="product-info">
+        <h3>{{ item.product.name }}</h3>
+        <p class="price">$ {{ item.product.price }}</p>
+        <div class="quantity">
+          <span>Cantidad: {{ item.quantity }}</span>
+        </div>
+        <div class="subtotal">
+          Subtotal: $ {{ item.product.price * item.quantity }}
+        </div>
+        <button class="remove-btn" (click)="removeItem(item.product.id)">Eliminar</button>
+      </div>
+    </div>
+  </div>
 
+  <div class="cart-summary">
+    <h3>Resumen de compra</h3>
+    <p>Productos: {{ cartItems.length }}</p>
+    <p class="total">Total: $ {{ getTotal() }}</p>
+    <button class="clear-btn" (click)="clearCart()">Vaciar carrito</button>
+    <button class="checkout-btn" (click)="finalizeOrder()">Finalizar pedido</button>
+  </div>
 </div>
 
 <ng-template #vacio>
-  <p style="text-align: center;">El carrito está vacío.</p>
+  <p class="empty-msg">El carrito está vacío.</p>
 </ng-template>

@@ -1,45 +1,52 @@
+:host {
+  display: block;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
 .slider {
-    position: relative;
+  position: relative;
+  width: 100vw;
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+
+  img {
     width: 100%;
-    max-width: 1200px;
-    margin: auto;
-    overflow: hidden;
-    border-radius: 10px;
-  
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: opacity 0.5s ease-in-out;
-    }
-  
-    button.prev,
-    button.next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2rem;
-      background: rgba(0, 0, 0, 0.3);
-      color: white;
-      border: none;
-      cursor: pointer;
-      padding: 10px 15px;
-      border-radius: 50%;
-      z-index: 1;
-      transition: background 0.3s;
-    }
-  
-    .prev {
-      left: 15px;
-    }
-  
-    .next {
-      right: 15px;
-    }
-  
-    button:hover {
-      background: rgba(0, 0, 0, 0.6);
-    }
+    height: auto;
+    display: block;
+    transition: opacity 0.5s ease-in-out;
   }
+
+  button.prev,
+  button.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 50%;
+    z-index: 1;
+    transition: background 0.3s;
+  }
+
+  .prev {
+    left: 20px;
+  }
+
+  .next {
+    right: 20px;
+  }
+
+  button:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
   
   

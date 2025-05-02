@@ -1,9 +1,51 @@
-<div *ngIf="user; else loading">
-    <h2>Perfil de {{ user.name }}</h2>
-    <p>Email: {{ user.email }}</p>
-  </div>
-  
+<div class="profile-container">
+  <!-- Botón hamburguesa solo en móviles -->
+  <button class="hamburger" (click)="toggleSidebar()">
+    ☰
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.active]="sidebarOpen">
+    <ul>
+      <li><i>🛒</i> Compras</li>
+      <li><i>📦</i> Ventas</li>
+      <li><i>📈</i> Marketing</li>
+      <li><i>💳</i> Créditos</li>
+      <li><i>🔔</i> Suscripciones</li>
+      <li><i>🧾</i> Facturación</li>
+      <li><i>👤</i> Mi perfil</li>
+      <li><i>⚙️</i> Configuración</li>
+    </ul>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="main-profile" *ngIf="user; else loading">
+    <div class="user-header">
+      <div class="avatar">{{ user.name.charAt(0) }}</div>
+      <div class="info">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+        <span class="note">Tu perfil es el mismo para compras y pagos.</span>
+      </div>
+    </div>
+
+    <div class="profile-cards">
+      <div class="card">
+        <h3>Tu información</h3>
+        <p>Nombre elegido y datos para identificarte.</p>
+      </div>
+      <div class="card">
+        <h3>Datos de tu cuenta</h3>
+        <p>Representan tu cuenta en Aeromx y Mercado Pago.</p>
+      </div>
+      <div class="card">
+        <h3>Seguridad</h3>
+        <p>Configura contraseñas y accesos.</p>
+      </div>
+    </div>
+  </main>
+
   <ng-template #loading>
-    <p>Cargando perfil...</p>
+    <p class="loading">Cargando perfil...</p>
   </ng-template>
-  
+</div>

@@ -1,6 +1,44 @@
-<h2>Login</h2>
-<form (ngSubmit)="onLogin()" #form="ngForm">
-  <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required>
-  <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required>
-  <button type="submit">Entrar</button>
-</form>
+<div class="login-container">
+  <h2>Ingresa tu <strong>e-mail</strong> o teléfono</h2>
+
+  <form (ngSubmit)="onLogin()" #form="ngForm" class="login-form">
+    <div class="input-wrapper" [ngClass]="{ 'error': emailInput.invalid && emailInput.touched }">
+      <input
+        #emailInput="ngModel"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="E-mail o teléfono"
+        required
+      />
+      <svg *ngIf="emailInput.invalid && emailInput.touched" class="warning-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a1 1 0 0 0 .86 1.5h18.64a1 1 0 0 0 .86-1.5L13.71 3.86a1 1 0 0 0-1.72 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    </div>
+    <div class="input-wrapper" [ngClass]="{ 'error': passwordInput.invalid && passwordInput.touched }">
+      <input
+        #passwordInput="ngModel"
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        placeholder="Contraseña"
+        required
+        minlength="6"
+      />
+      <svg *ngIf="passwordInput.invalid && passwordInput.touched" class="warning-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a1 1 0 0 0 .86 1.5h18.64a1 1 0 0 0 .86-1.5L13.71 3.86a1 1 0 0 0-1.72 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    </div>
+    
+
+    <button type="submit" [disabled]="form.invalid">Continuar</button>
+  </form>
+
+  <a class="create-account" routerLink="/register">Crear cuenta</a>
+</div>

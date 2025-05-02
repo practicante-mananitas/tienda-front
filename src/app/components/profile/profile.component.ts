@@ -7,10 +7,12 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './profile.component.html'
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
   user: any = null;
+  sidebarOpen = false;
 
   constructor(private authService: AuthService) {}
 
@@ -21,5 +23,9 @@ export class ProfileComponent implements OnInit {
       },
       error: () => alert('No autenticado')
     });
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 }

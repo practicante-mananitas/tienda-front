@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-product-detail',
@@ -17,7 +19,8 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -34,4 +37,9 @@ export class ProductDetailComponent implements OnInit {
       error: () => alert('Error al agregar al carrito')
     });
   }
+
+  volver() {
+    this.location.back();
+  }
+  
 }

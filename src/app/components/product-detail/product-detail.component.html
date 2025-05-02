@@ -1,11 +1,25 @@
+<button class="back-btn" (click)="volver()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+  Volver
+</button>
+
+
 <div *ngIf="product" class="detail-container">
-    <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="Producto">
-    
-    <div class="info">
-      <h2>{{ product.name }}</h2>
-      <p class="price">$ {{ product.price }}</p>
-      <p class="desc">{{ product.description }}</p>
-      <button (click)="agregarAlCarrito()">Agregar al carrito</button>
-    </div>
+  <div class="left-section">
+    <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="Producto" />
   </div>
-  
+
+  <div class="right-section">
+    <h2>{{ product.name }}</h2>
+    <p class="price">$ {{ product.price | number:'1.0-2' }} mx</p>
+
+    <div class="description">
+      <p class="desc">{{ product.description }}</p>
+    </div>
+
+    <button class="btn-cart" (click)="agregarAlCarrito()">Agregar al carrito</button>
+  </div>
+</div>

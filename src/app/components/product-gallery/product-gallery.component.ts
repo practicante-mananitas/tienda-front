@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { RouterModule } from '@angular/router';
 import { SliderComponent } from '../slider/slider.component';
+import { ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-product-gallery',
@@ -12,8 +13,15 @@ import { SliderComponent } from '../slider/slider.component';
   styleUrl: './product-gallery.component.scss'
 })
 export class ProductGalleryComponent implements OnInit {
+  @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
   products: any[] = [];
+  scrollLeft() {
+    this.scrollContainer.nativeElement.scrollBy({ left: -250, behavior: 'smooth' });
+  }
 
+  scrollRight() {
+    this.scrollContainer.nativeElement.scrollBy({ left: 250, behavior: 'smooth' });
+  }
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {

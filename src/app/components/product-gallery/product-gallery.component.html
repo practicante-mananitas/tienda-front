@@ -1,18 +1,61 @@
 <app-slider></app-slider>
-<h2 style="text-align: center; margin: 20px 0;">Tienda</h2>
 
-<div class="gallery">
-  <div
-    class="card"
-    *ngFor="let product of products"
-    [routerLink]="['/tienda', product.id]"
-    tabindex="0"
-    role="link"
-  >
-    <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen">
-    <div class="info">
-      <h3>{{ product.name }}</h3>
-      <p class="price">$ {{ product.price }}</p>
+<div class="product-section">
+  <div class="category-title">
+    <h2>Consolas y Videojuegos</h2>
+    <p>Relacionado con tus visitas recientes</p>
+  </div>
+
+  <!-- Contenedor con botones -->
+  <div class="carousel-wrapper">
+    <button class="nav left" (click)="scrollLeft()">❮</button>
+
+    <div class="gallery" #scrollContainer>
+      <div
+        class="card"
+        *ngFor="let product of products"
+        [routerLink]="['/tienda', product.id]"
+        tabindex="0"
+        role="link"
+      >
+        <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen">
+        <div class="info">
+          <h3>{{ product.name }}</h3>
+          <p class="price">$ {{ product.price }}</p>
+        </div>
+      </div>
     </div>
+
+    <button class="nav right" (click)="scrollRight()">❯</button>
+  </div>
+</div>
+
+<div class="product-section">
+  <div class="category-title">
+    <h2>Moda y Estilo</h2>
+    <p>Relacionado con tus visitas recientes</p>
+  </div>
+
+  <!-- Contenedor con botones -->
+  <div class="carousel-wrapper">
+    <button class="nav left" (click)="scrollLeft()">❮</button>
+
+    <div class="gallery" #scrollContainer>
+      <div
+        class="card"
+        *ngFor="let product of products"
+        [routerLink]="['/tienda', product.id]"
+        tabindex="0"
+        role="link"
+      >
+        <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen">
+        <div class="info">
+          <h3>{{ product.name }}</h3>
+          <p class="price">$ {{ product.price }}</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="nav right" (click)="scrollRight()">❯</button>
   </div>
 </div>

@@ -1,24 +1,24 @@
 <app-slider></app-slider>
 
-<div class="product-section">
+<div *ngFor="let category of categories" class="product-section">
   <div class="category-title">
-    <h2>Consolas y Videojuegos</h2>
+    <h2>{{ category.name }}</h2>
     <p>Relacionado con tus visitas recientes</p>
   </div>
 
   <!-- Contenedor con botones -->
   <div class="carousel-wrapper">
-    <button class="nav left" (click)="scrollLeft()">❮</button>
+    <button class="nav left" (click)="scrollLeft(category.id)">❮</button>
 
-    <div class="gallery" #scrollContainer>
+    <div class="gallery" #scrollContainer [attr.data-category-id]="category.id">
       <div
         class="card"
-        *ngFor="let product of products"
+        *ngFor="let product of getProductsByCategory(category.id)"
         [routerLink]="['/tienda', product.id]"
         tabindex="0"
         role="link"
       >
-        <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen">
+        <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
         <div class="info">
           <h3>{{ product.name }}</h3>
           <p class="price">$ {{ product.price }}</p>
@@ -26,36 +26,8 @@
       </div>
     </div>
 
-    <button class="nav right" (click)="scrollRight()">❯</button>
+    <button class="nav right" (click)="scrollRight(category.id)">❯</button>
   </div>
 </div>
 
-<div class="product-section">
-  <div class="category-title">
-    <h2>Moda y Estilo</h2>
-    <p>Relacionado con tus visitas recientes</p>
-  </div>
 
-  <!-- Contenedor con botones -->
-  <div class="carousel-wrapper">
-    <button class="nav left" (click)="scrollLeft()">❮</button>
-
-    <div class="gallery" #scrollContainer>
-      <div
-        class="card"
-        *ngFor="let product of products"
-        [routerLink]="['/tienda', product.id]"
-        tabindex="0"
-        role="link"
-      >
-        <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen">
-        <div class="info">
-          <h3>{{ product.name }}</h3>
-          <p class="price">$ {{ product.price }}</p>
-        </div>
-      </div>
-    </div>
-
-    <button class="nav right" (click)="scrollRight()">❯</button>
-  </div>
-</div>

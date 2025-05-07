@@ -2,7 +2,18 @@
   <div class="left-section">
     <img src="assets/logo.png" alt="Logo" class="logo" routerLink="/tienda"/>
     <span class="postal">Ingresa tu <strong>código postal</strong></span>
-    <a class="nav-link" href="#">Categorías ▼</a>
+
+    <div class="profile-wrapper" (click)="toggleCategoryMenu()" tabindex="0" (blur)="closeCategoryMenu()">
+      <a class="nav-link">Categorías ▼</a>
+      <div class="profile-menu" *ngIf="showCategoryMenu">
+        <ul>
+          <li *ngFor="let cat of categories">
+            <a [routerLink]="['/categoria', cat.id]">{{ cat.name }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>    
+
   </div>
 
   <div class="center-section">
@@ -28,6 +39,7 @@
     <ul>
       <li><a routerLink="/mis-pedidos">Mis pedidos</a></li>
       <li><a routerLink="/profile">Mi perfil</a></li>
+      <li><a routerLink="/login" *ngIf="!authService.isLoggedIn()">Iniciar Sesión</a></li>
       <li><button (click)="logout()" *ngIf="authService.isLoggedIn()">Cerrar sesión</button></li>
     </ul>
   </div>

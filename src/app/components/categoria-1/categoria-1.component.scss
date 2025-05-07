@@ -1,0 +1,118 @@
+.product-section {
+    background: white;
+    margin: 30px;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.247);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .category-title {
+    margin-bottom: 20px;
+  
+    h2 {
+      font-size: 22px;
+      margin: 0;
+      color: #222;
+    }
+  
+    p {
+      font-size: 14px;
+      margin: 5px 0 0;
+      color: #666;
+    }
+  }
+  
+  /* Contenedor con botones */
+  .carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  
+    .nav {
+      background: white;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 10;
+      padding: 10px;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.6;
+  
+      &:hover {
+        background: #eee;
+        opacity: 1;
+      }
+  
+      &.left {
+        left: 5px;
+      }
+  
+      &.right {
+        right: 5px;
+      }
+    }
+  }
+  
+  .gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 25px;
+    padding: 20px 40px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    margin: 0 40px;
+  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .card {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      background: #fff;
+      border: 1px solid #eaeaea;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      width: 200px;
+      text-align: left;
+      padding: 10px;
+      transition: box-shadow 0.2s ease;
+      cursor: pointer;
+  
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.253);
+      }
+  
+      img {
+        width: 100%;
+        height: 160px;
+        object-fit: contain;
+        background-color: #f9f9f9;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 10px;
+      }
+  
+      .info {
+        h3 {
+          font-size: 14px;
+          color: #333;
+          margin: 0 0 6px;
+          line-height: 1.2;
+        }
+  
+        .price {
+          font-weight: bold;
+          color: #00a650;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  

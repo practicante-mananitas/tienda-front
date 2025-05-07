@@ -18,7 +18,16 @@
     <input type="number" [(ngModel)]="product.price" name="price" required>
   </label>
   <br>
-
+  
+  <label>
+    Categoría:
+    <select [(ngModel)]="product.category_id" name="category_id" required>
+      <option value="" disabled>Selecciona una categoría</option>
+      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+    </select>
+  </label>
+  <br>
+  
   <label>
     Imagen actual:
     <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" width="80">

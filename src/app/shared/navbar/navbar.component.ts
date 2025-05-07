@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { FormsModule } from '@angular/forms';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,15 +17,25 @@ export class NavbarComponent implements OnInit {
   cartCount = 0;
   searchTerm: string = '';
   showProfileMenu = false;
+  showCategoryMenu = false;
   menuAbierto = false;
+  categories: any[] = [];
 
   constructor(
     public authService: AuthService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
+    // Cargar categorías para todos
+    this.productService.getCategories().subscribe({
+      next: (res) => this.categories = res,
+      error: (err) => console.error('Error al cargar categorías', err)
+    });
+  
+    // Solo si está logueado, obtener carrito
     if (this.authService.isLoggedIn()) {
       this.cartService.getCart().subscribe(); // carga inicial
       this.cartService.cartCount$.subscribe(count => {
@@ -32,6 +43,7 @@ export class NavbarComponent implements OnInit {
       });
     }
   }
+  
 
   logout() {
     this.authService.logout();
@@ -52,6 +64,14 @@ export class NavbarComponent implements OnInit {
 
   closeProfileMenu() {
     setTimeout(() => this.showProfileMenu = false, 150); // espera breve para permitir click
+  }
+
+  toggleCategoryMenu() {
+    this.showCategoryMenu = !this.showCategoryMenu;
+  }
+
+  closeCategoryMenu() {
+    setTimeout(() => this.showCategoryMenu = false, 150); // espera breve para permitir click
   }
 
   

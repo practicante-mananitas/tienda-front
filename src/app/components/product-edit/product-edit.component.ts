@@ -17,6 +17,7 @@ export class ProductEditComponent implements OnInit {
     price: 0,
     image: ''
   };
+  categories: any[] = [];
   selectedFile: File | null = null;
   productId: number = 0;
 
@@ -28,11 +29,20 @@ export class ProductEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.productId = +this.route.snapshot.paramMap.get('id')!;
+  
+    // Obtener datos del producto
     this.productService.getProduct(this.productId).subscribe({
       next: data => this.product = data,
       error: () => alert('Producto no encontrado')
     });
+  
+    // Obtener categorías
+    this.productService.getCategories().subscribe({
+      next: cats => this.categories = cats,
+      error: () => alert('Error al cargar categorías')
+    });
   }
+  
 
   onFileChange(event: any) {
     const file = event.target.files[0];
@@ -44,6 +54,8 @@ export class ProductEditComponent implements OnInit {
     formData.append('name', this.product.name);
     formData.append('description', this.product.description);
     formData.append('price', this.product.price.toString());
+    formData.append('category_id', this.product.category_id); // 👈 Agrega esto
+
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);

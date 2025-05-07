@@ -59,4 +59,12 @@ export class ProductService {
     return this.http.delete(`${this.apiUrl}/products/${id}`, { headers });
   }
   
+  getCategories(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/categories`);
+  }
+  
+  getProductsByCategory(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/products/category/${id}`);
+  }
+  
 }

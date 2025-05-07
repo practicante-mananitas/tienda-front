@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SliderComponent } from '../slider/slider.component';
 import { ViewChild, ElementRef } from '@angular/core';
 
@@ -15,20 +15,37 @@ import { ViewChild, ElementRef } from '@angular/core';
 export class ProductGalleryComponent implements OnInit {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
   products: any[] = [];
-  scrollLeft() {
-    this.scrollContainer.nativeElement.scrollBy({ left: -250, behavior: 'smooth' });
-  }
+  categories: any[] = [];
 
-  scrollRight() {
-    this.scrollContainer.nativeElement.scrollBy({ left: 250, behavior: 'smooth' });
-  }
-  constructor(private productService: ProductService) {}
+  // scrollLeft() {
+  //   this.scrollContainer.nativeElement.scrollBy({ left: -250, behavior: 'smooth' });
+  // }
+
+  // scrollRight() {
+  //   this.scrollContainer.nativeElement.scrollBy({ left: 250, behavior: 'smooth' });
+  // }
+  constructor(private productService: ProductService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.productService.getCategories().subscribe(data => this.categories = data);
     this.productService.getProducts().subscribe({
       next: data => this.products = data,
       error: err => console.error('Error cargando productos', err)
     });
   }
+  scrollLeft(categoryId: number) {
+    const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
+    container.scrollBy({ left: -300, behavior: 'smooth' });
+  }
+  
+  scrollRight(categoryId: number) {
+    const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  }
+  
+  getProductsByCategory(categoryId: number) {
+    return this.products.filter(p => p.category_id === categoryId);
+  }
+  
 }
  

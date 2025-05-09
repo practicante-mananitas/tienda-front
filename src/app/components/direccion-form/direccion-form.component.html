@@ -1,0 +1,58 @@
+
+
+<form (ngSubmit)="onSubmit()" #form="ngForm">
+    <h2>Nueva Dirección</h2>
+  <label>
+    Calle:
+    <input type="text" name="street" [(ngModel)]="direccion.street" placeholder="Ej: Avenida Reforma 123" required>
+  </label>
+
+  <label>
+    Código Postal:
+    <input type="text" name="postal_code" [(ngModel)]="direccion.postal_code" required>
+  </label>
+
+  <label>
+    Estado:
+    <select name="state" [(ngModel)]="direccion.state" required>
+      <option value="" disabled selected>Selecciona un estado</option>
+      <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+    </select>
+  </label>
+
+  <label>
+    Municipio / Alcaldía:
+    <input type="text" name="municipio" [(ngModel)]="direccion.municipio" required>
+  </label>
+
+  <label>
+    Localidad:
+    <input type="text" name="localidad" [(ngModel)]="direccion.localidad" required>
+  </label>
+
+  <label>
+    Colonia / Barrio:
+    <input type="text" name="colonia" [(ngModel)]="direccion.colonia" required>
+  </label>
+
+  <label>
+    Número interior / Depto (opcional):
+    <input type="text" name="interior" [(ngModel)]="direccion.interior">
+  </label>
+
+  <label>
+    Indicaciones para entrega (opcional):
+    <textarea name="indicaciones" [(ngModel)]="direccion.indicaciones"></textarea>
+  </label>
+
+  <label>
+    Tipo de domicilio:
+    <select name="tipo" [(ngModel)]="direccion.tipo" required>
+      <option value="" disabled selected>Selecciona un tipo</option>
+      <option value="residencial">Residencial</option>
+      <option value="laboral">Laboral</option>
+    </select>
+  </label>
+
+  <button type="submit">Guardar Dirección</button>
+</form>

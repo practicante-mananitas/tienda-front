@@ -4,26 +4,25 @@
     <h2>Nueva Dirección</h2>
   <label>
     Calle:
-    <input type="text" name="street" [(ngModel)]="direccion.street" placeholder="Ej: Avenida Reforma 123" required>
+    <input type="text" name="calle" [(ngModel)]="direccion.calle" placeholder="Ej: Avenida Reforma 123" required>
   </label>
 
   <label>
     Código Postal:
-    <input type="text" name="postal_code" [(ngModel)]="direccion.postal_code" required>
+    <input type="text" name="codigo_postal" [(ngModel)]="direccion.codigo_postal" required>
   </label>
 
-  <label>
-    Estado:
-    <select name="state" [(ngModel)]="direccion.state" required>
-      <option value="" disabled selected>Selecciona un estado</option>
-      <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
-    </select>
-  </label>
+  <label>Estado:</label>
+  <select name="state" (change)="onEstadoChange($event)" required>
+    <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.name }}</option>
+  </select>
 
-  <label>
-    Municipio / Alcaldía:
-    <input type="text" name="municipio" [(ngModel)]="direccion.municipio" required>
-  </label>
+
+  <label>Municipio:</label>
+  <select [(ngModel)]="direccion.municipio" name="municipio" required>
+    <option value="" disabled selected>Selecciona un municipio</option>
+    <option *ngFor="let m of municipios" [value]="m.name">{{ m.name }}</option>
+  </select>
 
   <label>
     Localidad:
@@ -37,17 +36,17 @@
 
   <label>
     Número interior / Depto (opcional):
-    <input type="text" name="interior" [(ngModel)]="direccion.interior">
+    <input type="text" name="numero_interior" [(ngModel)]="direccion.numero_interior">
   </label>
 
   <label>
     Indicaciones para entrega (opcional):
-    <textarea name="indicaciones" [(ngModel)]="direccion.indicaciones"></textarea>
+    <textarea name="indicaciones_entrega" [(ngModel)]="direccion.indicaciones_entrega"></textarea>
   </label>
 
   <label>
     Tipo de domicilio:
-    <select name="tipo" [(ngModel)]="direccion.tipo" required>
+    <select name="tipo_domicilio" [(ngModel)]="direccion.tipo_domicilio" required>
       <option value="" disabled selected>Selecciona un tipo</option>
       <option value="residencial">Residencial</option>
       <option value="laboral">Laboral</option>

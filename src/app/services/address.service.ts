@@ -37,4 +37,12 @@ export class AddressService {
       headers: this.getAuthHeaders()
     });
   }
+  getEstados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/estados`);
+  }
+
+  getMunicipiosByEstado(stateId: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/estados/${stateId}/municipios`);
+}
+
 }

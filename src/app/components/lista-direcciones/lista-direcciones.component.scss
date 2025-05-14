@@ -1,0 +1,53 @@
+.direccion-lista {
+  padding: 1rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.direccion-card {
+  display: flex;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  align-items: flex-start;
+}
+
+.icono {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.contenido {
+  flex: 1;
+}
+
+.calle, .cp, .info-extra {
+  margin-bottom: 0.3rem;
+}
+
+.link-agregar {
+  color: #3483fa;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link-agregar:hover {
+  text-decoration: underline;
+}
+
+.agregar-direccion {
+  text-align: center;
+  margin-top: 1rem;
+
+  a {
+    font-weight: bold;
+    color: #3483fa;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}

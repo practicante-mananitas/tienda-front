@@ -37,10 +37,15 @@
 
   <div class="profile-menu" *ngIf="showProfileMenu">
     <ul>
-      <li><a routerLink="/mis-pedidos">Mis pedidos</a></li>
-      <li><a routerLink="/profile">Mi perfil</a></li>
-      <li><a routerLink="/login" *ngIf="!authService.isLoggedIn()">Iniciar Sesión</a></li>
+     <!-- Mostrar solo si el usuario está autenticado -->
+      <li><a routerLink="/mis-pedidos" *ngIf="authService.isLoggedIn()">Mis pedidos</a></li>
+      <li><a routerLink="/profile" *ngIf="authService.isLoggedIn()">Mi perfil</a></li>
       <li><button (click)="logout()" *ngIf="authService.isLoggedIn()">Cerrar sesión</button></li>
+
+      <!-- Mostrar solo si el usuario NO está autenticado -->
+      <li><a routerLink="/login" *ngIf="!authService.isLoggedIn()">Iniciar Sesión</a></li>
+      <li><a routerLink="/register" *ngIf="!authService.isLoggedIn()">Crear Cuenta</a></li>
+
     </ul>
   </div>
 </div>

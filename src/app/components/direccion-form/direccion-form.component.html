@@ -1,7 +1,7 @@
+<form *ngIf="!mostrarExtraInfo && !soloExtra" (ngSubmit)="onSubmit()" #form="ngForm">
+<h2>{{ modoEdicion ? 'Editar Dirección' : 'Nueva Dirección' }}</h2>
 
 
-<form (ngSubmit)="onSubmit()" #form="ngForm">
-    <h2>Nueva Dirección</h2>
   <label>
     Calle:
     <input type="text" name="calle" [(ngModel)]="direccion.calle" placeholder="Ej: Avenida Reforma 123" required>
@@ -13,10 +13,9 @@
   </label>
 
   <label>Estado:</label>
-  <select name="state" (change)="onEstadoChange($event)" required>
-    <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.name }}</option>
-  </select>
-
+<select name="state" [(ngModel)]="direccion.estado" (change)="onEstadoChange($event)" required>
+  <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.name }}</option>
+</select>
 
   <label>Municipio:</label>
   <select [(ngModel)]="direccion.municipio" name="municipio" required>
@@ -53,5 +52,156 @@
     </select>
   </label>
 
-  <button type="submit">Guardar Dirección</button>
+<button type="submit">{{ modoEdicion ? 'Actualizar Dirección' : 'Guardar Dirección' }}</button>
+
 </form>
+
+<!-- Resumen de dirección -->
+<div *ngIf="mostrarExtraInfo" class="card-resumen">
+  <div class="resumen-header">
+    <span class="icon">📍</span>
+    <div>
+      <strong>Tu domicilio</strong>
+      {{ direccion.calle }}<br>
+      {{ direccion.tipo_domicilio === 'residencial' ? 'Residencial' : 'Laboral' }}
+    </div>
+  </div>
+</div>
+
+<!-- SECCIÓN EXTRA INFO -->
+<div  *ngIf="mostrarExtraInfo || soloExtra" class="seccion-extra">
+  
+
+  <div class="card-direccion">
+    <h3>Completa datos del lugar para agilizar tus envíos</h3>
+    <div class="tipo-container">
+      <button 
+        *ngFor="let tipo of tiposLugar" 
+        (click)="tipoLugar = tipo.valor"
+        [ngClass]="{ 'selected': tipoLugar === tipo.valor }">
+        <div class="icono">{{ tipo.icono }}</div>
+        <div>{{ tipo.label }}</div>
+      </button>
+    </div>
+    <!-- Si es abarrotes u otro -->
+<div *ngIf="tipoLugar === 'tienda' || tipoLugar === 'otro'" class="grupo-form">
+
+  <label class="pregunta">¿En dónde está ubicado?</label>
+  <div class="radio-group">
+    <label>
+      <input type="radio" [(ngModel)]="extraInfo.ubicacionTipo" value="centro" name="ubicacionTipo">
+      Centro comercial
+    </label>
+    <label>
+      <input type="radio" [(ngModel)]="extraInfo.ubicacionTipo" value="barrio" name="ubicacionTipo">
+      Barrio privado
+    </label>
+    <label>
+      <input type="radio" [(ngModel)]="extraInfo.ubicacionTipo" value="ninguna" name="ubicacionTipo">
+      Ninguna de las anteriores
+    </label>
+  </div>
+
+  <label class="pregunta">
+    {{
+      extraInfo.ubicacionTipo === 'centro' ? 'Nombre del centro comercial' :
+      extraInfo.ubicacionTipo === 'barrio' ? 'Nombre de la vivienda' :
+      extraInfo.ubicacionTipo === 'ninguna' ? 'Nombre de la tienda' :
+      ''
+    }}
+  </label>
+
+  <div class="nombre-casa-input">
+  <input
+    type="text"
+    [(ngModel)]="extraInfo.nombre_casa"
+    name="nombre_casa"
+    placeholder="{{ extraInfo.ubicacionTipo === 'centro' ? 'Ej: Plaza Las Américas' :
+                   extraInfo.ubicacionTipo === 'barrio' ? 'Ej: Condominio Arcos del Sol' :
+                   'Ej: Tienda XYZ' }}"
+    [disabled]="!extraInfo.ubicacionTipo"
+  >
+  </div>
+
+  <label class="pregunta">¿Se puede dejar paquetes en conserjería?</label>
+  <div class="radio-group">
+    <label><input type="radio" [(ngModel)]="extraInfo.conserjeria" value="sí" name="conserjeria2"> Sí</label>
+    <label><input type="radio" [(ngModel)]="extraInfo.conserjeria" value="no" name="conserjeria2"> No</label>
+  </div>
+</div>
+
+    <!-- division -->
+
+          <div *ngIf="tipoLugar === 'casa' || tipoLugar === 'edificio'" class="grupo-form">
+        <label class="pregunta">¿Está dentro de un barrio privado o condominio?</label>
+        <div class="radio-group">
+          <label><input type="radio" [(ngModel)]="extraInfo.barrio" value="sí" name="barrio"> Sí</label>
+          <label><input type="radio" [(ngModel)]="extraInfo.barrio" value="no" name="barrio"> No</label>
+        </div>
+
+        <label class="pregunta">Nombre de la vivienda</label>
+        <div class="nombre-casa-input">
+          <input
+            type="text"
+            [(ngModel)]="extraInfo.nombre_casa"
+            name="nombre_casa"
+            placeholder="Ej: xxx"
+            [disabled]="extraInfo.nombre_casa === 'Sin nombre'"
+          >
+          <label>
+            <input
+              type="checkbox"
+              (change)="setNombreCasaSinNombre($event)"
+            >
+            Sin nombre
+          </label>
+        </div>
+
+        <label class="pregunta">¿Se puede dejar paquetes en conserjería?</label>
+        <div class="radio-group">
+          <label><input type="radio" [(ngModel)]="extraInfo.conserjeria" value="sí" name="conserjeria"> Sí</label>
+          <label><input type="radio" [(ngModel)]="extraInfo.conserjeria" value="no" name="conserjeria"> No</label>
+        </div>
+      </div>
+
+
+          <div *ngIf="extraInfo.conserjeria === 'sí'">
+          <label class="pregunta">¿En qué días y horarios está abierta la conserjería?</label>
+      <div class="dias-botones">
+        <button
+          type="button"
+          *ngFor="let d of dias"
+          (click)="d.seleccionado = !d.seleccionado"
+          [ngClass]="{ 'activo': d.seleccionado }"
+        >
+          {{ d.nombre }}
+        </button>
+      </div>
+
+
+            <div class="horarios">
+        <div class="bloque-hora">
+          <label for="hora_apertura">Apertura</label>
+          <select [(ngModel)]="extraInfo.hora_apertura" name="hora_apertura" id="hora_apertura">
+            <option *ngFor="let hora of horas" [value]="hora">{{ hora }}</option>
+          </select>
+        </div>
+        <div class="bloque-hora">
+          <label for="hora_cierre">Cierre</label>
+          <select [(ngModel)]="extraInfo.hora_cierre" name="hora_cierre" id="hora_cierre">
+            <option *ngFor="let hora of horas" [value]="hora">{{ hora }}</option>
+          </select>
+        </div>
+      </div>
+
+          <div class="checkbox-linea">
+            <input type="checkbox" id="abierto24" [(ngModel)]="extraInfo.abierto24" name="abierto24">
+            <label for="abierto24">Abierto 24 horas</label>
+          </div>
+          
+        
+    </div>
+
+    <button (click)="guardarExtra()">Guardar datos del lugar</button>
+  </div>
+</div>

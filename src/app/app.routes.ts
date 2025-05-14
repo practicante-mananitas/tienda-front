@@ -14,6 +14,7 @@ import { MisPedidosComponent } from './components/mis-pedidos/mis-pedidos.compon
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { Categoria1Component } from './components/categoria-1/categoria-1.component';
 import { DireccionFormComponent } from './components/direccion-form/direccion-form.component';
+import { ListaDireccionesComponent } from './components/lista-direcciones/lista-direcciones.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -31,5 +32,8 @@ export const routes: Routes = [
   // { path: 'categoria/:id', component: ProductGalleryComponent},
   { path: 'categoria/1', component: Categoria1Component},
   { path: 'registrar-direccion', component: DireccionFormComponent},
+  { path: 'mis-direcciones', component: ListaDireccionesComponent},
+  { path: 'direccion/:id', component: DireccionFormComponent },
+  { path: 'direccion-extra/:id', component: DireccionFormComponent },
   { path: '**', redirectTo: 'tienda' }
 ];

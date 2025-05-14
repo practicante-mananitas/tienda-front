@@ -37,12 +37,25 @@ export class AddressService {
       headers: this.getAuthHeaders()
     });
   }
+
   getEstados(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/estados`);
   }
 
   getMunicipiosByEstado(stateId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/estados/${stateId}/municipios`);
+}
+
+saveDireccionExtra(data: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}/direccion-extra`, data, {
+    headers: this.getAuthHeaders()
+  });
+}
+
+getDireccionCompleta(id: number): Observable<any> {
+  return this.http.get(`${this.apiUrl}/direccion-completa/${id}`, {
+    headers: this.getAuthHeaders()
+  });
 }
 
 }

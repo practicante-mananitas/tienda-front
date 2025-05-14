@@ -1,5 +1,6 @@
-<h2>Registro</h2>
+
 <form (ngSubmit)="onRegister()" #form="ngForm">
+  <h2>Registro</h2>
   <input type="text" name="name" [(ngModel)]="name" placeholder="Nombre" required>
   <input type="text" name="phone" [(ngModel)]="phone" placeholder="Teléfono celular" required>
   <input type="text" name="address" [(ngModel)]="address" placeholder="Dirección de envío" required>

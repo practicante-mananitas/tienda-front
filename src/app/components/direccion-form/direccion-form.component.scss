@@ -1,63 +1,314 @@
 form {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 30px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    font-family: 'Segoe UI', sans-serif;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #333;
+
+  input,
+  select,
+  textarea {
+    margin-top: 5px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.2s;
+
+    &:focus {
+      border-color: #3483fa;
+      outline: none;
+    }
   }
-  
-  h2 {
+
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+}
+
+button {
+  padding: 12px;
+  font-size: 15px;
+  background-color: #3483fa;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+
+  &:hover {
+    background-color: #2968c8;
+  }
+}
+
+/* --- NUEVO ESTILO PARA LA INFO EXTRA --- */
+
+.seccion-extra {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
     text-align: center;
     color: #333;
-    margin-bottom: 10px;
   }
-  
-  label {
+}
+
+.card-direccion {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tipo-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  // color: black;
+
+  button {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f3f3f3;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
     font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+    color:#333;
+
+    .icono {
+      font-size: 2rem;
+    }
+
+    &.selected {
+      background: #3483fa;
+      color: white;
+      border-color: #2968c8;
+    }
+
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+}
+
+.dias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1rem;
+
+  label {
+    flex: 0 0 auto;
+    background: #f3f3f3;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+
+    input {
+      margin-right: 6px;
+    }
+
+    &:hover {
+      background-color: #e8e8e8;
+    }
+  }
+}
+
+.card-resumen {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  max-width: 800px;
+  margin: 2rem auto 1rem auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.resumen-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+
+  .icon {
+    font-size: 2rem;
+    background: #e3e3e3;
+    border-radius: 50%;
+    padding: 0.5rem;
+  }
+
+  strong {
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+}
+
+.pregunta {
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 14px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
     color: #333;
-  
-    input,
-    select,
-    textarea {
-      margin-top: 5px;
+
+    input {
+      margin: 0;
+    }
+  }
+}
+
+.nombre-casa-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  input[type="text"] {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+}
+
+.dias-botones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+
+  button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &.activo {
+      background: #3483fa;
+      color: white;
+      border-color: #2968c8;
+    }
+
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+}
+
+.checkbox-linea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1rem 0;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #3483fa;
+  }
+
+  label {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+  }
+}
+
+.horarios {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+
+  .bloque-hora {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    select {
       padding: 10px 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 14px;
-      transition: border 0.2s;
-  
+      appearance: none;
+      background-color: white;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%233483fa' stroke-width='1.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 10px 6px;
+
       &:focus {
         border-color: #3483fa;
         outline: none;
       }
     }
-  
-    textarea {
-      resize: vertical;
-      min-height: 60px;
-    }
   }
-  
-  button {
-    padding: 12px;
-    font-size: 15px;
-    background-color: #3483fa;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
-  
-    &:hover {
-      background-color: #2968c8;
-    }
-  }
-  
+}
+
+
+

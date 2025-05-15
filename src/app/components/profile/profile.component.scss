@@ -130,6 +130,9 @@
           font-size: 14px;
           color: #555;
         }
+        &:hover {
+          border-color: #007bff; // azul
+        }
       }
     }
   }

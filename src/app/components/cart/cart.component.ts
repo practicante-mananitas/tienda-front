@@ -56,7 +56,7 @@ export class CartComponent implements OnInit {
     this.cartService.finalizeOrder().subscribe({
       next: () => {
         alert('Pedido realizado con éxito!');
-        this.router.navigate(['/pedido-confirmado']);
+        this.router.navigate(['/checkout']);
       },
       error: () => alert('Hubo un error al finalizar el pedido.')
     });
@@ -65,4 +65,9 @@ export class CartComponent implements OnInit {
   volver() {
     this.location.back();
   }
+
+  goToCheckout() {
+  this.router.navigate(['/checkout']);
+}
+
 }

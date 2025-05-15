@@ -31,7 +31,9 @@
     <p>Productos: {{ cartItems.length }}</p>
     <p class="total">Total: $ {{ getTotal() }}</p>
     <button class="clear-btn" (click)="clearCart()">Vaciar carrito</button>
-    <button class="checkout-btn" (click)="finalizeOrder()">Finalizar pedido</button>
+    <!-- <button class="checkout-btn" (click)="finalizeOrder()">Finalizar pedido</button> -->
+     <button class="checkout-btn" (click)="goToCheckout()">Finalizar pedido</button>
+
   </div>
 </div>
 

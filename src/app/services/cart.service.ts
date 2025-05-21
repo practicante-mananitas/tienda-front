@@ -57,4 +57,14 @@ export class CartService {
     }).pipe(tap((res: any) => this.orderSummary = res.order));
   }
   
+  quoteShipping(addressId: number, cartItems: any[]) {
+  return this.http.post<any>('http://127.0.0.1:8000/api/shipping/quote', {
+    address_id: addressId,
+    items: cartItems.map(item => ({
+      product_id: item.product.id,
+      quantity: item.quantity,
+    }))
+  });
+}
+
 }

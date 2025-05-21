@@ -1,35 +1,84 @@
-<div *ngIf="loading" class="loader-container">
-  <div class="spinner"></div>
-  <p>Preparando todo para tu compra</p>
-</div>
-
-<div *ngIf="!loading" class="checkout-wrapper">
-  <div class="left">
-    <h3>Dirección de entrega</h3>
+<div class="checkout-container">
+  <div class="checkout-left">
+    <h2>Elige la forma de entrega</h2>
+    <br>
 
     <div *ngIf="direcciones.length > 0; else sinDirecciones">
-      <div *ngFor="let dir of direcciones">
+      <div *ngFor="let dir of direcciones.slice(0, 2)" class="shipping-option">
         <label>
-          <input type="radio" name="direccion" [value]="dir.id"
-                 [checked]="direccionSeleccionada?.id === dir.id"
-                 (change)="onDireccionChange(dir.id)">
-          {{ dir.calle }}, {{ dir.colonia }}, {{ dir.municipio }}, {{ dir.estado }}
+          <input
+            type="radio"
+            name="direccion"
+            [value]="dir.id"
+            [checked]="direccionSeleccionada?.id === dir.id"
+            (change)="onDireccionChange(dir.id)"
+          />
+          <div>
+            <strong>Enviar a domicilio</strong>
+            <div>{{ dir.calle }} - {{ dir.colonia }}, {{ dir.municipio }}</div>
+          </div>
         </label>
+        <span class="envio-gratis">Gratis</span>
+      </div>
+
+      <div *ngIf="direcciones.length > 2" class="mostrar-mas">
+        <button (click)="mostrarTodas = true">Mostrar más direcciones</button>
       </div>
     </div>
 
     <ng-template #sinDirecciones>
-      <p>No tienes direcciones registradas.</p>
-      <button (click)="irANuevaDireccion()">Registrar dirección</button>
+      <div class="no-direcciones">
+        <p>No tienes direcciones registradas.</p>
+        <button (click)="irANuevaDireccion()">Registrar dirección</button>
+      </div>
     </ng-template>
+
+    <div *ngIf="direccionSeleccionada" class="btn-confirmar">
+      <button (click)="confirmarCompra()">Continuar</button>
+    </div>
   </div>
 
-  <div class="right">
+  <div class="checkout-right">
     <h3>Resumen de compra</h3>
-    <p>Subtotal: ${{ totalProductos }}</p>
-    <p>Envío: ${{ costoEnvio }}</p>
-    <hr>
-    <p><strong>Total: ${{ totalProductos + costoEnvio }}</strong></p>
-    <button (click)="confirmarCompra()">Confirmar compra</button>
+    <div class="resumen-item">
+      <span>Productos ({{ cartItems.length }})</span>
+      <span>${{ totalProductos.toFixed(2) }}</span>
+    </div>
+    <div class="resumen-item">
+      <span>Envío</span>
+      <span>${{ costoEnvio.toFixed(2) }}</span>
+    </div>
+    <div *ngIf="diasEntrega !== null" class="dias-entrega">
+      <small>En un máximo de {{ diasEntrega + 3 }} días</small>
+    </div>
+    <hr />
+    <div class="resumen-item total">
+      <span><strong>Pagas</strong></span>
+      <span><strong>${{ (totalProductos + costoEnvio).toFixed(2) }}</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para mostrar todas las direcciones -->
+<div class="modal-backdrop" *ngIf="mostrarTodas" (click)="mostrarTodas = false"></div>
+<div class="modal-direcciones" *ngIf="mostrarTodas">
+  <div class="modal-content">
+    <h3>Todas tus direcciones</h3>
+    <div *ngFor="let dir of direcciones" class="shipping-option">
+      <label>
+        <input
+          type="radio"
+          name="direccion"
+          [value]="dir.id"
+          [checked]="direccionSeleccionada?.id === dir.id"
+          (change)="onDireccionChange(dir.id); mostrarTodas = false"
+        />
+        <div>
+          <strong>Enviar a domicilio</strong>
+          <div>{{ dir.calle }} - {{ dir.colonia }}, {{ dir.municipio }}</div>
+        </div>
+      </label>
+    </div>
+    <button class="cerrar-modal" (click)="mostrarTodas = false">Cerrar</button>
   </div>
 </div>

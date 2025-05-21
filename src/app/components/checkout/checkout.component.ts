@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AddressService } from '../../services/address.service';
 import { CartService } from '../../services/cart.service';
-import { ShippingService } from '../../services/shipping.service';
+import { AddressService } from '../../services/address.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,106 +11,85 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.scss'
+  styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
-  loading = true;
+  cartItems: any[] = [];
   direcciones: any[] = [];
   direccionSeleccionada: any = null;
+  costoEnvio: number = 0;
+  diasEntrega: number | null = null;
+  totalProductos: number = 0;
+  loading = true;
+  mostrarTodas = false;
 
-  cartItems: any[] = [];
-  totalProductos = 0;
-  costoEnvio = 0;
 
   constructor(
-    private router: Router,
-    private addressService: AddressService,
     private cartService: CartService,
-    private shippingService: ShippingService
+    private addressService: AddressService,
+    private router: Router,
+    private http: HttpClient
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    this.loading = true;
-
-    await Promise.all([
-      this.loadDirecciones(),
-      this.loadCartData()
-    ]);
-
-    this.loading = false;
-
-    if (this.direccionSeleccionada && this.cartItems.length > 0) {
-      this.calcularCostoEnvio(this.direccionSeleccionada);
-    }
-  }
-
-  loadDirecciones(): Promise<void> {
-    return new Promise((resolve) => {
-      this.addressService.getMyAddress().subscribe((res: any) => {
-        this.direcciones = res;
-        if (this.direcciones.length > 0) {
-          this.direccionSeleccionada = this.direcciones[0];
-        }
-        resolve();
-      });
-    });
-  }
-
-  loadCartData(): Promise<void> {
-    return new Promise((resolve) => {
-      this.cartService.getCart().subscribe((items: any[]) => {
+  ngOnInit(): void {
+    this.cartService.getCart().subscribe({
+      next: (items) => {
         this.cartItems = items;
-        this.totalProductos = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-        resolve();
-      });
+        this.calcularSubtotal();
+        this.loadDirecciones();
+      },
+      error: () => {
+        this.loading = false;
+      }
     });
   }
 
-  calcularCostoEnvio(direccion: any) {
-    if (!direccion?.codigo_postal || this.cartItems.length === 0) {
-      console.warn('No hay CP o carrito vacío para cotizar envío');
-      return;
-    }
-
-const items = this.cartItems.map(item => ({
-  product_id: item.product_id,  // 👈 Agrega esto
-  name: item.name,
-  weight: item.weight,
-  height: item.height,
-  width: item.width,
-  length: item.length,
-  quantity: item.quantity
-}));
-
-
-    console.log('Cotizando con:', {
-      codigo_postal: direccion.codigo_postal,
-      // items: payloadItems
+  loadDirecciones() {
+    this.addressService.getMyAddress().subscribe({
+      next: (addresses) => {
+        this.direcciones = Array.isArray(addresses) ? addresses : [addresses];
+        this.direccionSeleccionada = this.direcciones[0];
+        this.cotizarEnvio();
+      },
+      error: () => {
+        this.loading = false;
+      }
     });
-console.log('Dirección seleccionada:', direccion);
+  }
 
-this.shippingService.getShippingQuoteFromBackend(this.direccionSeleccionada.codigo_postal, items)
-  .subscribe(response => {
-    this.costoEnvio = response.total_price || 0;
-  });
+  onDireccionChange(id: number) {
+    this.direccionSeleccionada = this.direcciones.find(d => d.id === id);
+    this.cotizarEnvio();
+  }
+
+  calcularSubtotal() {
+    this.totalProductos = this.cartItems.reduce((acc, item) => {
+      const precio = item.product?.price ?? item.price;
+      return acc + (precio * item.quantity);
+    }, 0);
+  }
+
+cotizarEnvio() {
+  if (!this.direccionSeleccionada) return;
+
+  this.cartService.quoteShipping(this.direccionSeleccionada.id, this.cartItems)
+    .subscribe({
+      next: (res) => {
+        this.costoEnvio = Number(res.total) || 0;
+        this.diasEntrega = (Number(res.days) || 0) + 3;
+      },
+      error: () => {
+        this.costoEnvio = 0;
+        this.diasEntrega = null;
+      }
+    });
 }
 
-  onDireccionChange(dirId: number) {
-    const dir = this.direcciones.find(d => d.id === dirId);
-    if (dir) {
-      this.direccionSeleccionada = dir;
-      this.calcularCostoEnvio(dir);
-    }
+  confirmarCompra() {
+    alert('Compra confirmada. Aquí iría la lógica final para crear el pedido.');
   }
 
   irANuevaDireccion() {
-    this.router.navigate(['/direccion-form']);
-  }
-
-  confirmarCompra() {
-    this.cartService.finalizeOrder().subscribe(() => {
-      alert('Compra confirmada ✅');
-      this.router.navigate(['/gracias']);
-    });
+    this.router.navigate(['/registrar-direccion']); // Ajusta esta ruta si es necesario
   }
 }

@@ -17,13 +17,22 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onLogin() {
-    this.authService.login({ email: this.email, password: this.password }).subscribe({
-      next: res => {
-        this.authService.saveToken(res.access_token); // 👈 aquí es access_token
+onLogin() {
+  this.authService.login({ email: this.email, password: this.password }).subscribe({
+    next: res => {
+      this.authService.saveToken(res.access_token);
+
+      const redirect = localStorage.getItem('redirectAfterLogin');
+
+      if (redirect && redirect !== '/login') {
+        localStorage.removeItem('redirectAfterLogin');
+        this.router.navigateByUrl(redirect);
+      } else {
         this.router.navigate(['/profile']);
-      },
-      error: () => alert('Login incorrecto')
-    });
-  }
+      }
+    },
+    error: () => alert('Login incorrecto')
+  });
+}
+
 }

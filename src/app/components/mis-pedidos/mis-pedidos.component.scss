@@ -1,35 +1,130 @@
 .title {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.order-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin: 1rem auto;
+  max-width: 700px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-  
-  .order-card {
-    border: 1px solid #ccc;
-    border-left: 4px solid #4CAF50;
-    padding: 16px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background: #fafafa;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: 0.3s;
-  }
-  
-  .order-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
+
   .order-header {
-    font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: #444;
+
+    strong {
+      color: #000;
+    }
   }
-  
-  .order-items ul {
-    margin: 0;
-    padding-left: 20px;
+
+  .order-items {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+
+      li {
+        padding: 0.4rem 0;
+        font-size: 0.95rem;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+
+    button {
+      background-color: #3483fa;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #2968c8;
+      }
+    }
   }
-  
-  .order-items li {
-    font-size: 14px;
-    line-height: 1.6;
+}
+
+.item-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+
+  .product-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #ccc;
   }
-  
+
+  .item-info {
+    flex: 1;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+ng-template p {
+  text-align: center;
+  font-style: italic;
+  margin-top: 2rem;
+  color: #777;
+}
+
+// 🔽 RESPONSIVE
+@media (max-width: 768px) {
+  .order-card {
+    padding: 1rem;
+    margin: 1rem 1rem;
+  }
+
+  .order-items ul li {
+    font-size: 0.9rem;
+  }
+
+  .order-items button {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    margin: 1.5rem 1rem;
+  }
+
+    .product-thumb {
+    width: 36px;
+    height: 36px;
+  }
+
+  .item-info {
+    font-size: 0.9rem;
+  }
+}

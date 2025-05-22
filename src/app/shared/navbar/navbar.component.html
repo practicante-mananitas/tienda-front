@@ -1,8 +1,8 @@
 <nav class="navbar">
   <div class="left-section">
     <img src="assets/logo.png" alt="Logo" class="logo" routerLink="/tienda"/>
-    <span class="postal">Ingresa tu <strong>código postal</strong></span>
-
+    <!-- <span class="postal">Ingresa tu <strong>código postal</strong></span> -->
+<br>
     <div class="profile-wrapper" (click)="toggleCategoryMenu()" tabindex="0" (blur)="closeCategoryMenu()">
       <a class="nav-link">Categorías ▼</a>
       <div class="profile-menu" *ngIf="showCategoryMenu">
@@ -17,11 +17,17 @@
   </div>
 
   <div class="center-section">
-    <div class="search-box">
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Encuéntralo en Aeromx..." (keyup.enter)="buscar()">
-      <span class="search-icon" (click)="buscar()">🔍</span>
+    <div class="search-box" [class.active]="showSearch || !isMobile">
+      <input 
+        *ngIf="showSearch || !isMobile" 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Encuéntralo en Aeromx..." 
+        (keyup.enter)="buscar()" 
+        class="search-input"
+      />
+      <span class="search-icon" (click)="toggleSearch()">🔍</span>
     </div>
-    
   </div>
 
   <div class="right-section">
@@ -35,25 +41,24 @@
     <path d="M6 20c0-2.5 4-4 6-4s6 1.5 6 4"/>
   </svg>
 
-  <div class="profile-menu" *ngIf="showProfileMenu">
+ <div class="profile-menu" *ngIf="showProfileMenu && (isLoggedIn() || isGuest())">
     <ul>
      <!-- Mostrar solo si el usuario está autenticado -->
-      <li><a routerLink="/mis-pedidos" *ngIf="authService.isLoggedIn()">Mis pedidos</a></li>
-      <li><a routerLink="/profile" *ngIf="authService.isLoggedIn()">Mi perfil</a></li>
-      <li><button (click)="logout()" *ngIf="authService.isLoggedIn()">Cerrar sesión</button></li>
+        <li *ngIf="isLoggedIn()"><a routerLink="/mis-pedidos">Mis pedidos</a></li>
+        <li *ngIf="isLoggedIn()"><a routerLink="/profile">Mi perfil</a></li>
+        <li *ngIf="isLoggedIn()"><button (click)="logout()">Cerrar sesión</button></li>
 
-      <!-- Mostrar solo si el usuario NO está autenticado -->
-      <li><a routerLink="/login" *ngIf="!authService.isLoggedIn()">Iniciar Sesión</a></li>
-      <li><a routerLink="/register" *ngIf="!authService.isLoggedIn()">Crear Cuenta</a></li>
-
+        <li *ngIf="isGuest()"><a routerLink="/login">Iniciar Sesión</a></li>
+        <li *ngIf="isGuest()"><a routerLink="/register">Crear Cuenta</a></li>
     </ul>
   </div>
 </div>
 
-    <a routerLink="/carrito" class="cart-link" >
-      🛒
-      <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
-    </a>
+  <a (click)="irAlCarrito()" class="cart-link">
+    🛒
+    <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+  </a>
+
     <!-- <button class="logout" (click)="logout()" *ngIf="authService.isLoggedIn()">Cerrar sesión</button> -->
     <!-- <a routerLink="/login" *ngIf="!authService.isLoggedIn()">Login</a>
     <a routerLink="/register" *ngIf="!authService.isLoggedIn()">Register</a> -->

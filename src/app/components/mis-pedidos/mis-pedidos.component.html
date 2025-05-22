@@ -9,9 +9,18 @@
 
     <div class="order-items">
       <ul>
-        <li *ngFor="let item of order.items">
+       <li *ngFor="let item of order.items" class="item-line">
+        <img 
+          *ngIf="item.product.image" 
+          [src]="'http://127.0.0.1:8000/storage/' + item.product.image" 
+          alt="{{ item.product.name }}" 
+          class="product-thumb"
+        />
+        <span class="item-info">
           {{ item.quantity }} × {{ item.product.name }} – ${{ item.price }}
-        </li>
+        </span>
+      </li>
+
       </ul>
       <button (click)="repeat(order.id)">Volver a comprar</button>
     </div>

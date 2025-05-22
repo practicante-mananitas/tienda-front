@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { Location } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -20,7 +21,9 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartService,
-    private location: Location
+    private location: Location,
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -31,12 +34,20 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  agregarAlCarrito() {
-    this.cartService.addToCart(this.product.id).subscribe({
-      next: () => alert('Producto agregado al carrito'),
-      error: () => alert('Error al agregar al carrito')
-    });
+agregarAlCarrito() {
+  if (!this.authService.isLoggedIn()) {
+    // Opcional: guarda la intención y redirige después
+    localStorage.setItem('redirectAfterLogin', this.router.url);
+    this.router.navigate(['/login']);
+    return;
   }
+
+  this.cartService.addToCart(this.product.id).subscribe({
+    next: () => alert('Producto agregado al carrito'),
+    error: () => alert('Error al agregar al carrito')
+  });
+}
+
 
   volver() {
     this.location.back();

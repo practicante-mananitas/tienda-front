@@ -20,6 +20,8 @@ export class NavbarComponent implements OnInit {
   showCategoryMenu = false;
   menuAbierto = false;
   categories: any[] = [];
+  showSearch = false;
+  isMobile = false;
 
   constructor(
     public authService: AuthService,
@@ -42,8 +44,13 @@ export class NavbarComponent implements OnInit {
         this.cartCount = count;
       });
     }
+    this.checkIfMobile();
+    window.addEventListener('resize', this.checkIfMobile.bind(this));
   }
   
+  checkIfMobile() {
+    this.isMobile = window.innerWidth <= 768;
+  }
 
   logout() {
     this.authService.logout();
@@ -78,6 +85,40 @@ export class NavbarComponent implements OnInit {
 toggleMenu() {
   this.menuAbierto = !this.menuAbierto;
 }
+
+irAlCarrito() {
+  if (this.authService.isLoggedIn()) {
+    this.router.navigate(['/carrito']);
+  } else {
+    // Guarda la intención en localStorage
+    localStorage.setItem('redirectAfterLogin', '/carrito');
+
+    // (Opcional) Muestra mensaje de confirmación
+    if (confirm('Debes iniciar sesión para acceder al carrito. ¿Deseas iniciar sesión ahora?')) {
+      this.router.navigate(['/login']);
+    }
+  }
+}
+
+
+  hasProfileOptions(): boolean {
+  return this.authService.isLoggedIn() || !this.authService.isLoggedIn();
+}
+
+isLoggedIn() {
+  return this.authService.isLoggedIn();
+}
+
+isGuest() {
+  return !this.authService.isLoggedIn();
+}
+
+toggleSearch() {
+  if (this.isMobile) {
+    this.showSearch = !this.showSearch;
+  }
+}
+
 
 }
 

@@ -3,28 +3,29 @@
     <h2>Elige la forma de entrega</h2>
     <br>
 
-    <div *ngIf="direcciones.length > 0; else sinDirecciones">
-      <div *ngFor="let dir of direcciones.slice(0, 2)" class="shipping-option">
-        <label>
-          <input
-            type="radio"
-            name="direccion"
-            [value]="dir.id"
-            [checked]="direccionSeleccionada?.id === dir.id"
-            (change)="onDireccionChange(dir.id)"
-          />
-          <div>
-            <strong>Enviar a domicilio</strong>
-            <div>{{ dir.calle }} - {{ dir.colonia }}, {{ dir.municipio }}</div>
-          </div>
-        </label>
-        <span class="envio-gratis">Gratis</span>
-      </div>
-
-      <div *ngIf="direcciones.length > 2" class="mostrar-mas">
-        <button (click)="mostrarTodas = true">Mostrar más direcciones</button>
-      </div>
+  <div *ngIf="direcciones.length > 0; else sinDirecciones">
+    <div *ngFor="let dir of getDireccionesVisibles()" class="shipping-option">
+      <label>
+        <input
+          type="radio"
+          name="direccion"
+          [value]="dir.id"
+          [checked]="direccionSeleccionada?.id === dir.id"
+          (change)="onDireccionChange(dir.id)"
+        />
+        <div>
+          <strong>Enviar a domicilio</strong>
+          <div>{{ dir.calle }} - {{ dir.colonia }}, {{ dir.municipio }}</div>
+        </div>
+      </label>
+      <!-- <span class="envio-gratis">Gratis</span> -->
     </div>
+
+    <div *ngIf="direcciones.length > 2" class="mostrar-mas">
+      <button (click)="mostrarTodas = true">Mostrar más direcciones</button>
+    </div>
+  </div>
+
 
     <ng-template #sinDirecciones>
       <div class="no-direcciones">
@@ -49,7 +50,7 @@
       <span>${{ costoEnvio.toFixed(2) }}</span>
     </div>
     <div *ngIf="diasEntrega !== null" class="dias-entrega">
-      <small>En un máximo de {{ diasEntrega + 3 }} días</small>
+      <small>En un máximo de {{ diasEntrega }} días</small>
     </div>
     <hr />
     <div class="resumen-item total">
@@ -80,5 +81,12 @@
       </label>
     </div>
     <button class="cerrar-modal" (click)="mostrarTodas = false">Cerrar</button>
+  </div>
+</div>
+
+  <div class="envio-loading" *ngIf="cargandoEnvio">
+  <div class="loader-card">
+    <div class="spinner"></div>
+    <p>Preparando todo para tu compra</p>
   </div>
 </div>

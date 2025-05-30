@@ -1,0 +1,22 @@
+<div class="exito-box">
+  <h1>¡Gracias por tu compra!</h1>
+  <p>Tu pedido fue procesado con éxito.</p>
+
+  <div *ngIf="pedido">
+    <p><strong>Total:</strong> ${{ pedido.total }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.created_at | date:'short' }}</p>
+    <h3>Productos:</h3>
+<ul>
+  <li *ngFor="let item of pedido.items" class="item-resumen">
+      <img 
+    [src]="item.product_id ? item.imagen : '/assets/caja-envio.png'" 
+    alt="{{ item.producto }}"
+    />
+    {{ item.producto }} × {{ item.cantidad }} = ${{ item.precio_unitario * item.cantidad }}
+  </li>
+</ul>
+
+  </div>
+
+  <button routerLink="/#/tienda" class="btn-volver">Volver a la tienda</button>
+</div>

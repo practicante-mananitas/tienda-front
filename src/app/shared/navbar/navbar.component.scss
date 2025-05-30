@@ -39,7 +39,7 @@
 }
 
 .logo {
-  height: 40px;
+  height: 100px;
   object-fit: contain;
   cursor: pointer;
 }
@@ -187,35 +187,76 @@
     padding: 0 10px;
   }
 
-  .left-section,
-  .center-section,
-  .right-section {
-    margin: 0;
-    gap: 10px;
-  }
-
-  .search-box {
-    background: transparent;
-    padding: 0;
+  // Mover lupa a la izquierda
+  .center-section {
+    left: 10px;
+    transform: translateY(-50%);
+    justify-content: flex-start;
     width: auto;
 
-    input {
-      display: none;
-    }
-
-    &.active {
-      background: #f1f1f1;
-      padding: 5px 12px;
-      border-radius: 30px;
+    .search-box {
+      background: transparent;
+      padding: 0;
+      width: auto;
 
       input {
-        display: inline-block;
-        width: 100%;
+        display: none;
+      }
+
+      &.active {
+        background: #f1f1f1;
+        padding: 5px 12px;
+        border-radius: 30px;
+
+        input {
+          display: inline-block;
+          width: 100%;
+        }
+      }
+
+      .search-icon {
+        font-size: 18px;
+        cursor: pointer;
       }
     }
   }
 
-  .logo {
-    height: 35px;
+  // Mover el logo al centro
+  .left-section {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    flex-direction: row;
+    gap: 0;
+
+    // Solo mostrar el logo
+    .profile-wrapper {
+      display: none;
+    }
+
+    .logo {
+      height: 110px;
+      display: inline-block;
+    }
+  }
+
+  .right-section {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  // Oculta el texto de "Rastrear pedido", deja solo el 📍
+  .rastreo-link .rastreo-texto {
+    display: none;
+  }
+
+    .search-box.active {
+    max-width: 130px;
+    position: relative;
+    z-index: 10; // por si algo lo tapa
   }
 }

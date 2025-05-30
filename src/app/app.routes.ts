@@ -16,6 +16,7 @@ import { Categoria1Component } from './components/categoria-1/categoria-1.compon
 import { DireccionFormComponent } from './components/direccion-form/direccion-form.component';
 import { ListaDireccionesComponent } from './components/lista-direcciones/lista-direcciones.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { PagoExitoComponent } from './components/pago-exito/pago-exito.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,5 +38,6 @@ export const routes: Routes = [
   { path: 'direccion/:id', component: DireccionFormComponent },
   { path: 'direccion-extra/:id', component: DireccionFormComponent },
   { path: 'checkout', component: CheckoutComponent},
+  { path: 'pago/exito', component: PagoExitoComponent},
   { path: '**', redirectTo: 'tienda' }
 ];

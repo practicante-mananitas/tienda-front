@@ -22,7 +22,7 @@ export class CheckoutComponent implements OnInit {
   totalProductos: number = 0;
   loading = true;
   mostrarTodas = false;
-
+  cargandoEnvio = false;
 
   constructor(
     private cartService: CartService,
@@ -72,24 +72,88 @@ export class CheckoutComponent implements OnInit {
 cotizarEnvio() {
   if (!this.direccionSeleccionada) return;
 
+  this.cargandoEnvio = true;
+
   this.cartService.quoteShipping(this.direccionSeleccionada.id, this.cartItems)
     .subscribe({
       next: (res) => {
+console.log('🚚 Cotización recibida:', res); // 👈 AQUÍ
+        
         this.costoEnvio = Number(res.total) || 0;
         this.diasEntrega = (Number(res.days) || 0) + 3;
+        this.cargandoEnvio = false;
       },
       error: () => {
         this.costoEnvio = 0;
         this.diasEntrega = null;
+        this.cargandoEnvio = false;
       }
     });
 }
 
-  confirmarCompra() {
-    alert('Compra confirmada. Aquí iría la lógica final para crear el pedido.');
-  }
+
+confirmarCompra() {
+  const token = localStorage.getItem('token');
+  
+  const payload = {
+    items: this.cartItems.map(item => {
+      const product = item.product || {};
+      const imagePath = product.image 
+        ? `https://tusitio.com/storage/${product.image}` 
+        : null;
+
+      return {
+        id: product.id,
+        name: product.name || 'Producto',
+        quantity: item.quantity,
+        unit_price: Number(product.price ?? item.price),
+        picture_url: imagePath
+      };
+    }),
+    envio: this.costoEnvio,
+    address_id: this.direccionSeleccionada.id
+  };
+
+  // 👇 Pon este log aquí
+  console.log('📦 Payload enviado:', payload);
+
+  this.http.post<any>('http://localhost:8000/api/pago/preferencia', payload, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).subscribe({
+    next: (res) => {
+      if (res.init_point) {
+        window.location.href = res.init_point;
+      } else {
+        alert('Error al redirigir al pago');
+      }
+    },
+    error: () => {
+      alert('Ocurrió un error al preparar el pago');
+    }
+  });
+}
+
+
+
+
 
   irANuevaDireccion() {
     this.router.navigate(['/registrar-direccion']); // Ajusta esta ruta si es necesario
+  }
+
+  getDireccionesVisibles() {
+    const primeras = this.direcciones.slice(0, 2);
+    if (
+      this.direccionSeleccionada &&
+      !primeras.find(dir => dir.id === this.direccionSeleccionada.id)
+    ) {
+      // Incluye la seleccionada y solo una de las primeras para que sean máximo 2
+      const otra = primeras[0]; // solo una para mantener el total en 2
+      return [this.direccionSeleccionada, otra];
+    }
+    // Si ya está incluida en las primeras, solo muestra esas
+    return primeras;
   }
 }

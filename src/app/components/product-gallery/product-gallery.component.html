@@ -1,5 +1,21 @@
 <app-slider></app-slider>
 
+<!-- Promos iniciales -->
+<div class="promo-section">
+  <div class="promo-row">
+    <div class="promo-box" *ngFor="let promo of promos.slice(0,2)">
+      <img [src]="promo.image" [alt]="promo.alt" />
+    </div>
+  </div>
+
+  <div class="promo-single">
+    <img [src]="promos[2].image" [alt]="promos[2].alt" />
+  </div>
+</div>
+
+
+
+
 <div *ngFor="let category of categories" class="product-section">
   <div class="category-title">
     <h2>{{ category.name }}</h2>

@@ -13,8 +13,10 @@ import { Location } from '@angular/common';
 })
 export class CartComponent implements OnInit {
   cartItems: any[] = [];
+  modalAbierto = false;
 
-  constructor(private cartService: CartService, 
+  constructor(
+    private cartService: CartService, 
     private router: Router,
     private location: Location
   ) {}
@@ -52,22 +54,34 @@ export class CartComponent implements OnInit {
     }, 0);
   }
 
-  finalizeOrder() {
-    this.cartService.finalizeOrder().subscribe({
-      next: () => {
-        alert('Pedido realizado con éxito!');
-        this.router.navigate(['/checkout']);
-      },
-      error: () => alert('Hubo un error al finalizar el pedido.')
-    });
-  }
-  
   volver() {
     this.location.back();
   }
 
   goToCheckout() {
-  this.router.navigate(['/checkout']);
-}
+    this.router.navigate(['/checkout']);
+  }
 
+  // ✅ Para responsive: productos visibles y ocultos (solo en móvil)
+  get visibleItems() {
+    return this.isMobile() ? this.cartItems.slice(0, 2) : this.cartItems;
+  }
+
+  get hiddenItems() {
+    return this.isMobile() ? this.cartItems.slice(2) : [];
+  }
+
+  isMobile(): boolean {
+    return window.innerWidth <= 768;
+  }
+
+  abrirModal() {
+    this.modalAbierto = true;
+    document.body.style.overflow = 'hidden'; // Evita scroll del fondo
+  }
+
+  cerrarModal() {
+    this.modalAbierto = false;
+    document.body.style.overflow = 'auto';
+  }
 }

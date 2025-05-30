@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SliderComponent implements OnInit {
   images = [
-    'assets/banners/prueba4.png',
+    'assets/banners/prueba5.png',
     'assets/banners/prueba2.png',
     'assets/banners/prueba3.png'
   ];

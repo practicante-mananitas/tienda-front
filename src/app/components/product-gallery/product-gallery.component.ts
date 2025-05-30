@@ -17,6 +17,13 @@ export class ProductGalleryComponent implements OnInit {
   products: any[] = [];
   categories: any[] = [];
 
+  promos = [
+  { image: 'assets/banner-promo/promo2.png', alt: '10% en moda' },
+  { image: 'assets/banner-promo/promo3.png', alt: '15% en deportes' },
+  { image: 'assets/banner-promo/promo4.png', alt: '15% en deportes' }
+  ];
+
+
   // scrollLeft() {
   //   this.scrollContainer.nativeElement.scrollBy({ left: -250, behavior: 'smooth' });
   // }

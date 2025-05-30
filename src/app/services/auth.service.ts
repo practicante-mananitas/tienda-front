@@ -45,4 +45,24 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
   }
+
+  checkSession(): Observable<boolean> {
+  const token = localStorage.getItem('token');
+  if (!token) return new Observable<boolean>((observer) => observer.next(false));
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return new Observable<boolean>((observer) => {
+    this.http.get(`${this.apiUrl}/me`, { headers }).subscribe({
+      next: () => observer.next(true),
+      error: () => {
+        this.logout();
+        observer.next(false);
+      }
+    });
+  });
+}
+
 }

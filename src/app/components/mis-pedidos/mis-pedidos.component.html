@@ -3,30 +3,28 @@
 <div *ngIf="orders.length > 0; else sinPedidos">
   <div *ngFor="let order of orders" class="order-card">
     <div class="order-header">
-      <strong>Fecha:</strong> {{ order.created_at | date:'mediumDate' }}<br>
-      <strong>Total:</strong> ${{ order.total }}
+      <div class="line"><span class="label">Fecha:</span><span class="value">{{ order.created_at | date:'mediumDate' }}</span></div>
+      <div class="line"><span class="label">Subtotal:</span><span class="value">${{ order.subtotal }}</span></div>
+      <div class="line"><span class="label">Envío:</span><span class="value">${{ order.envio }}</span></div>
+      <div class="line total"><span class="label">Total:</span><span class="value">${{ order.total }}</span></div>
+      <div class="line"><span class="label">Estado:</span><span class="value">{{ order.status | titlecase }}</span></div>
     </div>
-
     <div class="order-items">
       <ul>
-       <li *ngFor="let item of order.items" class="item-line">
-        <img 
-          *ngIf="item.product.image" 
-          [src]="'http://127.0.0.1:8000/storage/' + item.product.image" 
-          alt="{{ item.product.name }}" 
-          class="product-thumb"
-        />
-        <span class="item-info">
-          {{ item.quantity }} × {{ item.product.name }} – ${{ item.price }}
-        </span>
-      </li>
-
+        <li *ngFor="let item of order.items" class="item-line">
+          <img 
+            [src]="item.product?.image ? 'http://127.0.0.1:8000/storage/' + item.product.image : 'assets/default-product.jpg'" 
+            alt="{{ item.product?.name || item.producto }}" 
+            class="product-thumb"
+          />
+          <span class="item-info">
+            {{ item.cantidad }} × {{ item.product?.name || item.producto }} – ${{ item.precio_unitario }}
+          </span>
+        </li>
       </ul>
       <button (click)="repeat(order.id)">Volver a comprar</button>
     </div>
   </div>
-  
-
 </div>
 
 <ng-template #sinPedidos>

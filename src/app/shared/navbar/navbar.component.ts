@@ -31,22 +31,31 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Cargar categorías para todos
-    this.productService.getCategories().subscribe({
-      next: (res) => this.categories = res,
-      error: (err) => console.error('Error al cargar categorías', err)
-    });
-  
-    // Solo si está logueado, obtener carrito
-    if (this.authService.isLoggedIn()) {
+  // Verificar token real con el backend
+  this.authService.checkSession().subscribe((isValid) => {
+    if (isValid) {
       this.cartService.getCart().subscribe(); // carga inicial
       this.cartService.cartCount$.subscribe(count => {
         this.cartCount = count;
       });
+    } else {
+      this.authService.logout();
+      // Opcional: mostrar mensaje o redirigir
+      // alert('Tu sesión ha expirado, por favor inicia sesión');
+      // this.router.navigate(['/login']);
     }
-    this.checkIfMobile();
-    window.addEventListener('resize', this.checkIfMobile.bind(this));
-  }
+  });
+
+  // Cargar categorías siempre
+  this.productService.getCategories().subscribe({
+    next: (res) => this.categories = res,
+    error: (err) => console.error('Error al cargar categorías', err)
+  });
+
+  this.checkIfMobile();
+  window.addEventListener('resize', this.checkIfMobile.bind(this));
+}
+
   
   checkIfMobile() {
     this.isMobile = window.innerWidth <= 768;

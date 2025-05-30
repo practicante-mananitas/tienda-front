@@ -1,3 +1,4 @@
+<!-- Botón volver -->
 <button class="back-btn" (click)="volver()">
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
@@ -10,20 +11,35 @@
 
 <div *ngIf="cartItems.length > 0; else vacio" class="cart-container">
   <div class="cart-items">
-    <div class="cart-item" *ngFor="let item of cartItems">
-      <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
-      <div class="product-info">
-        <h3>{{ item.product.name }}</h3>
-        <p class="price">$ {{ item.product.price }}</p>
-        <div class="quantity">
-          <span>Cantidad: {{ item.quantity }}</span>
+    <ng-container *ngIf="isMobile(); else todosLosProductos">
+      <div class="cart-item" *ngFor="let item of visibleItems">
+        <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+        <div class="product-info">
+          <h3>{{ item.product.name }}</h3>
+          <p class="price">$ {{ item.product.price }}</p>
+          <div class="quantity">Cantidad: {{ item.quantity }}</div>
+          <div class="subtotal">Subtotal: $ {{ item.product.price * item.quantity }}</div>
+          <button class="remove-btn" (click)="removeItem(item.product.id)">Eliminar</button>
         </div>
-        <div class="subtotal">
-          Subtotal: $ {{ item.product.price * item.quantity }}
-        </div>
-        <button class="remove-btn" (click)="removeItem(item.product.id)">Eliminar</button>
       </div>
-    </div>
+
+      <div *ngIf="cartItems.length > 2 && isMobile()" class="ver-mas">
+        <button (click)="abrirModal()">Mostrar todos los productos ({{ cartItems.length }})</button>
+      </div>
+    </ng-container>
+
+    <ng-template #todosLosProductos>
+      <div class="cart-item" *ngFor="let item of cartItems">
+        <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+        <div class="product-info">
+          <h3>{{ item.product.name }}</h3>
+          <p class="price">$ {{ item.product.price }}</p>
+          <div class="quantity">Cantidad: {{ item.quantity }}</div>
+          <div class="subtotal">Subtotal: $ {{ item.product.price * item.quantity }}</div>
+          <button class="remove-btn" (click)="removeItem(item.product.id)">Eliminar</button>
+        </div>
+      </div>
+    </ng-template>
   </div>
 
   <div class="cart-summary">
@@ -31,9 +47,29 @@
     <p>Productos: {{ cartItems.length }}</p>
     <p class="total">Total: $ {{ getTotal() }}</p>
     <button class="clear-btn" (click)="clearCart()">Vaciar carrito</button>
-    <!-- <button class="checkout-btn" (click)="finalizeOrder()">Finalizar pedido</button> -->
-     <button class="checkout-btn" (click)="goToCheckout()">Finalizar pedido</button>
+    <button class="checkout-btn" (click)="goToCheckout()">Finalizar pedido</button>
+  </div>
+</div>
 
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="modalAbierto">
+  <div class="modal-content">
+    <h3>Productos en el carrito</h3>
+    <button class="cerrar" (click)="cerrarModal()">✕</button>
+
+    <div class="modal-items">
+      <div class="cart-item" *ngFor="let item of cartItems">
+        <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+        <div class="product-info">
+          <h3>{{ item.product.name }}</h3>
+          <p class="price">$ {{ item.product.price }}</p>
+          <span>Cantidad: {{ item.quantity }}</span>
+          <div class="subtotal">
+            Subtotal: $ {{ item.product.price * item.quantity }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

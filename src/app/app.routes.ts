@@ -17,6 +17,7 @@ import { DireccionFormComponent } from './components/direccion-form/direccion-fo
 import { ListaDireccionesComponent } from './components/lista-direcciones/lista-direcciones.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { PagoExitoComponent } from './components/pago-exito/pago-exito.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -39,5 +40,6 @@ export const routes: Routes = [
   { path: 'direccion-extra/:id', component: DireccionFormComponent },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'pago/exito', component: PagoExitoComponent},
+  { path: 'admin-panel', component: AdminPanelComponent},
   { path: '**', redirectTo: 'tienda' }
 ];

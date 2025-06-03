@@ -1,49 +1,101 @@
 <app-slider></app-slider>
-
-<!-- Promos iniciales -->
-<div class="promo-section">
-  <div class="promo-row">
-    <div class="promo-box" *ngFor="let promo of promos.slice(0,2)">
-      <img [src]="promo.image" [alt]="promo.alt" />
+<div class="background-gradient">
+  <!-- Promos iniciales -->
+  <div class="promo-section">
+    <div class="promo-row">
+      <div class="promo-box" *ngFor="let promo of promos.slice(0,2)">
+        <img [src]="promo.image" [alt]="promo.alt" />
+      </div>
+    </div>
+    <div class="promo-single">
+      <img [src]="promos[2].image" [alt]="promos[2].alt" />
+    </div>
+    <br>
+    <div class="promo-single">
+      <img [src]="promos[3].image" [alt]="promos[3].alt" />
     </div>
   </div>
 
-  <div class="promo-single">
-    <img [src]="promos[2].image" [alt]="promos[2].alt" />
-  </div>
-</div>
-
-
-
-
-<div *ngFor="let category of categories" class="product-section">
-  <div class="category-title">
-    <h2>{{ category.name }}</h2>
-    <p>Relacionado con tus visitas recientes</p>
+  <div class="category-showcase">
+    <h2 class="title">DESCUBRE PRECIOS IRRESISTIBLES</h2>
+    <div class="category-icons">
+      <div class="category-icon" *ngFor="let cat of categories" (click)="scrollToCategory(cat.id)">
+        <div class="circle">
+          <img [src]="categoryCircleImages[cat.id] || '/assets/categorias/default.png'" [alt]="cat.name" />
+        </div>
+        <p>{{ cat.name }}</p>
+      </div>
+    </div>
   </div>
 
-  <!-- Contenedor con botones -->
-  <div class="carousel-wrapper">
-    <button class="nav left" (click)="scrollLeft(category.id)">❮</button>
+  <!-- 👇 Bucle de categorías -->
+  <ng-container *ngFor="let category of categories; let i = index">
+    <div class="product-section" [attr.data-category-id]="category.id">
+      <div class="category-title">
+        <h2> Favoritos en {{ category.name }}</h2>
+        <p>Relacionado con tus visitas recientes</p>
+      </div>
+      <div class="carousel-wrapper">
+        <button class="nav left" (click)="scrollLeft(category.id)">❮</button>
+        <div class="gallery" #scrollContainer [attr.data-category-id]="category.id">
+          <div class="card" *ngFor="let product of getProductsByCategory(category.id)" [routerLink]="['/tienda', product.id]">
+            <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
+            <div class="info">
+              <h3>{{ product.name }}</h3>
+              <p class="price">$ {{ product.price }}</p>
+            </div>
+          </div>
+        </div>
+        <button class="nav right" (click)="scrollRight(category.id)">❯</button>
+      </div>
+    </div>
 
-    <div class="gallery" #scrollContainer [attr.data-category-id]="category.id">
-      <div
-        class="card"
-        *ngFor="let product of getProductsByCategory(category.id)"
-        [routerLink]="['/tienda', product.id]"
-        tabindex="0"
-        role="link"
-      >
-        <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
-        <div class="info">
-          <h3>{{ product.name }}</h3>
-          <p class="price">$ {{ product.price }}</p>
+    <!-- 🔥 Sección destacada -->
+    <div class="highlight-block" *ngIf="i > 0 && i % 2 === 1 && getHighlightSection(i)">
+      <h2 class="highlight-title">
+        <span class="emoji">{{ getHighlightSection(i).icono }}</span>
+        {{ getHighlightSection(i).titulo }}
+      </h2>
+      <p class="highlight-subtitle">Recomendado por el administrador</p>
+      <div class="highlight-products">
+        <div class="highlight-card" *ngFor="let product of getHighlightSection(i).productos">
+          <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="producto" />
+          <div class="text">
+            <h3>{{ product.name }}</h3>
+            <p class="price">$ {{ product.price }}</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <button class="nav right" (click)="scrollRight(category.id)">❯</button>
-  </div>
-</div>
+    <!-- ✅ Most Wanted SOLO una vez -->
+    <div class="most-wanted-block" *ngIf="i === 1 && mostWanted.length">
+      <h2 class="title">PROMOCIONES CON HASTA 30% OFF</h2>
+      <div class="most-wanted-carousel">
+        <div class="product-card" *ngFor="let item of mostWanted">
+          <div class="image-wrapper">
+            <div class="discount-badge">{{ item.discount }}% OFF</div>
+            <img [src]="'assets/most-wanted/' + item.image" [alt]="item.name" />
+          </div>
+          <p class="name">{{ item.name.toUpperCase() }}</p>
+        </div>
+      </div>
+    </div>
 
+    <div class="mini-banner-section" *ngIf="i === 2 && mostWanted.length">
+      <div class="mini-banner-top-row">
+        <div class="mini-banner-large" *ngFor="let banner of miniBanners.slice(0,2)">
+          <img [src]="banner.image" [alt]="banner.alt" />
+        </div>
+      </div>
+    <h2 class="mini-banner-title">ENCUENTRA TAMBIÉN</h2>
+      <div class="mini-banner-bottom-row">
+        <div class="mini-banner-small" *ngFor="let banner of miniBanners.slice(2,5)">
+          <img [src]="banner.image" [alt]="banner.alt" />
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>
 

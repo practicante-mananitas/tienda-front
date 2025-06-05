@@ -1,64 +1,118 @@
+.full-page-form {
+  width: 100%;
+  padding: 0 20px 40px 20px;
+  background: transparent; // para que use el fondo del admin-content
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.back-btn {
+  margin-bottom: 20px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #3483fa;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 form {
-    background: #fff;
-    padding: 30px;
-    margin: 30px auto;
-    max-width: 500px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  background: #fff;
+  padding: 30px;
+  margin: 0 auto;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h2 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 20px;
+  }
+
+  label {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    font-family: 'Segoe UI', sans-serif;
-  
-    h2 {
-      text-align: center;
-      color: #222;
-      margin-bottom: 20px;
-    }
-  
-    label {
-      display: flex;
-      flex-direction: column;
-      font-weight: 500;
-      color: #333;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+
+    input,
+    textarea,
+    select {
+      margin-top: 6px;
+      padding: 10px 12px;
       font-size: 14px;
-  
-      input, textarea, select {
-        margin-top: 6px;
-        padding: 10px 12px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        background: #f9f9f9;
-        transition: border 0.2s ease;
-  
-        &:focus {
-          border-color: #3483fa;
-          outline: none;
-          background: white;
-        }
-      }
-  
-      textarea {
-        resize: vertical;
-        min-height: 80px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+
+      &:focus {
+        border-color: #3483fa;
+        outline: none;
+        background: white;
       }
     }
-  
-    button {
-      padding: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      color: white;
-      background-color: #3483fa;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-  
-      &:hover {
-        background-color: #2968c8;
-      }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
     }
   }
-  
+
+  .form-note {
+    font-size: 14px;
+    font-weight: 500;
+    color: #777;
+    background: #fffbe6;
+    padding: 10px 15px;
+    border-left: 4px solid #ffc107;
+    border-radius: 6px;
+    margin: 10px 0 -10px;
+    text-align: left;
+  }
+
+  button[type='submit'] {
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    background-color: #3483fa;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #2968c8;
+    }
+  }
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 13px;
+  margin: -10px 0 10px;
+  padding-left: 5px;
+}
+
+.invalid-input {
+  border: 1px solid #d32f2f !important;
+  background-color: #fff0f0;
+}
+
+.form-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}

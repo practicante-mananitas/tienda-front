@@ -1,39 +1,96 @@
+<div class="full-page-form">
+  <!-- <button class="back-btn" (click)="volverAlPanel()">← Regresar</button> -->
 
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)" enctype="multipart/form-data">
+        <p class="form-warning" *ngIf="formIntentado && form.invalid">
+      ⚠️ Por favor, completa todos los campos obligatorios correctamente.
+        </p>
+    <h2>🆕 Crear Producto</h2>
 
-<form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-  <h2>Crear Producto</h2>
-  <label>
-    Nombre:
-    <input type="text" [(ngModel)]="product.name" name="name" required>
-  </label>
-  <br>
+    <label>
+      Nombre:
+      <input
+        type="text"
+        [(ngModel)]="product.name"
+        name="name"
+        required
+        #nameInput="ngModel"
+        [class.invalid-input]="nameInput.invalid && nameInput.touched"
+      />
+    </label>
+    <p class="error" *ngIf="nameInput.invalid && nameInput.touched">El nombre es obligatorio.</p>
 
-  <label>
-    Descripción:
-    <textarea [(ngModel)]="product.description" name="description"></textarea>
-  </label>
-  <br>
+    <label>
+      Descripción:
+      <textarea
+        [(ngModel)]="product.description"
+        name="description"
+        required
+        #descInput="ngModel"
+        [class.invalid-input]="descInput.invalid && descInput.touched"
+      ></textarea>
+    </label>
+    <p class="error" *ngIf="descInput.invalid && descInput.touched">La descripción es obligatoria.</p>
 
-  <label>
-    Precio:
-    <input type="number" [(ngModel)]="product.price" name="price" required>
-  </label>
-  <br>
+    <label>
+      Precio:
+      <input
+        type="number"
+        [(ngModel)]="product.price"
+        name="price"
+        required
+        min="1"
+        #priceInput="ngModel"
+        [class.invalid-input]="priceInput.invalid && priceInput.touched"
+      />
+    </label>
+    <p class="error" *ngIf="priceInput.invalid && priceInput.touched">El precio debe ser mayor a $1.</p>
 
-  <label>
-    Imagen:
-    <input type="file" (change)="onFileChange($event)">
-  </label>
-  <br>
+    <p class="form-note">*Las medidas tienen que ser de la caja en la que se va a enviar empaquetada*</p>
 
-  <label>
-    Categoría:
-    <select [(ngModel)]="product.category_id" name="category_id" required>
-      <option value="" disabled selected>Selecciona una categoría</option>
-      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-    </select>
-  </label>  
-  
+    <label>
+      Peso (kg):
+      <input
+        type="number"
+        [(ngModel)]="product.weight"
+        name="weight"
+        min="1"
+        required
+        #pesoInput="ngModel"
+        [class.invalid-input]="pesoInput.invalid && pesoInput.touched"
+      />
+    </label>
+    <p class="error" *ngIf="pesoInput.invalid && pesoInput.touched">El peso debe ser mínimo de 1 kg.</p>
 
-  <button type="submit">Guardar</button>
-</form>
+    <label>
+      Alto (cm):
+      <input type="number" [(ngModel)]="product.height" name="height" required />
+    </label>
+
+    <label>
+      Ancho (cm):
+      <input type="number" [(ngModel)]="product.width" name="width" required />
+    </label>
+
+    <label>
+      Largo (cm):
+      <input type="number" [(ngModel)]="product.length" name="length" required />
+    </label>
+
+    <label>
+      Imagen:
+      <input type="file" name="image" (change)="onFileChange($event)" />
+
+    </label>
+
+    <label>
+      Categoría:
+      <select [(ngModel)]="product.category_id" name="category_id" required>
+        <option value="" disabled selected>Selecciona una categoría</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+      </select>
+    </label>
+
+    <button type="submit">Guardar</button>
+  </form>
+</div>

@@ -1,0 +1,23 @@
+<div class="productos-panel">
+  <h1>📊 Productos por Categoría</h1>
+
+  <div *ngFor="let categoria of categorias" class="categoria-bloque">
+    <h2>{{ categoria.name }}</h2>
+
+    <div class="productos-grid">
+      <div class="producto-card" *ngFor="let producto of productosPorCategoria[categoria.id]">
+        <img [src]="'http://127.0.0.1:8000/storage/' + producto.image" alt="{{ producto.name }}" />
+        <h3>{{ producto.name }}</h3>
+        <p>${{ producto.price }}</p>
+
+        <div class="acciones">
+          <button (click)="editar(producto.id)">Editar</button>
+          <button (click)="eliminar(producto.id)" class="danger">Eliminar</button>
+          <button (click)="toggleActivo(producto)" [class.paused]="!producto.activo">
+            {{ producto.activo ? 'En stock' : 'Pausado' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

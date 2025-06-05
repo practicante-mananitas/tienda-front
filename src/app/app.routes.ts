@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminRoutes } from './admin-panel-routing';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -41,5 +42,7 @@ export const routes: Routes = [
   { path: 'checkout', component: CheckoutComponent},
   { path: 'pago/exito', component: PagoExitoComponent},
   { path: 'admin-panel', component: AdminPanelComponent},
+  // { path: 'admin-panel/producto-nuevo', component: ProductFormComponent },
+   ...adminRoutes,
   { path: '**', redirectTo: 'tienda' }
 ];

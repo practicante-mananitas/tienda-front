@@ -5,7 +5,7 @@
   font-size: 14px;
   color: #666;
   border-top: 1px solid #ddd;
-  margin-top: 50px;
+  margin-top: 0; // <-- ✅ QUITA el espacio extra
 
   .footer-content {
     max-width: 1000px;

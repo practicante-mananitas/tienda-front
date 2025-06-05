@@ -1,18 +1,18 @@
-<div class="admin-panel">
-  <h2>🔥 Top Vendidos</h2>
-  <select multiple [(ngModel)]="topVendidos">
-    <option *ngFor="let p of productos" [value]="p.id">{{ p.name }}</option>
-  </select>
+<div class="admin-dashboard">
+  <aside class="sidebar">
+    <h2>Admin</h2>
+    <nav>
+      <a routerLink="/admin-panel/resumen">📊 Resumen</a>
+      <a routerLink="/admin-panel/productos">🛒 Productos</a>
+      <a routerLink="/admin-panel/producto-nuevo">➕ Crear Producto</a>
+      <a routerLink="/admin-panel/pedidos">📦 Pedidos</a>
+      <a routerLink="/admin-panel/finanzas">💰 Finanzas</a>
+      <a routerLink="/admin-panel/destacados">🌟 Destacados</a>
+      <a routerLink="/admin-panel/clientes">👤 Clientes</a>
+    </nav>
+  </aside>
 
-  <h2>🎁 Recomendados</h2>
-  <select multiple [(ngModel)]="recomendados">
-    <option *ngFor="let p of productos" [value]="p.id">{{ p.name }}</option>
-  </select>
-
-  <h2>🏷️ Ofertas Relámpago</h2>
-  <select multiple [(ngModel)]="ofertas">
-    <option *ngFor="let p of productos" [value]="p.id">{{ p.name }}</option>
-  </select>
-
-  <button (click)="guardar()">Guardar</button>
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
 </div>

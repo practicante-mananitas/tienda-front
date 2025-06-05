@@ -1,32 +1,48 @@
-.admin-panel {
-  padding: 40px;
-  max-width: 700px;
-  margin: auto;
+.admin-dashboard {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
 
-  h2 {
-    font-size: 18px;
-    margin: 20px 0 10px;
-  }
-
-  select {
-    width: 100%;
-    height: 120px;
-    padding: 10px;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  button {
-    padding: 10px 25px;
-    font-size: 16px;
-    background: #c10606;
+  .sidebar {
+    width: 240px;
+    background: #2c3e50;
     color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
 
-    &:hover {
-      background: #a40505;
+    h2 {
+      font-size: 20px;
+      margin-bottom: 30px;
     }
+
+    nav a {
+      display: block;
+      color: #ecf0f1;
+      margin-bottom: 15px;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 6px;
+      transition: 0.3s;
+
+      &:hover {
+        background: #34495e;
+      }
+    }
+  }
+
+  .admin-content {
+    flex: 1;
+    background: #f4f6f9;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // NUEVO: empuja el contenido al menos a ocupar todo el alto
+  .admin-content > * {
+    flex: 1;
   }
 }

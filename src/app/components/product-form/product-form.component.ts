@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Output, EventEmitter } from '@angular/core';
+
 
 
 @Component({
@@ -18,15 +20,23 @@ export class ProductFormComponent {
     name: '',
     description: '',
     price: 0,
-    category_id: ''
+    category_id: '',
+    weight: 0,
+    height: 0,
+    width: 0,
+    length: 0
   };
+
 
   categories: any[] = [];
   selectedFile: File | null = null;
+  formIntentado = false;
+  @Output() productoCreado = new EventEmitter<void>();
+
 
   constructor(
     private productService: ProductService, 
-    private router: Router,
+    public router: Router,
     private http: HttpClient
   ) {}
 
@@ -43,26 +53,58 @@ export class ProductFormComponent {
     this.selectedFile = file;
   }
 
-  onSubmit() {
-    const formData = new FormData();
-    formData.append('name', this.product.name);
-    formData.append('description', this.product.description);
-    formData.append('price', this.product.price.toString());
-    formData.append('category_id', this.product.category_id);
+ onSubmit(form: any) {
+  this.formIntentado = true;
 
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
-
-    this.productService.createProduct(formData).subscribe({
-      next: () => {
-        alert('Producto creado correctamente');
-        this.router.navigate(['/productos']);
-      },
-      error: err => {
-        console.error(err);
-        alert('Error al crear producto');
-      }
+  if (form.invalid) {
+    // 🔥 Marca todos los campos como tocados
+    Object.values(form.controls).forEach((control: any) => {
+      control.markAsTouched();
     });
+
+    // ✅ Mostrar alerta
+    alert('⚠️ Por favor, completa todos los campos obligatorios.');
+
+    // 🔥 Scroll hacia la alerta visual
+    setTimeout(() => {
+      const warning = document.querySelector('.form-warning');
+      if (warning) {
+        warning.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+
+    return;
   }
+
+  const formData = new FormData();
+  formData.append('name', this.product.name);
+  formData.append('description', this.product.description);
+  formData.append('price', this.product.price.toString());
+  formData.append('category_id', this.product.category_id);
+  formData.append('weight', this.product.weight.toString());
+  formData.append('height', this.product.height.toString());
+  formData.append('width', this.product.width.toString());
+  formData.append('length', this.product.length.toString());
+
+  if (this.selectedFile) {
+    formData.append('image', this.selectedFile);
+  }
+
+  this.productService.createProduct(formData).subscribe({
+    next: () => {
+      alert('Producto creado correctamente');
+      this.productoCreado.emit();
+      this.router.navigate(['/admin-panel']);
+    },
+    error: err => {
+      console.error(err);
+      alert('Error al crear producto');
+    }
+  });
+}
+
+  volverAlPanel() {
+  this.router.navigate(['/admin-panel']);
+}
+
 }

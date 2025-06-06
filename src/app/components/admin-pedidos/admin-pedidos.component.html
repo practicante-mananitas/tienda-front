@@ -1,1 +1,37 @@
-<p>admin-pedidos works!</p>
+<div class="admin-pedidos-panel">
+  <h1>📦 Pedidos de Usuarios</h1>
+
+  <div *ngFor="let pedido of pedidos" class="pedido-card">
+    <div class="pedido-header">
+      <p><strong>Pedido ID:</strong> {{ pedido.id }} | <strong>Pago:</strong> {{ pedido.payment_id }}</p>
+      <p><strong>Total:</strong> ${{ pedido.total }} | <strong>Status:</strong> {{ pedido.status }}</p>
+      <p><strong>Usuario:</strong> {{ pedido.user.name }} ({{ pedido.user.email }})</p>
+      <p><strong>Dirección:</strong> {{ pedido.address.calle }}, {{ pedido.address.colonia }}, {{ pedido.address.municipio }}, {{ pedido.address.estado }}</p>
+      <p><strong>Fecha:</strong> {{ pedido.created_at | date: 'medium' }}</p>
+      <button (click)="toggleDetalle(pedido.id)">Ver Detalle</button>
+    </div>
+
+    <div *ngIf="pedidoItemsVisibles[pedido.id]" class="pedido-items">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Imagen</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pedidoItems[pedido.id]">
+            <td>{{ item.producto.name }}</td>
+            <td>
+              <img [src]="'http://127.0.0.1:8000/storage/' + item.producto.image" width="60" />
+            </td>
+            <td>{{ item.cantidad }}</td>
+            <td>${{ item.precio_unitario }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

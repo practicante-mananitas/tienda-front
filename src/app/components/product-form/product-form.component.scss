@@ -116,3 +116,19 @@ form {
   font-size: 14px;
   font-weight: 500;
 }
+
+.peso-volumetrico-box {
+  background: #f0f4ff;
+  border-left: 4px solid #004aad;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 15px;
+  border-radius: 4px;
+
+  .peso-volumetrico-hint {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+  }
+}
+

@@ -8,6 +8,8 @@ import { AdminPedidosComponent } from './components/admin-pedidos/admin-pedidos.
 import { AdminFinanzasComponent } from './components/admin-finanzas/admin-finanzas.component';
 import { AdminDestacadosComponent } from './components/admin-destacados/admin-destacados.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { ProductEditComponent } from './components/product-edit/product-edit.component';
+import { AdminPedidosExcedidosComponent } from './components/admin-pedidos-excedidos/admin-pedidos-excedidos.component';
 
 export const adminRoutes: Routes = [
   {
@@ -21,6 +23,9 @@ export const adminRoutes: Routes = [
       { path: 'pedidos', component: AdminPedidosComponent },
       { path: 'finanzas', component: AdminFinanzasComponent },
       { path: 'destacados', component: AdminDestacadosComponent },
+      { path: 'productos/editar/:id', component: ProductEditComponent },
+      {  path: 'pedidos-excedidos', component: AdminPedidosExcedidosComponent }
+
     ]
   }
 ];

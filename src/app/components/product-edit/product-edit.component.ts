@@ -8,15 +8,22 @@ import { ProductService } from '../../services/product.service';
   selector: 'app-product-edit',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './product-edit.component.html'
+  templateUrl: './product-edit.component.html',
+  styleUrl: './product-edit.component.scss'
 })
 export class ProductEditComponent implements OnInit {
   product: any = {
-    name: '',
-    description: '',
-    price: 0,
-    image: ''
-  };
+  name: '',
+  description: '',
+  price: 0,
+  image: '',
+  category_id: null,
+  weight: null,
+  height: null,
+  width: null,
+  length: null
+};
+
   categories: any[] = [];
   selectedFile: File | null = null;
   productId: number = 0;
@@ -56,6 +63,12 @@ export class ProductEditComponent implements OnInit {
     formData.append('price', this.product.price.toString());
     formData.append('category_id', this.product.category_id); // 👈 Agrega esto
 
+    formData.append('weight', this.product.weight?.toString() || '');
+    formData.append('height', this.product.height?.toString() || '');
+    formData.append('width', this.product.width?.toString() || '');
+    formData.append('length', this.product.length?.toString() || '');
+
+
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -64,9 +77,22 @@ export class ProductEditComponent implements OnInit {
     this.productService.updateProduct(this.productId, formData).subscribe({
       next: () => {
         alert('Producto actualizado');
-        this.router.navigate(['/productos']);
+        this.router.navigate(['/admin-panel/productos']);
       },
       error: () => alert('Error al actualizar')
     });
   }
+
+  get pesoVolumetrico(): number {
+    const { height, width, length } = this.product;
+    if (!height || !width || !length) return 0;
+    return +(height * width * length / 5000).toFixed(2);
+  }
+
+  get pesoFacturable(): number {
+    const real = this.product.weight || 0;
+    const volumetrico = this.pesoVolumetrico;
+    return Math.max(real, volumetrico);
+  }
+
 }

@@ -47,7 +47,14 @@
     </div>
     <div class="resumen-item">
       <span>Envío</span>
-      <span>${{ costoEnvio.toFixed(2) }}</span>
+      <span>
+        <ng-container *ngIf="costoEnvio > 0; else cotizando">
+          ${{ costoEnvio.toFixed(2) }}
+        </ng-container>
+        <ng-template #cotizando>
+          <span style="color: #f39c12;"><strong>Cotización en proceso</strong></span>
+        </ng-template>
+      </span>
     </div>
     <div *ngIf="diasEntrega !== null" class="dias-entrega">
       <small>En un máximo de {{ diasEntrega }} días</small>

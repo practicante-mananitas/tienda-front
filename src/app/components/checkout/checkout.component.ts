@@ -77,8 +77,19 @@ cotizarEnvio() {
   this.cartService.quoteShipping(this.direccionSeleccionada.id, this.cartItems)
     .subscribe({
       next: (res) => {
-console.log('🚚 Cotización recibida:', res); // 👈 AQUÍ
-        
+        console.log('🚚 Cotización recibida:', res);
+
+        if (res.manual) {
+          this.costoEnvio = 0;
+          this.diasEntrega = null;
+          this.cargandoEnvio = false;
+
+          // Alerta con SweetAlert o alert simple
+          alert(res.message || 'El envío será cotizado manualmente. Recibirás el costo por correo.');
+
+          return;
+        }
+
         this.costoEnvio = Number(res.total) || 0;
         this.diasEntrega = (Number(res.days) || 0) + 3;
         this.cargandoEnvio = false;
@@ -93,8 +104,13 @@ console.log('🚚 Cotización recibida:', res); // 👈 AQUÍ
 
 
 confirmarCompra() {
+  if (this.costoEnvio === 0) {
+    alert('El costo del envío se está calculando. Recibirás el monto total por correo cuando esté listo.');
+    return;
+  }
+
   const token = localStorage.getItem('token');
-  
+
   const payload = {
     items: this.cartItems.map(item => {
       const product = item.product || {};
@@ -114,7 +130,6 @@ confirmarCompra() {
     address_id: this.direccionSeleccionada.id
   };
 
-  // 👇 Pon este log aquí
   console.log('📦 Payload enviado:', payload);
 
   this.http.post<any>('http://localhost:8000/api/pago/preferencia', payload, {
@@ -134,6 +149,8 @@ confirmarCompra() {
     }
   });
 }
+
+
 
 
 

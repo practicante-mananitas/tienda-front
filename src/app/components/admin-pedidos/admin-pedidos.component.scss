@@ -1,0 +1,75 @@
+.admin-pedidos-panel {
+  padding: 30px;
+  background-color: #f4f4f4;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #222;
+  }
+
+  .pedido-card {
+    background: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border-left: 6px solid #42aaff; // 🔵 Azul cielo
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+    .pedido-header {
+      p {
+        margin: 4px 0;
+        font-size: 14px;
+        color: #444;
+
+        strong {
+          color: #222;
+        }
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 6px 14px;
+        background-color: #42aaff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #2a90dd;
+        }
+      }
+    }
+
+    .pedido-items {
+      margin-top: 20px;
+      overflow-x: auto;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td {
+          padding: 10px;
+          border: 1px solid #ddd;
+          text-align: left;
+          font-size: 14px;
+        }
+
+        th {
+          background-color: #eef6fc;
+          font-weight: bold;
+          color: #222;
+        }
+
+        img {
+          border-radius: 4px;
+          max-height: 60px;
+        }
+      }
+    }
+  }
+}

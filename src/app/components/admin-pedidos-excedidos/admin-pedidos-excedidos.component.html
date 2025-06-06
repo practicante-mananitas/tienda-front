@@ -1,0 +1,22 @@
+<h2>📦 Pedidos Excedidos</h2>
+
+<div *ngFor="let pedido of pedidos" class="pedido-card">
+  <h3>{{ pedido.name }} ({{ pedido.email }})</h3>
+  <p><strong>Tel:</strong> {{ pedido.phone }}</p>
+  <p><strong>Dirección:</strong> {{ pedido.calle }}, {{ pedido.colonia }}, {{ pedido.municipio }}, {{ pedido.estado }}, CP: {{ pedido.codigo_postal }}</p>
+  <p><strong>Extra:</strong> {{ pedido.tipo_lugar }} - {{ pedido.nombre_casa }} - {{ pedido.conserjeria ?? 'Sin conserje' }}</p>
+
+  <div class="producto-info">
+    <p><strong>🛒 Producto:</strong> {{ pedido.product_name }}</p>
+    <div class="medidas-grid">
+      <div><strong>Cantidad:</strong> {{ pedido.cantidad }}</div>
+      <div><strong>Peso:</strong> {{ pedido.peso }} kg</div>
+      <div><strong>Alto:</strong> {{ pedido.alto }} cm</div>
+      <div><strong>Ancho:</strong> {{ pedido.ancho }} cm</div>
+      <div><strong>Largo:</strong> {{ pedido.largo }} cm</div>
+    </div>
+  </div>
+
+  <p><strong>Fecha:</strong> {{ pedido.created_at | date:'short' }}</p>
+  <hr />
+</div>

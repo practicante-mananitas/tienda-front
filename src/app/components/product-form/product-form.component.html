@@ -46,21 +46,24 @@
     </label>
     <p class="error" *ngIf="priceInput.invalid && priceInput.touched">El precio debe ser mayor a $1.</p>
 
-    <p class="form-note">*Las medidas tienen que ser de la caja en la que se va a enviar empaquetada*</p>
+    <p class="form-note">*Las medidas tienen que ser de la caja en la que se va a enviar empaquetada por producto*</p>
 
     <label>
-      Peso (kg):
-      <input
-        type="number"
-        [(ngModel)]="product.weight"
-        name="weight"
-        min="1"
-        required
-        #pesoInput="ngModel"
-        [class.invalid-input]="pesoInput.invalid && pesoInput.touched"
-      />
-    </label>
-    <p class="error" *ngIf="pesoInput.invalid && pesoInput.touched">El peso debe ser mínimo de 1 kg.</p>
+  Peso (kg):
+  <input
+    type="number"
+    [(ngModel)]="product.weight"
+    name="weight"
+    min="0.01"
+    step="0.01"
+    required
+    #pesoInput="ngModel"
+    [class.invalid-input]="pesoInput.invalid && pesoInput.touched"
+  />
+</label>
+<p class="error" *ngIf="pesoInput.invalid && pesoInput.touched">
+  El peso debe ser mayor a 0.
+</p>
 
     <label>
       Alto (cm):
@@ -76,6 +79,21 @@
       Largo (cm):
       <input type="number" [(ngModel)]="product.length" name="length" required />
     </label>
+
+<div *ngIf="pesoVolumetrico > 0" class="peso-volumetrico-box">
+  <p><strong>Peso volumétrico estimado:</strong> {{ pesoVolumetrico }} kg</p>
+  <p class="peso-volumetrico-hint">
+    Se usará este valor si es mayor al peso real. Intenta optimizar las medidas.
+  </p>
+  <div *ngIf="pesoFacturable > 0" class="peso-facturable-box">
+  <p><strong>Peso facturable estimado:</strong> {{ pesoFacturable }} kg</p>
+  <p class="peso-volumetrico-hint">
+    Se usará este valor como base para la cotización. Es el mayor entre el peso real y el volumétrico.
+  </p>
+</div>
+
+</div>
+
 
     <label>
       Imagen:

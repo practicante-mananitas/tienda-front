@@ -107,4 +107,17 @@ export class ProductFormComponent {
   this.router.navigate(['/admin-panel']);
 }
 
+get pesoVolumetrico(): number {
+  const { height, width, length } = this.product;
+  if (!height || !width || !length) return 0;
+  return +(height * width * length / 5000).toFixed(2);
+}
+
+get pesoFacturable(): number {
+  const volumetrico = this.pesoVolumetrico;
+  const real = this.product.weight || 0;
+  return +(Math.max(real, volumetrico)).toFixed(2);
+}
+
+
 }

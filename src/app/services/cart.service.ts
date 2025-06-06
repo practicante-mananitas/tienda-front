@@ -58,13 +58,21 @@ export class CartService {
   }
   
   quoteShipping(addressId: number, cartItems: any[]) {
-  return this.http.post<any>('http://127.0.0.1:8000/api/shipping/quote', {
-    address_id: addressId,
-    items: cartItems.map(item => ({
-      product_id: item.product.id,
-      quantity: item.quantity,
-    }))
-  });
-}
+    const token = localStorage.getItem('token');
+     console.log('🚀 Enviando token JWT:', token); // 👈 este console para validar
+
+    return this.http.post<any>('http://127.0.0.1:8000/api/shipping/quote', {
+      address_id: addressId,
+      items: cartItems.map(item => ({
+        product_id: item.product.id,
+        quantity: item.quantity,
+      }))
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}` // 👈 ESTO ES CLAVE
+      }
+    });
+  }
+
 
 }

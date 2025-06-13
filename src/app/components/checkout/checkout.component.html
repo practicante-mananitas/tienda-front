@@ -91,9 +91,11 @@
   </div>
 </div>
 
-  <div class="envio-loading" *ngIf="cargandoEnvio">
-  <div class="loader-card">
-    <div class="spinner"></div>
-    <p>Preparando todo para tu compra</p>
-  </div>
-</div>
+    <div class="envio-loading" *ngIf="cargandoEnvio || cargandoPago">
+      <div class="loader-card">
+        <div class="spinner"></div>
+        <p *ngIf="cargandoEnvio">Cotizando envío, espere un momento...</p>
+        <p *ngIf="cargandoPago">Preparando redirección al pago...</p>
+      </div>
+    </div>
+

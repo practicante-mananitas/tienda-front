@@ -1,1 +1,42 @@
-<p>admin-resumen works!</p>
+<div class="admin-resumen-panel">
+  <h1>Resumen Administrativo</h1>
+
+  <div class="resumen-cards">
+
+    <div class="card" (click)="abrirModal('pedidosPendientes')">
+      <h2>Pedidos Pendientes</h2>
+      <p>{{ resumen.pedidosPendientes.count }}</p>
+    </div>
+
+    <div class="card" (click)="abrirModal('productosBajoStock')">
+      <h2>Productos con Poco Stock</h2>
+      <p>{{ resumen.productosBajoStock.count }}</p>
+    </div>
+
+    <div class="card" (click)="abrirModal('pedidosRetrasados')">
+      <h2>Pedidos Retrasados</h2>
+      <p>{{ resumen.pedidosRetrasados.count }}</p>
+    </div>
+
+  </div>
+
+  <div class="modal-backdrop" *ngIf="modalVisible" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="cerrarModal()">×</button>
+      <h3>{{ modalTitulo }}</h3>
+      
+      <div *ngIf="modalContenido.length === 0">No hay datos para mostrar.</div>
+
+      <ul *ngIf="modalContenido.length > 0">
+        <li *ngFor="let item of modalContenido">
+          <ng-container *ngIf="modalTitulo.includes('Pedidos')">
+            Pedido #{{ item.id }} - Estado: {{ item.shipment_status }} - Fecha: {{ item.created_at | date }}
+          </ng-container>
+          <ng-container *ngIf="modalTitulo.includes('Productos')">
+            Producto: {{ item.name }} - Stock: {{ item.stock }}
+          </ng-container>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

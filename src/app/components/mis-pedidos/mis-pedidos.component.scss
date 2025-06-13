@@ -1,172 +1,259 @@
 .title {
   text-align: center;
-  margin-top: 2rem;
-  font-size: 1.8rem;
+  margin: 2rem 0;
   color: #333;
-  font-weight: 600;
+  font-size: 2.2rem;
+}
+
+.loading-spinner, .error-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-auto-rows: 1fr; /* AGREGADO: Esto hace que todas las filas tengan la misma altura */
+  gap: 25px;
+  padding: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .order-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
-  margin: 1rem auto;
-  max-width: 700px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-.order-header {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-  color: #444;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%; /* AGREGADO: Asegura que la tarjeta ocupe toda la altura de su celda de cuadrícula */
 
-  .line {
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .order-header {
+    background-color: #f8f9fa;
+    padding: 18px 20px;
+    border-bottom: 1px solid #e9ecef;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+
+    .line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: #555;
+
+      .label {
+        font-weight: bold;
+        color: #333;
+      }
+      .value {
+        text-align: right;
+      }
+    }
+    .total {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #1a8917;
+      border-top: 1px dashed #ced4da;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
   }
 
-  .label {
-    font-weight: 600;
-    color: #000;
-    min-width: 90px;
-    text-align: left;
-  }
+  .order-section {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    /* AGREGADO: Para asegurar que el contenido dentro de la sección empuje hacia abajo */
+    flex-grow: 1; 
+    
+    &:last-of-type {
+      border-bottom: none;
+    }
 
-  .value {
-    text-align: right;
-    flex: 1;
-  }
-
-  .total .value {
-    font-weight: bold;
-    color: #000;
-  }
-}
-
-
-
-  .order-header span {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.96rem;
-}
-
-.order-header .resumen-line {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.95rem;
-}
-
-.order-header .resumen-line strong {
-  min-width: 80px;
-  color: #000;
-}
-
-  .order-items {
+    h4 {
+      font-size: 1.15rem;
+      color: #007bff;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #e9ecef;
+    }
+    h5 {
+      font-size: 1rem;
+      color: #444;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    h6 {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+    p {
+      font-size: 0.9rem;
+      margin: 4px 0;
+      color: #666;
+      strong {
+        color: #333;
+      }
+    }
     ul {
       list-style: none;
       padding: 0;
-      margin-bottom: 1rem;
+      margin: 0;
+    }
+    li {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 3px;
+    }
+  }
 
+  .order-items-list {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .item-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dashed #f0f0f0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .product-thumb {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        flex-shrink: 0;
+      }
+      .item-info {
+        flex-grow: 1;
+        font-size: 0.9rem;
+        color: #333;
+      }
+      .item-total-line {
+        font-weight: bold;
+        color: #28a745;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  /* La sección de empaquetado fue eliminada del HTML del usuario, por lo que este CSS ya no aplicaría.
+     Lo mantengo aquí comentado por si acaso se reintroduce o tienes otras secciones similares.
+  .packaging-boxes-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .packaging-card-sm {
+    background-color: #e6f7ff;
+    border: 1px dashed #007bff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    flex: 1 1 calc(50% - 10px);
+    box-sizing: border-box;
+
+    h5 {
+      font-size: 0.95rem;
+      color: #0056b3;
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #cce5ff;
+    }
+    p {
+      font-size: 0.8rem;
+      margin: 2px 0;
+      color: #444;
+    }
+    .tight-fit-warning {
+      color: #dc3545;
+      font-weight: bold;
+      font-size: 0.75rem;
+      margin-top: 5px;
+    }
+    .packed-products-sm {
+      margin-top: 8px;
+      border-top: 1px dashed #cce5ff;
+      padding-top: 6px;
+
+      ul {
+        list-style: disc;
+        padding-left: 18px;
+      }
       li {
-        padding: 0.4rem 0;
-        font-size: 0.95rem;
-        border-bottom: 1px solid #eee;
-
-        &:last-child {
-          border-bottom: none;
-        }
-      }
-    }
-
-    button {
-      background-color: #3483fa;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background-color: #2968c8;
+        font-size: 0.75rem;
+        color: #666;
+        margin-bottom: 2px;
       }
     }
   }
-}
+  */
 
-.item-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #eee;
+  .btn-repeat-order {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 15px 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: auto; /* Empuja el botón hacia la parte inferior */
 
-  .product-thumb {
-    width: 40px;
-    height: 40px;
-    border-radius: 6px;
-    object-fit: cover;
-    border: 1px solid #ccc;
-  }
-
-  .item-info {
-    flex: 1;
-    font-size: 0.95rem;
-    color: #444;
-  }
-
-  &:last-child {
-    border-bottom: none;
+    &:hover {
+      background-color: #218838;
+    }
   }
 }
 
-ng-template p {
-  text-align: center;
-  font-style: italic;
-  margin-top: 2rem;
-  color: #777;
-}
-
-
-// 🔽 RESPONSIVE
+// Responsive adjustments
 @media (max-width: 768px) {
+  .orders-grid {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
   .order-card {
-    padding: 1rem;
-    margin: 1rem 1rem;
+    .order-header, .order-section {
+      padding: 15px;
+    }
   }
-
-  .order-items ul li {
-    font-size: 0.9rem;
+  /*
+  .packaging-card-sm {
+    flex: 1 1 100%;
   }
-
-  .order-items button {
-    width: 100%;
-    font-size: 0.95rem;
-  }
-
-  .title {
-    font-size: 1.4rem;
-    margin: 1.5rem 1rem;
-  }
-
-    .product-thumb {
-    width: 36px;
-    height: 36px;
-  }
-
-  .item-info {
-    font-size: 0.9rem;
+  */
+  .btn-repeat-order {
+    width: calc(100% - 30px);
+    margin: 15px;
   }
 }

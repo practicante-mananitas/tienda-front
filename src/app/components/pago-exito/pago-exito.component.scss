@@ -1,77 +1,135 @@
 .exito-box {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 550px; // Reducido para un tamaño más compacto
+  margin: 1.5rem auto; // Menor margen para ocupar menos espacio vertical
+  padding: 1.5rem; // Padding más ajustado
+  background: #b90610; // Fondo rojo fuerte
+  border-radius: 1rem; // Un poco menos redondeado para un look más pulcro
+  // Sombra sutil pero elegante
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ajustada para el fondo oscuro */
   text-align: center;
+  font-family: 'Inter', sans-serif;
 
   h1 {
-    color: #1db954;
-    font-size: 2rem;
+    color: #fff; /* Blanco para contraste con el fondo rojo */
+    font-size: 2rem; // Tamaño de fuente ligeramente reducido para el título principal
     margin-bottom: 0.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em; // Ajuste sutil de espacio entre letras
   }
 
   p {
-    margin: 0.25rem 0;
-    font-size: 1rem;
+    margin: 0.3rem 0;
+    font-size: 0.95rem; // Un poco más pequeña para ahorrar espacio
+    color: #f8f8f8; /* Gris muy claro para contraste */
+    line-height: 1.5;
   }
 
   h3 {
-    margin-top: 2rem;
-    font-size: 1.25rem;
-    font-weight: bold;
+    margin-top: 1.5rem; // Espacio ajustado
+    font-size: 1.15rem; // Más pequeño
+    font-weight: 600;
+    color: #fff; /* Blanco para contraste */
   }
 
   ul {
     list-style: none;
     padding: 0;
-    margin-top: 1rem;
+    margin-top: 1rem; // Espacio ajustado
   }
 
   .item-resumen {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #eee;
-    border-radius: 0.5rem;
-    background-color: #fafafa;
-    font-size: 1rem;
+    gap: 0.8rem; // Espacio reducido entre elementos del ítem
+    padding: 0.8rem; // Padding más ajustado
+    margin-bottom: 0.8rem; // Margen entre ítems
+    background-color: #fcfcfc; // Fondo muy claro (para los ítems individuales, se mantienen claros)
+    border: 1px solid #eee; // Borde más sutil
+    border-radius: 0.6rem; // Bordes redondeados
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04); // Sombra más ligera
+    font-size: 0.9rem; // Tamaño de fuente más pequeño para el ítem
+    color: #555; /* El color del texto dentro del item-resumen se mantiene oscuro para contrastar con su propio fondo claro */
+    transition: transform 0.15s ease-in-out;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
 
     img {
-      width: 60px;
-      height: 60px;
+      width: 50px; // Imágenes más pequeñas
+      height: 50px;
       object-fit: cover;
       border-radius: 0.5rem;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    }
+
+    .info-producto {
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .info-producto strong {
+        display: block;
+        font-size: 0.95rem; // Nombre del producto más pequeño
+        color: #333;
+        margin-bottom: 0.1rem;
+    }
+    .info-producto span {
+        font-size: 0.8rem; // Detalles más pequeños
+        color: #777;
     }
 
     @media (max-width: 480px) {
-      flex-direction: column;
-      text-align: center;
+      flex-direction: row; // Mantener en fila en móviles si es posible o ajustar a columna
+      text-align: left; // Mantener texto alineado a la izquierda
+      padding: 0.6rem; // Padding ajustado para móviles
+      font-size: 0.85rem; // Fuente aún más pequeña en móviles
 
       img {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0; // Eliminar margen inferior si se mantiene en fila
+        width: 40px; // Imágenes aún más pequeñas
+        height: 40px;
       }
+      .info-producto {
+          text-align: left; // Mantener texto alineado a la izquierda
+      }
+      // Si el ítem no cabe bien en fila, puedes descomentar esto para forzar columna en móvil
+      /*
+      flex-direction: column;
+      text-align: center;
+      img {
+          margin-bottom: 0.5rem;
+      }
+      .info-producto {
+          text-align: center;
+      }
+      */
     }
   }
 
   .btn-volver {
-    margin-top: 2rem;
-    padding: 0.75rem 2rem;
-    background-color: #1db954;
+    margin-top: 1.8rem; // Espacio ajustado
+    padding: 0.75rem 1.8rem; // Padding más ajustado
+    background-image: linear-gradient(to right, #28a745 0%, #218838 100%); /* Mantener el botón en verde para destacar */
     color: white;
     font-weight: bold;
+    font-size: 1rem; // Texto más pequeño
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 0.6rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
 
     &:hover {
-      background-color: #169b45;
+      background-image: linear-gradient(to right, #218838 0%, #1c7430 100%);
+      transform: translateY(-1px); // Menos elevación
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     }
   }
 }

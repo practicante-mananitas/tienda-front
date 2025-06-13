@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core'; // Añadimos OnInit
+import { FormsModule, NgForm } from '@angular/forms'; // Añadimos NgForm
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Output, EventEmitter } from '@angular/core';
-
 
 
 @Component({
@@ -15,7 +14,7 @@ import { Output, EventEmitter } from '@angular/core';
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnInit { // Implementamos OnInit
   product = {
     name: '',
     description: '',
@@ -24,9 +23,9 @@ export class ProductFormComponent {
     weight: 0,
     height: 0,
     width: 0,
-    length: 0
+    length: 0,
+    stock: 0 // <--- NUEVO: Propiedad para el stock
   };
-
 
   categories: any[] = [];
   selectedFile: File | null = null;
@@ -37,7 +36,7 @@ export class ProductFormComponent {
   constructor(
     private productService: ProductService, 
     public router: Router,
-    private http: HttpClient
+    private http: HttpClient // Se mantiene si lo usas en otro lado (aunque no veo uso directo de 'http' aquí fuera de productService)
   ) {}
 
   ngOnInit() {
@@ -53,71 +52,70 @@ export class ProductFormComponent {
     this.selectedFile = file;
   }
 
- onSubmit(form: any) {
-  this.formIntentado = true;
+  onSubmit(form: NgForm) { // Tipamos el formulario como NgForm
+    this.formIntentado = true;
 
-  if (form.invalid) {
-    // 🔥 Marca todos los campos como tocados
-    Object.values(form.controls).forEach((control: any) => {
-      control.markAsTouched();
-    });
+    if (form.invalid) {
+      // Marca todos los campos como tocados
+      Object.values(form.controls).forEach((control: any) => {
+        control.markAsTouched();
+      });
 
-    // ✅ Mostrar alerta
-    alert('⚠️ Por favor, completa todos los campos obligatorios.');
+      // Mostrar alerta
+      alert('⚠️ Por favor, completa todos los campos obligatorios correctamente.');
 
-    // 🔥 Scroll hacia la alerta visual
-    setTimeout(() => {
-      const warning = document.querySelector('.form-warning');
-      if (warning) {
-        warning.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+      // Scroll hacia la alerta visual
+      setTimeout(() => {
+        const warning = document.querySelector('.form-warning');
+        if (warning) {
+          warning.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
 
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('name', this.product.name);
-  formData.append('description', this.product.description);
-  formData.append('price', this.product.price.toString());
-  formData.append('category_id', this.product.category_id);
-  formData.append('weight', this.product.weight.toString());
-  formData.append('height', this.product.height.toString());
-  formData.append('width', this.product.width.toString());
-  formData.append('length', this.product.length.toString());
-
-  if (this.selectedFile) {
-    formData.append('image', this.selectedFile);
-  }
-
-  this.productService.createProduct(formData).subscribe({
-    next: () => {
-      alert('Producto creado correctamente');
-      this.productoCreado.emit();
-      this.router.navigate(['/admin-panel']);
-    },
-    error: err => {
-      console.error(err);
-      alert('Error al crear producto');
+      return;
     }
-  });
-}
+
+    const formData = new FormData();
+    formData.append('name', this.product.name);
+    formData.append('description', this.product.description);
+    formData.append('price', this.product.price.toString());
+    formData.append('category_id', this.product.category_id);
+    formData.append('weight', this.product.weight.toString());
+    formData.append('height', this.product.height.toString());
+    formData.append('width', this.product.width.toString());
+    formData.append('length', this.product.length.toString());
+    formData.append('stock', this.product.stock.toString()); // <--- NUEVO: Añadir el stock al FormData
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.productService.createProduct(formData).subscribe({
+      next: () => {
+        alert('Producto creado correctamente');
+        this.productoCreado.emit();
+        this.router.navigate(['/admin-panel']); // Redirigir al panel de administración
+      },
+      error: err => {
+        console.error('Error al crear producto:', err);
+        alert('Error al crear producto. Revisa la consola para más detalles.');
+      }
+    });
+  }
 
   volverAlPanel() {
-  this.router.navigate(['/admin-panel']);
-}
+    this.router.navigate(['/admin-panel']);
+  }
 
-get pesoVolumetrico(): number {
-  const { height, width, length } = this.product;
-  if (!height || !width || !length) return 0;
-  return +(height * width * length / 5000).toFixed(2);
-}
+  get pesoVolumetrico(): number {
+    const { height, width, length } = this.product;
+    if (!height || !width || !length) return 0;
+    return +(height * width * length / 5000).toFixed(2);
+  }
 
-get pesoFacturable(): number {
-  const volumetrico = this.pesoVolumetrico;
-  const real = this.product.weight || 0;
-  return +(Math.max(real, volumetrico)).toFixed(2);
-}
-
-
+  get pesoFacturable(): number {
+    const volumetrico = this.pesoVolumetrico;
+    const real = this.product.weight || 0;
+    return +(Math.max(real, volumetrico)).toFixed(2);
+  }
 }

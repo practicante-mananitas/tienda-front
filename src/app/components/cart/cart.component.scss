@@ -1,140 +1,226 @@
 .cart-container {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    padding: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .cart-title {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 26px;
-    font-weight: 600;
-  }
-  
-  .cart-items {
-    flex: 2;
-    min-width: 300px;
-  }
-  
-  .cart-item {
-    display: flex;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    padding: 15px;
-    gap: 15px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-  
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px; /* Añadido: Establecer un ancho máximo para el contenedor */
+  margin: 0 auto; /* Añadido: Centrar el contenedor */
+  background-color: #f8f9fa; /* Fondo ligero para el contenedor */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada */
+}
+
+.cart-title {
+  text-align: center;
+  margin: 20px 0 30px; /* Ajuste de margen inferior */
+  font-size: 2.5em; /* Tamaño de fuente más grande */
+  font-weight: 600;
+  color: #333; /* Color de texto más oscuro */
+}
+
+.cart-items {
+  flex: 2;
+  min-width: 300px;
+  background-color: #fff; /* Fondo blanco */
+  padding: 25px; /* Más padding */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra ligera */
+}
+
+.cart-item {
+  display: flex;
+  align-items: center; /* Centrar verticalmente los items */
+  background: #fff;
+  border: 1px solid #eee; /* Borde más suave */
+  border-radius: 8px;
+  margin-bottom: 20px; /* Más margen inferior */
+  padding: 15px;
+  gap: 20px; /* Más espacio entre elementos */
+  box-shadow: 0 1px 5px rgba(0,0,0,0.03); /* Sombra más sutil */
+
   .product-image {
     width: 100px;
     height: 100px;
-    object-fit: contain;
+    object-fit: cover; /* Recortar la imagen para que cubra el área */
+    border-radius: 8px; /* Bordes redondeados */
   }
-  
+
   .product-info {
     flex: 1;
+    display: flex; /* Añadido: Usa flexbox para organizar los elementos internos */
+    flex-direction: column; /* Apilar elementos verticalmente */
   }
-  
+
   .price {
     font-weight: bold;
-    color: #1a8917;
+    color: #007bff; /* Un azul más estándar */
+    margin-bottom: 5px; /* Espacio debajo del precio */
   }
-  
-  .subtotal {
+
+  .quantity, .subtotal {
     margin-top: 5px;
-    font-weight: bold;
+    font-weight: normal; /* Normalizar peso de fuente */
+    color: #666; /* Color más suave */
+    font-size: 0.9em; /* Tamaño de fuente ligeramente más pequeño */
   }
-  
-  .remove-btn {
-    background: none;
-    border: none;
-    color: #f44336;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
+
+  .subtotal {
+    font-weight: bold; /* Mantener bold para subtotal */
   }
-  
-  .cart-summary {
-    flex: 1;
-    min-width: 250px;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    height: fit-content;
-  }
-  
-  .total {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  .clear-btn,
-  .checkout-btn {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .clear-btn {
-    background: #eee;
-    color: #333;
-  }
-  
-  .checkout-btn {
-    background: #3483fa;
-    color: white;
-  }
-  
-  .empty-msg {
-    text-align: center;
-    margin: 40px 0;
-    font-size: 18px;
-  }
-  
-  
-.back-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 20px;
-    background: none;
-    border: none;
-    color: #3483fa;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: color 0.2s ease;
-  
-    svg {
-      stroke: #3483fa;
-      transition: transform 0.2s ease;
-    }
-  
-    &:hover {
-      color: #0056b3;
-  
-      svg {
-        transform: translateX(-2px);
-        stroke: #0056b3;
-      }
+
+  /* NUEVO: Estilos para el estado del stock */
+  .stock-status {
+    margin-top: 5px;
+    .out-of-stock-message {
+      color: #dc3545; /* Rojo para advertencia de stock */
+      font-weight: bold;
+      font-size: 0.85rem; /* Tamaño de fuente pequeño */
+      display: block; /* Asegura que ocupe su propia línea */
+      margin-bottom: 5px;
     }
   }
 
-  .ver-mas {
+  .remove-btn {
+    background-color: #dc3545; /* Fondo rojo para eliminar */
+    color: white;
+    border: none;
+    padding: 8px 12px; /* Ajuste de padding */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-top: 10px;
+    transition: background-color 0.3s ease; /* Transición suave */
+
+    &:hover {
+      background-color: #c82333; /* Color más oscuro al pasar el ratón */
+    }
+  }
+}
+
+.cart-summary {
+  flex: 1;
+  min-width: 250px;
+  background: #fff;
+  border: 1px solid #eee; /* Borde más suave */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 25px; /* Más padding */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra ligera */
+  height: fit-content;
+  display: flex; /* Añadido: Para organizar mejor los elementos */
+  flex-direction: column; /* Apilar elementos verticalmente */
+  justify-content: space-between; /* Empujar los botones hacia abajo */
+
+  h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px; /* Más margen inferior */
+    color: #333;
+    text-align: center;
+  }
+  
+  p {
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #555;
+  }
+
+  .total {
+    font-size: 1.4em; /* Tamaño más grande */
+    font-weight: bold;
+    color: #007bff; /* Un verde más agradable */
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee; /* Línea divisoria */
+  }
+
+  .clear-btn,
+  .checkout-btn {
+    width: 100%;
+    padding: 12px 15px; /* Más padding */
+    margin-top: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px; /* Bordes más redondeados */
+    transition: background-color 0.3s ease;
+    font-size: 1.1em; /* Texto más grande */
+  }
+
+  .clear-btn {
+    background: #6c757d; /* Gris para vaciar */
+    color: white;
+    margin-bottom: 10px;
+
+    &:hover {
+      background: #5a6268;
+    }
+  }
+
+  .checkout-btn {
+    background: #007bff; /* Verde para finalizar */
+    color: white;
+
+    &:hover {
+      background: #025fc4;
+    }
+
+    /* NUEVO: Estilo para botón deshabilitado */
+    &:disabled {
+      background-color: #cccccc; /* Gris claro */
+      cursor: not-allowed;
+      opacity: 0.7; /* Menor opacidad */
+    }
+  }
+
+  /* NUEVO: Mensaje de advertencia para el checkout */
+  .checkout-warning {
+    color: #dc3545; /* Rojo de advertencia */
+    font-size: 0.9rem;
+    margin-top: 15px;
+    font-weight: 500;
+    text-align: center;
+  }
+}
+
+.empty-msg {
   text-align: center;
-  margin-top: 10px;
+  margin: 50px 0; /* Más margen */
+  font-size: 1.5em; /* Tamaño de fuente más grande */
+  color: #666;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px; /* Manteniendo el margen original */
+  background: none;
+  border: none;
+  color: #3483fa;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s ease;
+
+  svg {
+    stroke: #3483fa;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: #0056b3;
+
+    svg {
+      transform: translateX(-2px);
+      stroke: #0056b3;
+    }
+  }
+}
+
+.ver-mas {
+  text-align: center;
+  margin-top: 10px; /* Margen original */
 
   button {
     background: none;
@@ -150,7 +236,8 @@
   }
 }
 
-.ver-mas-btn {
+/* El .ver-mas-btn del HTML original no está en el HTML actual, se ignora. */
+/* .ver-mas-btn {
   background: none;
   border: none;
   color: #3483fa;
@@ -158,7 +245,7 @@
   cursor: pointer;
   margin: 10px 0 20px;
   text-decoration: underline;
-}
+} */
 
 .modal-backdrop {
   position: fixed;
@@ -166,7 +253,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.6); /* Oscurecer un poco más el fondo */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,25 +263,98 @@
 .modal-content {
   background: #fff;
   width: 90%;
+  max-width: 600px; /* Establecer un ancho máximo */
   max-height: 80vh;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 10px; /* Mantener redondeado original */
+  padding: 20px; /* Mantener padding original */
   overflow-y: auto;
   position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra para el modal */
 }
 
 .modal-content h3 {
   margin-top: 0;
-  font-size: 1.2rem;
+  font-size: 1.2rem; /* Mantener tamaño original */
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.modal-items .cart-item {
+  margin-bottom: 10px; /* Ajuste de margen para items en modal */
+  padding: 10px; /* Ajuste de padding */
+  gap: 15px; /* Ajuste de gap */
+
+  .product-image {
+    width: 80px; /* Imágenes más pequeñas en modal */
+    height: 80px;
+  }
+
+  .product-info {
+    h3 {
+      font-size: 1.1em; /* Tamaño de título de producto en modal */
+    }
+    .price, .quantity, .subtotal {
+      font-size: 0.9em; /* Ajuste de tamaño de fuente */
+    }
+  }
 }
 
 .cerrar {
   position: absolute;
-  top: 10px;
+  top: 10px; /* Mantener posición original */
   right: 15px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 20px; /* Mantener tamaño original */
+  color: #777; /* Color más suave */
   cursor: pointer;
+  transition: color 0.2s ease; /* Transición para el hover */
+  &:hover {
+    color: #333; /* Color más oscuro al pasar el ratón */
+  }
 }
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cart-container {
+    flex-direction: column;
+    padding: 15px;
+    gap: 20px;
+  }
+
+  .cart-items, .cart-summary {
+    padding: 15px;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    .product-image {
+      margin-bottom: 10px;
+      width: 80px;
+      height: 80px;
+    }
+    .product-info {
+      width: 100%;
+      text-align: left;
+      h3, .price, .quantity, .subtotal {
+        text-align: left;
+      }
+      .remove-btn {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .cart-title {
+    font-size: 2em;
+  }
+
+  .modal-content {
+    padding: 20px;
+    h3 {
+      font-size: 1.5em;
+    }
+  }
+}

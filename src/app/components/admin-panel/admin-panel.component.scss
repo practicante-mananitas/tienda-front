@@ -3,6 +3,7 @@
   flex-direction: row;
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
+  overflow: hidden; // Añadido: Para prevenir que el dashboard mismo tenga scroll si hay contenido que sobresale
 
   .sidebar {
     width: 240px;
@@ -12,6 +13,8 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    overflow-y: auto; // Añadido: Si el sidebar se hace muy largo, que tenga su propio scroll vertical
+    box-sizing: border-box; // Asegura que padding no aumente el width
 
     h2 {
       font-size: 20px;
@@ -39,10 +42,57 @@
     padding: 40px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto; // Añadido: El contenido principal tendrá scroll vertical si es necesario
+    overflow-x: hidden; // Añadido: Previene que el contenido principal tenga scroll horizontal
+    box-sizing: border-box; // Asegura que padding no aumente el width
+
+    // IMPORTANTE: Este selector ahora apunta directamente al router-outlet para controlarlo
+    // En lugar de `> *` que podría afectar a otros elementos no deseados,
+    // es más específico y permite que `admin-productos` gestione su propio scroll.
+    router-outlet + * { // Esto selecciona el componente renderizado por router-outlet
+        flex: none; // Anula cualquier flex: 1 del padre si lo estuviera heredando o forzando
+        width: 100%; // Asegura que ocupe el ancho disponible
+        max-width: 100%; // Previene desbordamientos no intencionados
+        display: block; // Asegura que se comporte como un bloque para el width
+    }
+  }
+}
+
+// Media query para el panel de administración en pantallas más pequeñas (opcional, pero buena práctica)
+@media (max-width: 992px) {
+  .admin-dashboard {
+    flex-direction: column; // Sidebar y contenido apilados
   }
 
-  // NUEVO: empuja el contenido al menos a ocupar todo el alto
-  .admin-content > * {
-    flex: 1;
+  .admin-dashboard .sidebar {
+    width: 100%; // Sidebar ocupa todo el ancho
+    height: auto; // Altura automática
+    max-height: 200px; // Límite de altura para el sidebar si hay muchos items
+    flex-direction: row; // Los elementos del nav pueden estar en fila
+    flex-wrap: wrap; // Envuelve si no caben
+    justify-content: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .admin-dashboard .sidebar h2 {
+    width: 100%; // Título ocupa todo el ancho
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .admin-dashboard .sidebar nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; // Espacio entre elementos del nav
+  }
+
+  .admin-dashboard .sidebar nav a {
+    margin-bottom: 0; // Elimina el margen inferior cuando están en fila
+  }
+
+  .admin-dashboard .admin-content {
+    padding: 20px; // Menos padding en pantallas pequeñas
   }
 }

@@ -1,11 +1,14 @@
+/* Estilos para el componente de Checkout */
+
 .checkout-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2rem;
+  gap: 2rem; /* Espacio entre las columnas */
   padding: 2rem;
-  background: #f5f5f5;
-  min-height: 100vh;
+  background: #f5f5f5; /* Un fondo suave para la página de checkout */
+  min-height: 100vh; /* Asegura que ocupe al menos la altura completa de la vista */
+  align-items: flex-start; /* Alinea los elementos al inicio del contenedor flex */
 }
 
 .checkout-left,
@@ -13,17 +16,17 @@
   background-color: white;
   border-radius: 10px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra sutil para las tarjetas */
 }
 
 .checkout-left {
-  flex: 1 1 400px;
-  max-width: 600px;
+  flex: 1 1 400px; /* Permite que la columna izquierda crezca y se encoja, con un mínimo de 400px */
+  max-width: 600px; /* Ancho máximo para la columna izquierda */
 }
 
 .checkout-right {
-  flex: 0 0 280px;
-  align-self: flex-start;
+  flex: 0 0 280px; /* La columna derecha tiene un ancho fijo de 280px y no crece ni se encoge */
+  align-self: flex-start; /* Se alinea al inicio de la cruz del contenedor (arriba) */
 }
 
 .shipping-option {
@@ -35,19 +38,22 @@
   border-radius: 8px;
   margin-bottom: 1rem;
   background-color: #fafafa;
-  transition: border 0.2s ease;
+  transition: border 0.2s ease; /* Transición suave para el borde al pasar el ratón */
+  cursor: pointer; /* Indica que es un elemento interactivo */
 }
 
 .shipping-option:hover {
-  border-color: #3483fa;
+  border-color: #3483fa; /* Color del borde al pasar el ratón */
 }
 
+/* Oculta el radio button nativo y estiliza el contenedor si lo deseas, o simplemente usa el margin */
 input[type='radio'] {
   margin-right: 1rem;
+  /* Puedes añadir estilos personalizados si quieres ocultar el input y crear un indicador visual propio */
 }
 
 .envio-gratis {
-  color: #00a650;
+  color: #00a650; /* Un verde vibrante para envío gratis */
   font-weight: bold;
 }
 
@@ -55,10 +61,21 @@ input[type='radio'] {
   display: flex;
   justify-content: space-between;
   margin: 0.8rem 0;
+  font-size: 0.95rem; /* Tamaño de fuente para los ítems del resumen */
+  color: #444;
+}
+
+.resumen-item strong {
+  color: #222;
 }
 
 .total {
   font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  border-top: 1px solid #eee; /* Línea divisoria para el total */
+  padding-top: 1rem;
+  margin-top: 1rem;
 }
 
 .btn-confirmar {
@@ -68,27 +85,46 @@ input[type='radio'] {
 .btn-confirmar button {
   width: 100%;
   padding: 0.9rem;
-  background-color: #3483fa;
+  background-color: #3483fa; /* Azul vibrante para el botón principal */
   border: none;
   border-radius: 6px;
   color: white;
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease; /* Transiciones para interactividad */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para el botón */
 }
 
 .btn-confirmar button:hover {
-  background-color: #2968c8;
+  background-color: #2968c8; /* Color más oscuro al pasar el ratón */
+  transform: translateY(-2px); /* Pequeño efecto de elevación */
 }
 
+.btn-confirmar button:active {
+  transform: translateY(0); /* Efecto de "presión" al hacer clic */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Estilo para el botón deshabilitado (ya existente en tu cart.component.scss, se mantiene) */
+.btn-confirmar button:disabled {
+  background-color: #cccccc; /* Gris claro */
+  cursor: not-allowed;
+  opacity: 0.7; /* Menor opacidad */
+  transform: translateY(0); /* Sin efecto de elevación */
+  box-shadow: none; /* Sin sombra */
+}
+
+
 .no-direcciones {
-  background: #fff3f3;
-  border: 1px solid #ffcccc;
+  background: #fff3f3; /* Fondo suave para advertencia */
+  border: 1px solid #ffcccc; /* Borde rojo claro */
   padding: 1rem;
   border-radius: 8px;
   text-align: center;
-  color: #a94442;
+  color: #a94442; /* Texto rojo oscuro para advertencia */
+  margin-top: 1rem;
+  font-size: 0.9rem;
 }
 
 .mostrar-mas button {
@@ -98,35 +134,45 @@ input[type='radio'] {
   font-weight: bold;
   cursor: pointer;
   margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-decoration: underline; /* Subrayado para indicar que es un enlace/acción */
 }
 
+/* --- Estilos para el Modal de Direcciones --- */
 .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente oscuro */
+  z-index: 99; /* Z-index para asegurar que esté sobre el contenido principal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-direcciones {
   position: fixed;
-  top: 10vh;
+  top: 10vh; /* Posiciona el modal un poco más abajo del top */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); /* Centra horizontalmente */
   width: 90%;
   max-width: 600px;
   background: white;
   border-radius: 10px;
   padding: 2rem;
-  z-index: 100;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  z-index: 100; /* Z-index mayor que el backdrop */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Sombra pronunciada para el modal */
+  max-height: 80vh; /* Altura máxima para que sea scrollable si el contenido es mucho */
+  display: flex; /* Añadido: Para organizar mejor el contenido del modal */
+  flex-direction: column; /* Apila el contenido verticalmente */
 }
 
 .modal-content {
-  max-height: 70vh;
-  overflow-y: auto;
+  flex-grow: 1; /* Permite que el contenido interno del modal ocupe el espacio disponible */
+  overflow-y: auto; /* Habilita el scroll vertical si el contenido excede la altura */
+  padding-right: 10px; /* Pequeño padding para que la barra de scroll no se pegue al borde */
 }
 
 .cerrar-modal {
@@ -136,28 +182,37 @@ input[type='radio'] {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  align-self: center; /* Centra el botón de cerrar si está en flex-direction column */
+  margin-top: 1.5rem; /* Más espacio */
+  font-weight: 500;
+  &:hover {
+    background-color: #bbb;
+  }
 }
 
 .dias-entrega {
   display: inline-block;
-  background-color: #e3f2fd; // azul clarito
-  color: #1976d2;             // azul fuerte
+  background-color: #e3f2fd; /* Azul clarito */
+  color: #1976d2; /* Azul fuerte */
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
   margin-top: 0.8rem;
   text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil para el tag */
 }
 
+/* --- Estilos para la Carga de Envío (Overlay) --- */
 .envio-loading {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.9);
-  z-index: 9999;
+  background: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  z-index: 9999; /* Asegura que esté por encima de todo */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,18 +229,60 @@ input[type='radio'] {
 
 .spinner {
   border: 4px solid #eee;
-  border-top: 4px solid #3483fa;
+  border-top: 4px solid #3483fa; /* Color azul para el spinner */
   border-radius: 50%;
   width: 40px;
   height: 40px;
   margin: 0 auto 10px auto;
-  animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite; /* Animación de rotación */
 }
 
 @keyframes spin {
-  0%   { transform: rotate(0deg); }
+  0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
 
+  .checkout-left,
+  .checkout-right {
+    padding: 1rem;
+    flex: 1 1 100%; /* En móviles, ambas columnas ocupan el 100% de ancho */
+    max-width: 100%; /* Remueve el max-width para móvil */
+  }
 
+  .checkout-right {
+    order: -1; /* Mueve el resumen al inicio en móviles para mejor UX */
+  }
+
+  .shipping-option {
+    flex-direction: column; /* Apila los elementos de la opción de envío */
+    align-items: flex-start;
+    padding: 0.8rem;
+  }
+
+  input[type='radio'] {
+    margin-right: 0;
+    margin-bottom: 0.5rem; /* Espacio debajo del radio button si está apilado */
+  }
+
+  .dias-entrega {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .modal-direcciones {
+    padding: 1rem;
+    top: 5vh; /* Ajusta la posición del modal */
+    max-height: 90vh;
+  }
+
+  .modal-content {
+    padding-right: 0; /* No es necesario en móviles si no hay scrollbar nativa visible */
+  }
+}

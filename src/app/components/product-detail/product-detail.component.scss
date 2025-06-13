@@ -25,6 +25,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    // La transición de filtro eliminada de aquí, ya que no se aplicará globalmente
+  }
 
     h2 {
       font-size: 24px;
@@ -50,6 +52,97 @@
       }
     }
 
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      transition: opacity 0.2s ease; // Mantener la transición de opacidad si se ajusta
+
+      // ESTILOS ELIMINADOS: filter y opacity para .out-of-stock en quantity-selector
+      &.out-of-stock {
+        // filter: grayscale(80%) blur(1px); // ELIMINADO
+        opacity: 0.5; // Ajustado a una opacidad más sutil si deseas un ligero "apagado" sin blur.
+                     // Si quieres que no haya ninguna opacidad, pon 'opacity: 1;' o elimina esta línea.
+      }
+
+      .btn-quantity {
+        width: 40px;
+        height: 40px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #555;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover:not([disabled]) {
+          background-color: #e0e0e0;
+          border-color: #aaa;
+        }
+        &:active:not([disabled]) {
+          background-color: #d0d0d0;
+        }
+        &:disabled {
+          opacity: 0.4; // Menor opacidad para los botones deshabilitados
+          cursor: not-allowed; // Cursor de "no permitido"
+          background-color: #f0f0f0; // Resetea el color de fondo si estaba en hover
+          border-color: #ddd; // Borde más claro
+        }
+      }
+
+      .quantity-input {
+        width: 60px;
+        height: 40px;
+        padding: 0 10px;
+        text-align: center;
+        font-size: 1.2rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        -moz-appearance: textfield;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        &:focus {
+          outline: none;
+          border-color: #3483fa;
+          box-shadow: 0 0 0 2px rgba(52, 131, 250, 0.2);
+        }
+        &:disabled {
+          opacity: 0.6; // Menor opacidad para el input deshabilitado
+          background-color: #f5f5f5;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .stock-message {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: -5px;
+      text-align: center;
+      color: #28a745;
+
+      &.low-stock {
+        color: #ffc107;
+        font-weight: bold;
+      }
+      &.no-stock {
+        color: #dc3545;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    }
+
     .btn-cart {
       margin-top: 10px;
       padding: 12px 20px;
@@ -59,13 +152,27 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, opacity 0.3s ease; // filter eliminado de la transición
 
-      &:hover {
+      &:hover:not([disabled]) {
         background-color: #2968c8;
       }
+      // Estilo específico para el botón deshabilitado
+      &:disabled {
+        background-color: #cccccc; // Gris claro
+        cursor: not-allowed;
+        opacity: 0.6; // Opacidad sutil para el deshabilitado
+        // filter: grayscale(100%); // ELIMINADO
+      }
+      // ESTILOS ELIMINADOS: filter y opacity para .out-of-stock en btn-cart
+      &.out-of-stock {
+        // filter: grayscale(100%) blur(1px); // ELIMINADO
+        opacity: 0.6; // Ajustado a una opacidad más sutil para los botones agotados.
+                      // Si quieres que no haya ninguna opacidad, pon 'opacity: 1;' o elimina esta línea.
+        cursor: not-allowed;
+        background-color: #cccccc; // Para que el botón agotado siempre sea gris
+      }
     }
-  }
 }
 
 .back-btn {
@@ -130,6 +237,10 @@
         }
       }
 
+      .quantity-selector {
+        justify-content: center;
+      }
+
       .btn-cart {
         width: 100%;
       }
@@ -142,4 +253,3 @@
     gap: 6px;
   }
 }
-

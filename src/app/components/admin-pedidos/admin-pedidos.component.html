@@ -1,37 +1,207 @@
 <div class="admin-pedidos-panel">
   <h1>📦 Pedidos de Usuarios</h1>
 
-  <div *ngFor="let pedido of pedidos" class="pedido-card">
-    <div class="pedido-header">
-      <p><strong>Pedido ID:</strong> {{ pedido.id }} | <strong>Pago:</strong> {{ pedido.payment_id }}</p>
-      <p><strong>Total:</strong> ${{ pedido.total }} | <strong>Status:</strong> {{ pedido.status }}</p>
-      <p><strong>Usuario:</strong> {{ pedido.user.name }} ({{ pedido.user.email }})</p>
-      <p><strong>Dirección:</strong> {{ pedido.address.calle }}, {{ pedido.address.colonia }}, {{ pedido.address.municipio }}, {{ pedido.address.estado }}</p>
-      <p><strong>Fecha:</strong> {{ pedido.created_at | date: 'medium' }}</p>
-      <button (click)="toggleDetalle(pedido.id)">Ver Detalle</button>
-    </div>
+  <!-- NUEVO: Spinner de carga para la lista principal de pedidos -->
+<!-- Spinner principal -->
+<div *ngIf="isLoadingPedidos" class="loading-full-screen">
+  <fa-icon [icon]="faSpinner" class="fa-spin" size="3x"></fa-icon>
+  <p>Cargando pedidos...</p>
+</div>
 
-    <div *ngIf="pedidoItemsVisibles[pedido.id]" class="pedido-items">
-      <table>
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Imagen</th>
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of pedidoItems[pedido.id]">
-            <td>{{ item.producto.name }}</td>
-            <td>
-              <img [src]="'http://127.0.0.1:8000/storage/' + item.producto.image" width="60" />
-            </td>
-            <td>{{ item.cantidad }}</td>
-            <td>${{ item.precio_unitario }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- NUEVO: Mensaje si no hay pedidos después de cargar -->
+  <div *ngIf="!isLoadingPedidos && pedidos.length === 0" class="no-pedidos-msg">
+    <p>No hay pedidos registrados todavía.</p>
+  </div>
+
+  <!-- Contenedor principal de pedidos, solo visible cuando no está cargando y hay pedidos -->
+  <div *ngIf="!isLoadingPedidos && pedidos.length > 0">
+    <div *ngFor="let pedido of pedidos" class="pedido-card">
+      <div class="pedido-header">
+        <p><strong>Pedido ID:</strong> #{{ pedido.id }} | <strong>Pago:</strong> {{ pedido.payment_id }}</p>
+        <p><strong>Total:</strong> ${{ pedido.total | number:'1.2-2' }} | <strong>Status:</strong> 
+          <!-- NUEVO: Status de Pago con estilos -->
+          <span class="status-badge" [ngClass]="{
+            'status-approved': pedido.status === 'approved',
+            'status-pending': pedido.status === 'pending',
+            'status-rejected': pedido.status === 'rejected'
+          }">
+            {{ pedido.status | uppercase }}
+          </span>
+        </p>
+        <p><strong>Usuario:</strong> {{ pedido.user?.name || 'N/A' }} ({{ pedido.user?.email || 'N/A' }})</p>
+        <p><strong>Dirección:</strong> {{ pedido.address?.calle || 'N/A' }}, {{ pedido.address?.colonia || 'N/A' }}, {{ pedido.address?.municipio || 'N/A' }}, <strong>{{ getStateName(pedido.address?.estado) }}</strong></p>
+        <p><strong>Fecha:</strong> {{ pedido.created_at | date: 'medium' }}</p>
+        <p class="entrega" *ngIf="pedido.fecha_maxima_entrega"><strong>Fecha Máx. Entrega:</strong> {{ pedido.fecha_maxima_entrega | date: 'mediumDate' }}</p>
+        
+        <!-- NUEVO: Sección para el Estado de Envío y el Selector -->
+        <div class="shipment-status-section">
+          <p><strong>Estado Envío:</strong> 
+            <span class="shipment-status-display" [ngClass]="getShipmentStatusInfo(pedido.shipment_status).colorClass">
+              <fa-icon [icon]="getShipmentStatusInfo(pedido.shipment_status).icon"></fa-icon>
+              {{ getShipmentStatusInfo(pedido.shipment_status).text }}
+            </span>
+          </p>
+          <div class="shipment-actions">
+            <select 
+              [(ngModel)]="pedido.shipment_status" 
+              (change)="updateShipmentStatus(pedido, pedido.shipment_status)"
+              [disabled]="pedido.isUpdatingShipmentStatus"
+            >
+              <option value="in_process">En Proceso</option>
+              <option value="sent">Enviado</option>
+              <option value="delivered">Entregado</option>
+              <option value="cancelled">Cancelado</option>
+            </select>
+           <!-- Spinner individual por pedido -->
+          <fa-icon *ngIf="pedido.isUpdatingShipmentStatus" [icon]="faSpinner" class="fa-spin update-spinner"></fa-icon>
+          </div>
+        </div>
+        <!-- FIN NUEVO: Sección para el Estado de Envío y el Selector -->
+
+        <!-- Modificación del botón de Ver Detalles Completos con icono -->
+        <button (click)="openPedidoDetailsModal(pedido.id)">
+          <fa-icon [icon]="faEye"></fa-icon> Ver Detalles Completos
+        </button>
+      </div>
+
+      <!-- La tabla de ítems colapsable original se mantiene si aún la quieres -->
+      <div *ngIf="pedidoItemsVisibles[pedido.id]" class="pedido-items">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Imagen</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of pedidoItems[pedido.id]">
+              <td>{{ item.product?.name || 'N/A' }}</td>
+              <td>
+                <img [src]="'http://127.0.0.1:8000/storage/' + item.product?.image" width="60" alt="Producto" />
+              </td>
+              <td>{{ item.cantidad }}</td>
+              <td>${{ item.precio_unitario | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================== -->
+  <!-- MODAL PARA DETALLES COMPLETOS DEL PEDIDO -->
+  <!-- ======================================================================== -->
+  <div class="modal-backdrop" *ngIf="showDetailsModal" (click)="closeDetailsModal()"></div>
+  <div class="modal-details" *ngIf="showDetailsModal">
+    <div class="modal-content">
+      <button class="close-button" (click)="closeDetailsModal()">X</button>
+      
+      <h2 *ngIf="selectedPedido">Detalles del Pedido #{{ selectedPedido.id }}</h2>
+
+      <!-- NUEVO: Spinner de carga para el modal -->
+        <!-- Spinner dentro del modal de detalles -->
+        <div class="loading-spinner" *ngIf="loadingDetails">
+          <fa-icon [icon]="faSpinner" class="fa-spin" size="3x"></fa-icon>
+          <p>Cargando detalles del pedido...</p>
+        </div>
+      <div class="error-message" *ngIf="detailsError">
+        Error al cargar los detalles del pedido. Por favor, intenta de nuevo.
+      </div>
+
+      <ng-container *ngIf="!loadingDetails && !detailsError && selectedPedido">
+        <div class="details-section">
+          <h3>Información General</h3>
+          <p><strong>ID de Pago:</strong> {{ selectedPedido.payment_id || 'N/A' }}</p>
+          <p><strong>Referencia Externa:</strong> {{ selectedPedido.external_reference || 'N/A' }}</p>
+          <p><strong>Total Pedido:</strong> ${{ selectedPedido.total | number:'1.2-2' }}</p>
+          <p><strong>Costo de Envío:</strong> ${{ selectedPedido.envio | number:'1.2-2' }}</p>
+          <p><strong>Estado:</strong> {{ selectedPedido.status || 'N/A' }}</p>
+          <!-- NUEVO: Mostrar el estado de envío también en el modal -->
+          <p><strong>Estado Envío:</strong> 
+            <span class="shipment-status-display" [ngClass]="getShipmentStatusInfo(selectedPedido.shipment_status).colorClass">
+              <fa-icon [icon]="getShipmentStatusInfo(selectedPedido.shipment_status).icon"></fa-icon>
+              {{ getShipmentStatusInfo(selectedPedido.shipment_status).text }}
+            </span>
+          </p>
+          <p><strong>Fecha:</strong> {{ selectedPedido.created_at | date: 'fullDate' }} {{ selectedPedido.created_at | date: 'shortTime' }}</p>
+          <p *ngIf="selectedPedido.fecha_maxima_entrega"><strong>Fecha Máx. Entrega:</strong> {{ selectedPedido.fecha_maxima_entrega | date: 'fullDate' }}</p>
+        </div>
+
+        <div class="details-section" *ngIf="selectedPedido.user">
+          <h3>Detalles del Usuario</h3>
+          <p><strong>Nombre:</strong> {{ selectedPedido.user.name || 'N/A' }}</p>
+          <p><strong>Email:</strong> {{ selectedPedido.user.email || 'N/A' }}</p>
+        </div>
+
+        <div class="details-section" *ngIf="selectedPedido.address">
+          <h3>Dirección de Envío</h3>
+          <p><strong>Calle:</strong> {{ selectedPedido.address.calle || 'N/A' }} #{{ selectedPedido.address.numero_exterior || 'N/A' }} <span *ngIf="selectedPedido.address.numero_interior">Int. {{ selectedPedido.address.numero_interior }}</span></p>
+          <p><strong>Colonia:</strong> {{ selectedPedido.address.colonia || 'N/A' }}</p>
+          <p><strong>Ciudad:</strong> {{ selectedPedido.address.municipio || 'N/A' }}, <strong>{{ getStateName(selectedPedido.address.estado) }}</strong></p>
+          <p><strong>Código Postal:</strong> {{ selectedPedido.address.codigo_postal || 'N/A' }}</p>
+          <p><strong>País:</strong> {{ selectedPedido.address.pais || 'N/A' }}</p>
+          <p><strong>Nombre de Contacto:</strong> {{ selectedPedido.user?.name || 'N/A' }}</p>
+          <p><strong>Teléfono:</strong> {{ selectedPedido.user?.phone || 'N/A' }}</p>
+          <p><strong>Email:</strong> {{ selectedPedido.user?.email || 'N/A' }}</p>
+          
+          <!-- CAMBIOS AQUI: Los campos que vienen directamente de 'address' -->
+          <p *ngIf="selectedPedido.address.localidad"><strong>Localidad:</strong> {{ selectedPedido.address.localidad }}</p>
+          <p *ngIf="selectedPedido.address.tipo_domicilio"><strong>Tipo de Domicilio:</strong> {{ selectedPedido.address.tipo_domicilio }}</p>
+          <p *ngIf="selectedPedido.address.indicaciones_entrega"><strong>Indicaciones de Entrega:</strong> {{ selectedPedido.address.indicaciones_entrega }}</p>
+          <!-- FIN DE CAMBIOS -->
+
+          <!-- Mostrar Address Extras (extraInfo) si existen -->
+          <ng-container *ngIf="selectedPedido.address.extraInfo">
+            <h3>Información Adicional de la Dirección (Detalles Extra)</h3>
+            <p *ngIf="selectedPedido.address.extraInfo.tipo_lugar"><strong>Tipo de Lugar:</strong> {{ selectedPedido.address.extraInfo.tipo_lugar }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.barrio"><strong>Barrio:</strong> {{ selectedPedido.address.extraInfo.barrio }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.nombre_casa"><strong>Nombre Casa/Edificio:</strong> {{ selectedPedido.address.extraInfo.nombre_casa }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.conserjeria !== undefined"><strong>Conserjería:</strong> {{ selectedPedido.address.extraInfo.conserjeria ? 'Sí' : 'No' }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.hora_apertura"><strong>Hora Apertura:</strong> {{ selectedPedido.address.extraInfo.hora_apertura }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.hora_cierre"><strong>Hora Cierre:</strong> {{ selectedPedido.address.extraInfo.hora_cierre }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.abierto24 !== undefined"><strong>Abierto 24h:</strong> {{ selectedPedido.address.extraInfo.abierto24 ? 'Sí' : 'No' }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.dias && selectedPedido.address.extraInfo.dias.length > 0"><strong>Días de Servicio:</strong> {{ selectedPedido.address.extraInfo.dias.join(', ') }}</p>
+            <p *ngIf="selectedPedido.address.extraInfo.referencia"><strong>Referencia Adicional:</strong> {{ selectedPedido.address.extraInfo.referencia }}</p>
+          </ng-container>
+        </div>
+
+        <div class="details-section" *ngIf="selectedPedido.items && selectedPedido.items.length > 0">
+          <h3>Productos del Pedido</h3>
+          <div class="productos-scroll-container">
+            <div class="producto-card-modal" *ngFor="let item of selectedPedido.items">
+              <img [src]="'http://127.0.0.1:8000/storage/' + item.product?.image" alt="{{ item.product?.name || 'N/A' }}">
+              <div class="info-producto">
+                <strong>{{ item.product?.name || 'Producto Desconocido' }}</strong>
+                <span>Cantidad: {{ item.cantidad }}</span>
+                <span>Precio Unitario: ${{ item.precio_unitario | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalles de Empaquetado (Cajas) -->
+        <div class="details-section" *ngIf="selectedPedido.packaging_details && selectedPedido.packaging_details.length > 0">
+          <h3>Detalles de Empaquetado</h3>
+          <div class="packaging-boxes">
+            <div *ngFor="let caja of selectedPedido.packaging_details; let i = index" class="packaging-card">
+              <h4>Caja {{ i + 1 }} ({{ caja.tipo }})</h4>
+              <p>Dimensiones: {{ caja.length }}x{{ caja.width }}x{{ caja.height }} cm</p>
+              <p>Peso Facturable: {{ caja.weight?.toFixed(2) }} kg</p>
+              <p *ngIf="caja.has_tight_fit" class="tight-fit-warning">Advertencia: Ajuste apretado.</p>
+              <div class="packed-products">
+                <h5>Productos en esta caja:</h5>
+                <ul>
+                  <li *ngFor="let prod of caja.productos">
+                    - {{ prod.name || 'Producto ID ' + prod.id }} ({{ prod.length }}x{{ prod.width }}x{{ prod.height }} cm, {{ prod.peso_a_usar?.toFixed(2) }} kg)
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

@@ -1,46 +1,75 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CartService } from '../../services/cart.service'; // o OrderService si prefieres separarlo
-import { OrderService } from '../../services/order.service';
-import { Router } from '@angular/router';
-import { PedidoService } from '../../services/pedido.service';
+import { CommonModule, DatePipe, NgIf, NgFor, TitleCasePipe } from '@angular/common'; // Importa DatePipe, NgIf, NgFor, TitleCasePipe
+import { CartService } from '../../services/cart.service';
+import { OrderService } from '../../services/order.service'; // Asegúrate de que OrderService exista y lo estés usando para misPedidos
+import { Router, RouterLink } from '@angular/router'; // Importar RouterLink para los botones
+import { PedidoService } from '../../services/pedido.service'; // Este es el que usarás para getMisPedidos
 
 @Component({
   selector: 'app-mis-pedidos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    DatePipe,
+    NgIf,
+    NgFor,
+    TitleCasePipe, // Para el pipe titlecase
+    RouterLink // Para usar routerLink en los botones
+  ],
   templateUrl: './mis-pedidos.component.html',
   styleUrl: './mis-pedidos.component.scss'
 })
 export class MisPedidosComponent implements OnInit {
   orders: any[] = [];
+  loading: boolean = true;
+  error: string | null = null;
 
-  constructor(private orderService: OrderService, 
+  // NUEVO: Mapa de estados de México
+  statesMap: { [key: string]: string } = {
+    '1': 'Aguascalientes', '2': 'Baja California', '3': 'Baja California Sur',
+    '4': 'Campeche', '5': 'Chiapas', '6': 'Chihuahua', '7': 'Ciudad de México',
+    '8': 'Coahuila de Zaragoza', '9': 'Colima', '10': 'Durango',
+    '11': 'Guanajuato', '12': 'Guerrero', '13': 'Hidalgo',
+    '14': 'Jalisco', '15': 'México', '16': 'Michoacán de Ocampo',
+    '17': 'Morelos', '18': 'Nayarit', '19': 'Nuevo León',
+    '20': 'Oaxaca', '21': 'Puebla', '22': 'Querétaro',
+    '23': 'Quintana Roo', '24': 'San Luis Potosí', '25': 'Sinaloa',
+    '26': 'Sonora', '27': 'Tabasco', '28': 'Tamaulipas',
+    '29': 'Tlaxcala', '30': 'Veracruz de Ignacio de la Llave',
+    '31': 'Yucatán', '32': 'Zacatecas',
+  };
+
+  constructor(
+    private orderService: OrderService, // Si usas este para obtener los pedidos del usuario
     private router: Router,
-    private pedidoService: PedidoService,
+    private pedidoService: PedidoService, // Asumiendo que es el servicio que llama al backend para misPedidos
     private cartService: CartService
   ) {}
 
   ngOnInit(): void {
-  this.pedidoService.getMisPedidos().subscribe({
-  next: (res: any[]) => {
-    this.orders = res.map((pedido: any) => {
-      const envioItem = pedido.items.find((item: any) => item.product === null);
-      const productos = pedido.items.filter((item: any) => item.product !== null);
-
-      return {
-        ...pedido,
-        envio: envioItem ? Number(envioItem.precio_unitario) : 0,
-        subtotal: productos.reduce((acc: number, item: any) => acc + (item.precio_unitario * item.cantidad), 0),
-        items: productos
-      };
+    this.loading = true;
+    this.error = null;
+    this.pedidoService.getMisPedidos().subscribe({
+      next: (res: any[]) => {
+        // Los datos ya vienen con todas las relaciones y el cálculo hecho desde el backend
+        this.orders = res; 
+        console.log('Mis pedidos cargados:', this.orders); // Para depuración
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar mis pedidos:', err);
+        this.error = 'No se pudieron cargar tus pedidos.';
+        this.orders = [];
+        this.loading = false;
+      }
     });
-  },
-  error: () => this.orders = []
-});
-
   }
 
+  // Función para obtener el nombre del estado
+  getStateName(stateId: string | number): string {
+    const idAsString = String(stateId); 
+    return this.statesMap[idAsString] || 'Desconocido';
+  }
 
   repeat(pedidoId: number): void {
     this.pedidoService.repeatPedido(pedidoId).subscribe({
@@ -51,10 +80,10 @@ export class MisPedidosComponent implements OnInit {
         alert('Productos agregados al carrito');
         this.router.navigate(['/carrito']);
       },
-      error: () => alert('No se pudo repetir el pedido')
+      error: (err) => {
+        console.error('Error al repetir el pedido:', err);
+        alert('No se pudo repetir el pedido');
+      }
     });
   }
-
-  
-  
 }

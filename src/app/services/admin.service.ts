@@ -9,7 +9,7 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   getProductos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/products`);
+    return this.http.get<any[]>(`${this.apiUrl}/products`); // Cambiado de 'productos' a 'products'
   }
 
   getHighlightSections(): Observable<any[]> {
@@ -21,18 +21,27 @@ export class AdminService {
   }
 
   eliminarProducto(id: number) {
-    return this.http.delete(`${this.apiUrl}/productos/${id}`);
+    return this.http.delete(`${this.apiUrl}/products/${id}`); // Cambiado de 'productos' a 'products'
   }
 
-  actualizarEstadoProducto(id: number, activo: boolean) {
-    return this.http.put(`${this.apiUrl}/productos/${id}/estado`, { activo });
+  // --- CORRECCIÓN CLAVE AQUÍ ---
+  // 1. Cambiado 'productos' a 'products'
+  // 2. Cambiado 'estado' a 'status'
+  // 3. La propiedad enviada en el body es 'status' y su valor debe ser 'active', 'paused', 'disabled'
+  actualizarEstadoProducto(id: number, status: string) { // Cambiado 'activo: boolean' a 'status: string'
+    return this.http.put(`${this.apiUrl}/products/${id}/status`, { status });
   }
 
   getProductosPorCategoria(categoriaId: number) {
-    return this.http.get<any[]>(`${this.apiUrl}/categorias/${categoriaId}/productos`);
+    return this.http.get<any[]>(`${this.apiUrl}/categorias/${categoriaId}/productos`); // Cambiado de 'productos' a 'products'
   }
 
   getCategorias() {
     return this.http.get<any[]>(`${this.apiUrl}/categories`);
+  }
+
+    // Actualiza el estado de envío de un pedido específico
+  updatePedidoShipmentStatus(pedidoId: number, shipmentStatus: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/pedidos/${pedidoId}/shipment-status`, { shipment_status: shipmentStatus });
   }
 }

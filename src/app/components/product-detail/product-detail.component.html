@@ -6,13 +6,14 @@
   Volver
 </button>
 
-
 <div *ngIf="product" class="detail-container">
   <div class="left-section">
     <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="Producto" />
   </div>
 
-  <div class="right-section">
+  <!-- AÑADIDO: Clase 'out-of-stock' cuando el producto no tiene stock -->
+  <!-- NUEVO: Clase 'product-paused' cuando el producto está pausado -->
+  <div class="right-section" [class.out-of-stock]="isProductOutOfStock" [class.product-paused]="isProductPaused">
     <h2>{{ product.name }}</h2>
     <p class="price">$ {{ product.price | number:'1.0-2' }} mx</p>
 
@@ -20,6 +21,37 @@
       <p class="desc">{{ product.description }}</p>
     </div>
 
-    <button class="btn-cart" (click)="agregarAlCarrito()">Agregar al carrito</button>
+    <div class="quantity-selector">
+      <!-- DESHABILITAR botones de cantidad si la cantidad es 1, el producto está agotado O PAUSADO -->
+      <button class="btn-quantity" (click)="decrementQuantity()" [disabled]="quantity === 1 || isProductOutOfStock || isProductPaused">-</button>
+      <input 
+        type="number" 
+        [value]="quantity" 
+        (change)="onQuantityChange($event)" 
+        min="0" 
+        [max]="product?.stock" 
+        class="quantity-input"
+        aria-label="Cantidad del producto"
+        [disabled]="isProductOutOfStock || isProductPaused" 
+      />
+      <button class="btn-quantity" (click)="incrementQuantity()" [disabled]="quantity >= product?.stock || isProductOutOfStock || isProductPaused">+</button>
+    </div>
+
+    <!-- AÑADIDO: Mensaje de stock/estado -->
+    <p *ngIf="stockMessage" 
+       class="stock-message" 
+       [ngClass]="{
+         'low-stock': product.stock > 0 && product.stock <= 5 && !isProductPaused,
+         'no-stock': isProductOutOfStock && !isProductPaused,
+         'paused-product-message': isProductPaused
+       }">
+      {{ stockMessage }}
+    </p>
+
+    <!-- DESHABILITAR el botón de agregar al carrito si el producto está agotado O PAUSADO -->
+    <button class="btn-cart" (click)="agregarAlCarrito()" [disabled]="isProductOutOfStock || isProductPaused">
+      <!-- NUEVO: Mensaje del botón según el estado -->
+      {{ isProductPaused ? 'Producto Pausado' : (isProductOutOfStock ? 'Producto Agotado' : 'Agregar al carrito') }}
+    </button>
   </div>
 </div>

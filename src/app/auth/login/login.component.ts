@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']  // CORREGIDO: styleUrls en plural
 })
 export class LoginComponent {
   email = '';
@@ -17,22 +17,22 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-onLogin() {
-  this.authService.login({ email: this.email, password: this.password }).subscribe({
-    next: res => {
-      this.authService.saveToken(res.access_token);
+  onLogin() {
+    this.authService.login({ email: this.email, password: this.password }).subscribe({
+      next: (res) => {
+        // Aquí ya tienes res.token y res.user
+        // No necesitas llamar a saveToken porque ya se guarda dentro del servicio en login()
 
-      const redirect = localStorage.getItem('redirectAfterLogin');
+        const redirect = localStorage.getItem('redirectAfterLogin');
 
-      if (redirect && redirect !== '/login') {
-        localStorage.removeItem('redirectAfterLogin');
-        this.router.navigateByUrl(redirect);
-      } else {
-        this.router.navigate(['/profile']);
-      }
-    },
-    error: () => alert('Login incorrecto')
-  });
-}
-
+        if (redirect && redirect !== '/login') {
+          localStorage.removeItem('redirectAfterLogin');
+          this.router.navigateByUrl(redirect);
+        } else {
+          this.router.navigate(['/profile']);
+        }
+      },
+      error: () => alert('Login incorrecto')
+    });
+  }
 }

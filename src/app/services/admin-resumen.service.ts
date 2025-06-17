@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminResumenService {
-  private API_BASE = 'http://localhost:8000/api/admin/resumen'; // Cambia esto si usas otro puerto o URL
+  private API_BASE = 'http://localhost:8000/api/admin/resumen'; // Ajusta según tu backend
 
   constructor(private http: HttpClient) {}
 
@@ -20,5 +20,9 @@ export class AdminResumenService {
 
   pedidosRetrasados(): Observable<any> {
     return this.http.get<any>(`${this.API_BASE}/pedidos-retrasados`);
+  }
+
+  productosPorCategoria(): Observable<{ categoria: string; total: number }[]> {
+    return this.http.get<{ categoria: string; total: number }[]>(`${this.API_BASE}/productos-categoria`);
   }
 }

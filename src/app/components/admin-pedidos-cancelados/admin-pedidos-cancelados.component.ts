@@ -5,11 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faTruck, faBox, faCheckCircle, faTimesCircle, faEye } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
-
 @Component({
-  selector: 'app-admin-pedidos',
-  templateUrl: './admin-pedidos.component.html',
-  standalone: true,
+  selector: 'app-admin-pedidos-cancelados',
   imports: [
     CommonModule,
     DatePipe,
@@ -18,10 +15,12 @@ import { ActivatedRoute } from '@angular/router';
     FormsModule,
     FaIconComponent // IMPORTANTE: Agregar el componente de FontAwesome
   ],
-  styleUrls: ['./admin-pedidos.component.scss']
+  standalone: true,
+  templateUrl: './admin-pedidos-cancelados.component.html',
+  styleUrl: './admin-pedidos-cancelados.component.scss'
 })
-export class AdminPedidosComponent implements OnInit {
-  pedidos: any[] = [];
+export class AdminPedidosCanceladosComponent implements OnInit{
+ pedidos: any[] = [];
   pedidoItems: { [key: number]: any[] } = {};
   pedidoItemsVisibles: { [key: number]: boolean } = {};
   showDetailsModal: boolean = false;
@@ -91,7 +90,7 @@ cargarPedidos() {
     next: (data) => {
       // Filtrar para que solo queden los pedidos con shipment_status 'in_process' o 'sent'
       this.pedidos = data.filter(pedido => 
-        pedido.shipment_status === 'in_process' 
+        pedido.shipment_status === 'cancelled' 
       );
 
       this.pedidos.forEach(pedido => {

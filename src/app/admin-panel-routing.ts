@@ -10,11 +10,16 @@ import { AdminDestacadosComponent } from './components/admin-destacados/admin-de
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
 import { AdminPedidosExcedidosComponent } from './components/admin-pedidos-excedidos/admin-pedidos-excedidos.component';
+import { AdminPedidosEntregadosComponent } from './components/admin-pedidos-entregados/admin-pedidos-entregados.component';
+import { AdminPedidosCanceladosComponent } from './components/admin-pedidos-cancelados/admin-pedidos-cancelados.component';
+import { AdminPedidosEnviadosComponent } from './components/admin-pedidos-enviados/admin-pedidos-enviados.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const adminRoutes: Routes = [
   {
     path: 'admin-panel',
     component: AdminPanelComponent,
+    canActivate: [adminGuard],
     children: [
       { path: '', redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen', component: AdminResumenComponent },
@@ -24,7 +29,12 @@ export const adminRoutes: Routes = [
       { path: 'finanzas', component: AdminFinanzasComponent },
       { path: 'destacados', component: AdminDestacadosComponent },
       { path: 'productos/editar/:id', component: ProductEditComponent },
-      {  path: 'pedidos-excedidos', component: AdminPedidosExcedidosComponent }
+      {  path: 'pedidos-excedidos', component: AdminPedidosExcedidosComponent },
+      { path: 'admin-pedido/:id', component: AdminPedidosComponent },
+      { path: 'pedidos-entregados', component: AdminPedidosEntregadosComponent},
+      { path: 'pedidos-cancelados', component: AdminPedidosCanceladosComponent},
+      { path: 'pedidos-enviados', component: AdminPedidosEnviadosComponent}
+      // { path: 'admin-products/:id', component: AdminProductosComponent }
 
     ]
   }

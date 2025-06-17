@@ -1,0 +1,161 @@
+/* Contenedor general */
+:host {
+  display: block;
+  padding: 1rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Mensaje de carga */
+div[ng-reflect-ng-if="true"] {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* Títulos principales */
+h1, h2 {
+  color: #222;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+/* Tarjetas resumen */
+.tarjetas-resumen {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tarjeta {
+  flex: 1 1 220px;
+  background: #f9f9f9;
+  padding: 1.5rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #222;
+  }
+
+  &.total {
+    border-left: 6px solid #007bff;
+  }
+
+  &.productos {
+    border-left: 6px solid #28a745;
+  }
+
+  &.envios {
+    border-left: 6px solid #ffc107;
+  }
+}
+
+/* Select filtro años */
+label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.3rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+}
+
+/* Tabla de finanzas */
+.tabla-finanzas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+
+  th, td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+    color: #444;
+  }
+
+  th {
+    background: #f1f1f1;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  td:first-child, th:first-child {
+    text-align: left;
+  }
+
+  tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Paginación */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.paginacion button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.4rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #c0c0c0;
+    cursor: not-allowed;
+  }
+}
+
+/* Canvas gráfico responsivo */
+/* Canvas gráfico responsivo */
+canvas {
+  width: 100% !important;     /* Que ocupe todo el ancho disponible */
+  max-width: 900px;            /* Máximo ancho deseado para la gráfica */
+  height: 500px !important;    /* Altura fija para hacerla más grande */
+  display: block;
+  margin: 0 auto 2rem;
+}
+

@@ -6,16 +6,19 @@
     <div class="card" (click)="abrirModal('pedidosPendientes')">
       <h2>Pedidos Pendientes</h2>
       <p>{{ resumen.pedidosPendientes.count }}</p>
+      <p class="description">Productos recientes pendientes de envio</p>
     </div>
 
     <div class="card" (click)="abrirModal('productosBajoStock')">
       <h2>Productos con Poco Stock</h2>
       <p>{{ resumen.productosBajoStock.count }}</p>
+      <p class="description">Productos con menos de 10 en stock.</p>
     </div>
 
     <div class="card" (click)="abrirModal('pedidosRetrasados')">
       <h2>Pedidos Retrasados</h2>
       <p>{{ resumen.pedidosRetrasados.count }}</p>
+      <p class="description">Pedidos en proceso desde hace más de 5 días.</p>
     </div>
 
   </div>
@@ -27,16 +30,31 @@
       
       <div *ngIf="modalContenido.length === 0">No hay datos para mostrar.</div>
 
-      <ul *ngIf="modalContenido.length > 0">
-        <li *ngFor="let item of modalContenido">
-          <ng-container *ngIf="modalTitulo.includes('Pedidos')">
-            Pedido #{{ item.id }} - Estado: {{ item.shipment_status }} - Fecha: {{ item.created_at | date }}
-          </ng-container>
-          <ng-container *ngIf="modalTitulo.includes('Productos')">
-            Producto: {{ item.name }} - Stock: {{ item.stock }}
-          </ng-container>
-        </li>
-      </ul>
+    <ul *ngIf="modalContenido.length > 0">
+      <li *ngFor="let item of modalContenido" (click)="irDetalle(item)" class="clickable-item">
+        <ng-container *ngIf="modalTitulo.includes('Pedidos')">
+          Pedido #{{ item.id }} - Estado: {{ item.shipment_status }} - Fecha: {{ item.created_at | date }}
+        </ng-container>
+        <ng-container *ngIf="modalTitulo.includes('Productos')">
+          Producto: {{ item.name }} - Stock: {{ item.stock }}
+        </ng-container>
+      </li>
+    </ul>
+
     </div>
   </div>
+
+  <div *ngIf="chartReady" class="grafica-card">
+  <h2>Productos por Categoría</h2>
+<canvas baseChart
+  [data]="{
+    labels: chartLabels,
+    datasets: [{ data: chartData, label: 'Productos' }]
+  }"
+  [type]="chartType"
+  [options]="chartOptions">
+</canvas>
+
+</div>
+
 </div>

@@ -1,1 +1,62 @@
-<p>admin-finanzas works!</p>
+<div *ngIf="cargando">Cargando datos de finanzas...</div>
+
+<div *ngIf="!cargando">
+  <h1>Resumen de Finanzas</h1>
+
+  <div class="tarjetas-resumen">
+    <div class="tarjeta total">
+      <h2>Total Ingresos</h2>
+      <p>\${{ resumenGeneral?.total | number:'1.2-2' }}</p>
+    </div>
+    <div class="tarjeta productos">
+      <h2>Ingresos por Productos</h2>
+      <p>\${{ resumenGeneral?.productos | number:'1.2-2' }}</p>
+    </div>
+    <div class="tarjeta envios">
+      <h2>Ingresos por Envío</h2>
+      <p>\${{ resumenGeneral?.envio | number:'1.2-2' }}</p>
+    </div>
+  </div>
+
+  <h2>Filtrar por Año</h2>
+  <label for="selectAnio">Selecciona año:</label>
+  <select id="selectAnio" [(ngModel)]="anioSeleccionado" (change)="filtrarMesesPorAnio(anioSeleccionado)">
+    <option *ngFor="let anio of aniosDisponibles" [value]="anio">{{ anio }}</option>
+  </select>
+
+  <h2>Ingresos por Mes</h2>
+  <table class="tabla-finanzas">
+    <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Pedidos</th>
+        <th>Productos</th>
+        <th>Envíos</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of ingresosPorMesFiltrados">
+        <td>{{ item.mes }}</td>
+        <td>{{ item.cantidad_pedidos }}</td>
+        <td>\${{ item.ingresos_productos | number:'1.2-2' }}</td>
+        <td>\${{ item.ingresos_envio | number:'1.2-2' }}</td>
+        <td>\${{ item.total_ingresos | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="paginacion">
+    <button (click)="cambiarPagina('prev')" [disabled]="paginaActual === 1">Anterior</button>
+<button (click)="cambiarPagina('next')" [disabled]="estaUltimaPagina">Siguiente</button>
+
+  </div>
+
+  <h2>Gráfica de Ingresos</h2>
+  <canvas baseChart
+    [data]="barChartData"
+    [options]="barChartOptions"
+    [type]="barChartType">
+  </canvas>
+
+</div>

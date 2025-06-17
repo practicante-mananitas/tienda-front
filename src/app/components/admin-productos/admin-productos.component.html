@@ -10,7 +10,7 @@
       </button>
 
       <div class="productos-scroll-container" [attr.data-cat-id]="categoria.id">
-        <div class="producto-card" *ngFor="let producto of productosPorCategoria[categoria.id]">
+        <div class="producto-card" *ngFor="let producto of productosPorCategoria[categoria.id]" [id]="'producto-' + producto.id">
           <!-- Asegúrate de que la URL de la imagen sea correcta si cambias el backend -->
           <img [src]="'http://127.0.0.1:8000/storage/' + producto.image" alt="{{ producto.name }}" />
           <h3>{{ producto.name }}</h3>

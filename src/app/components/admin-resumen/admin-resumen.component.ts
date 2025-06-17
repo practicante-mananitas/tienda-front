@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminResumenService } from '../../services/admin-resumen.service'; // Ajusta ruta
+import { Router } from '@angular/router';
+import { ChartConfiguration, ChartType } from 'chart.js';
+import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
+
 
 @Component({
   selector: 'app-admin-resumen',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgChartsModule],
   templateUrl: './admin-resumen.component.html',
   styleUrls: ['./admin-resumen.component.scss']
 })
@@ -20,12 +24,57 @@ export class AdminResumenComponent implements OnInit {
   modalVisible = false;
   modalTitulo = '';
   modalContenido: any[] = [];
-
-  constructor(private resumenService: AdminResumenService) {}
-
-  ngOnInit() {
-    this.cargarResumen();
+  public chartLabels: string[] = [];
+public chartData: number[] = [];
+public chartReady = false;
+public chartType: ChartType = 'bar'; // o 'pie', 'line', etc.
+public chartOptions: ChartConfiguration['options'] = {
+  responsive: true,
+  scales: {
+    x: {},
+    y: {
+      beginAtZero: true,
+      ticks: { stepSize: 1 }
+    }
+  },
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: true,
+      text: 'Productos por Categoría',
+    }
   }
+};
+
+
+
+  constructor(private resumenService: AdminResumenService,
+    private router: Router 
+  ) {}
+
+ngOnInit() {
+  this.cargarResumen();
+
+  this.resumenService.productosPorCategoria().subscribe(data => {
+    this.chartLabels = data.map(item => item.categoria);
+    this.chartData = data.map(item => item.total);
+
+    this.chartType = window.innerWidth < 768 ? 'doughnut' : 'bar';
+    this.chartReady = true;
+  });
+
+  // Escuchar cambios de tamaño opcionalmente
+  window.addEventListener('resize', () => {
+    const nuevoTipo = window.innerWidth < 768 ? 'doughnut' : 'bar';
+    if (this.chartType !== nuevoTipo) {
+      this.chartType = nuevoTipo;
+    }
+  });
+}
+
+
 
   cargarResumen() {
     this.resumenService.pedidosPendientes().subscribe(data => {
@@ -57,5 +106,25 @@ export class AdminResumenComponent implements OnInit {
     this.modalVisible = false;
     this.modalContenido = [];
   }
+
+  obtenerKeys(obj: any): string[] {
+  return Object.keys(obj).filter(k => typeof obj[k] !== 'object');
+}
+
+irDetalle(item: any) {  
+  if (this.modalTitulo.includes('Pedidos')) {
+    this.router.navigate(['/admin-panel/pedidos'], { queryParams: { scrollTo: item.id } });
+    this.cerrarModal();
+  } else if (this.modalTitulo.includes('Productos')) {
+    // Cambiar 'admin-products' por 'productos' que es la ruta correcta
+    this.router.navigate(['/admin-panel/productos'], { queryParams: { scrollTo: item.id } });
+    this.cerrarModal();
+  }
+}
+
+
+
+
+
 
 }

@@ -22,9 +22,28 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
-  login(data: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, data);
-  }
+login(data: { email: string; password: string }): Observable<any> {
+  return new Observable((observer) => {
+    this.http.post(`${this.apiUrl}/login`, data).subscribe({
+      next: (res: any) => {
+        const token = res.access_token;
+        this.saveToken(token);
+
+        // ahora pedimos los datos del usuario
+        const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+        this.http.get(`${this.apiUrl}/me`, { headers }).subscribe({
+          next: (user: any) => {
+            localStorage.setItem('usuario', JSON.stringify(user));
+            observer.next({ token, user });
+          },
+          error: (err) => observer.error(err)
+        });
+      },
+      error: (err) => observer.error(err)
+    });
+  });
+}
+
 
   getProfile(): Observable<any> {
     const token = localStorage.getItem('token');
@@ -64,5 +83,11 @@ export class AuthService {
     });
   });
 }
+
+obtenerUsuario() {
+  const user = localStorage.getItem('usuario');
+  return user ? JSON.parse(user) : null;
+}
+
 
 }

@@ -7,9 +7,7 @@ import { faSpinner, faTruck, faBox, faCheckCircle, faTimesCircle, faEye } from '
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-admin-pedidos',
-  templateUrl: './admin-pedidos.component.html',
-  standalone: true,
+  selector: 'app-admin-pedidos-enviados',
   imports: [
     CommonModule,
     DatePipe,
@@ -18,10 +16,12 @@ import { ActivatedRoute } from '@angular/router';
     FormsModule,
     FaIconComponent // IMPORTANTE: Agregar el componente de FontAwesome
   ],
-  styleUrls: ['./admin-pedidos.component.scss']
+  standalone: true,
+  templateUrl: './admin-pedidos-enviados.component.html',
+  styleUrl: './admin-pedidos-enviados.component.scss'
 })
-export class AdminPedidosComponent implements OnInit {
-  pedidos: any[] = [];
+export class AdminPedidosEnviadosComponent implements OnInit{
+pedidos: any[] = [];
   pedidoItems: { [key: number]: any[] } = {};
   pedidoItemsVisibles: { [key: number]: boolean } = {};
   showDetailsModal: boolean = false;
@@ -91,7 +91,7 @@ cargarPedidos() {
     next: (data) => {
       // Filtrar para que solo queden los pedidos con shipment_status 'in_process' o 'sent'
       this.pedidos = data.filter(pedido => 
-        pedido.shipment_status === 'in_process' 
+        pedido.shipment_status === 'sent' 
       );
 
       this.pedidos.forEach(pedido => {

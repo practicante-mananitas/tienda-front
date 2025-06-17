@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
@@ -20,31 +20,59 @@ export class AdminProductosComponent implements OnInit {
   faEdit = faEdit;
   faArrowLeft = faArrowLeft;
   faArrowRight = faArrowRight;
+  scrollToId: string | null = null;
 
-  constructor(private adminService: AdminService, private router: Router) {}
+  constructor(private adminService: AdminService, 
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
-  ngOnInit(): void {
-    this.cargarCategoriasYProductos();
-  }
+ngOnInit(): void {
+  // Primero guardamos el scrollToId del query param
+  this.route.queryParams.subscribe(params => {
+    this.scrollToId = params['scrollTo'] || null;
+  });
+
+  // Luego cargamos categorías y productos
+  this.cargarCategoriasYProductos();
+}
 
   cargarCategoriasYProductos(): void {
-    this.adminService.getCategorias().subscribe(cats => {
-      this.categorias = cats;
-      this.productosPorCategoria = {}; 
+  this.adminService.getCategorias().subscribe(cats => {
+    this.categorias = cats;
+    this.productosPorCategoria = {};
 
-      cats.forEach(cat => {
-        this.adminService.getProductosPorCategoria(cat.id).subscribe(prods => {
-          this.productosPorCategoria[cat.id] = prods;
-        }, error => {
-          console.error(`Error al cargar productos para categoría ${cat.id}:`, error);
-          alert(`Error al cargar productos de la categoría ${cat.name}.`);
-        });
+    let categoriasCargadas = 0;
+
+    cats.forEach(cat => {
+      this.adminService.getProductosPorCategoria(cat.id).subscribe(prods => {
+        this.productosPorCategoria[cat.id] = prods;
+        categoriasCargadas++;
+
+        if (categoriasCargadas === cats.length && this.scrollToId) {
+          setTimeout(() => {
+            const el = document.getElementById('producto-' + this.scrollToId);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            this.scrollToId = null; // limpiamos para no repetir scroll
+            if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  el.classList.add('highlight');
+                  setTimeout(() => {
+                    el.classList.remove('highlight');
+                  }, 3000); // remueve el resaltado tras 3 segundos
+                }
+          }, 0);
+        }
       });
-    }, error => {
-      console.error('Error al cargar categorías:', error);
-      alert('Error al cargar las categorías.');
     });
-  }
+  }, error => {
+    console.error('Error al cargar categorías:', error);
+    alert('Error al cargar las categorías.');
+  });
+}
+
 
   editar(id: number) {
     this.router.navigate(['/admin-panel/productos/editar', id]);

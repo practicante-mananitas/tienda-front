@@ -7,12 +7,13 @@ export const adminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const user = authService.obtenerUsuario(); // debe retornar el usuario con el campo role
+  const token = localStorage.getItem('token');
+  const user = authService.obtenerUsuario();
 
-  if (user && user.role === 'admin') {
+  if (token && user && user.role === 'admin') {
     return true;
   } else {
-    router.navigate(['/']); // redirige a inicio si no es admin
+    router.navigate(['/login']); // o a donde quieras redirigir
     return false;
   }
 };

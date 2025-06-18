@@ -3,31 +3,47 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service'; // Ajusta la ruta si es necesario
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Obtén el token de autenticación del localStorage (o de tu servicio de autenticación)
-    // Asegúrate de que tu servicio de autenticación guarde el token en 'token' en localStorage.
     const token = localStorage.getItem('token');
 
-    // Clona la petición y añade el encabezado Authorization si el token existe
     if (token) {
-      // Clona la solicitud para añadir el encabezado de autorización
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}` // Formato estándar: "Bearer TU_TOKEN"
+          Authorization: `Bearer ${token}`
         }
       });
     }
 
-    // Pasa la petición (modificada o no) al siguiente manejador de la cadena
-    return next.handle(request);
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          // ⚠️ Verifica si es una solicitud a login o register
+          const isLoginOrRegister =
+            request.url.includes('/login') || request.url.includes('/register');
+
+          if (!isLoginOrRegister) {
+            const mensaje = error.error?.mensaje || 'Tu sesión ha expirado o es inválida.';
+            alert(mensaje);
+            this.authService.logout();
+            this.router.navigate(['/login']);
+          }
+        }
+
+        return throwError(() => error);
+      })
+    );
   }
 }

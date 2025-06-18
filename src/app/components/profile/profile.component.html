@@ -7,8 +7,8 @@
   <!-- Sidebar -->
   <aside class="sidebar" [class.active]="sidebarOpen">
     <ul>
-      <li routerLink="/mis-pedidos"><i>🛒</i> Compras</li>
-      <li><i>📦</i> Ventas</li>
+      <li routerLink="/tienda"><i>📦</i> Tienda</li>
+      <li routerLink="/mis-pedidos"><i>🛒</i> Mis Compras</li>
       <li><i>📈</i> Marketing</li>
       <li><i>💳</i> Créditos</li>
       <li><i>🔔</i> Suscripciones</li>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="profile-cards">
-      <div class="card">
+      <div class="card" routerLink="/info">
         <h3>Tu información</h3>
         <p>Nombre elegido y datos para identificarte.</p>
       </div>
@@ -38,7 +38,7 @@
         <h3>Datos de tu cuenta</h3>
         <p>Representan tu cuenta en Aeromx y Mercado Pago.</p>
       </div>
-      <div class="card">
+      <div class="card" routerLink="/seguridad">
         <h3>Seguridad</h3>
         <p>Configura contraseñas y accesos.</p>
       </div>

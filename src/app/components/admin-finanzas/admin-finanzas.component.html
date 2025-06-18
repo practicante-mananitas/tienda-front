@@ -53,10 +53,20 @@
   </div>
 
   <h2>Gráfica de Ingresos</h2>
-  <canvas baseChart
-    [data]="barChartData"
-    [options]="barChartOptions"
-    [type]="barChartType">
-  </canvas>
+<canvas baseChart
+  *ngIf="chartType === 'bar'"
+  [data]="barChartData"
+  [options]="barChartOptions"
+  [type]="'bar'">
+</canvas>
+
+<canvas baseChart
+  *ngIf="chartType === 'doughnut'"
+  [data]="doughnutChartData"
+  [options]="doughnutChartOptions"
+  [type]="'doughnut'">
+</canvas>
+
+
 
 </div>

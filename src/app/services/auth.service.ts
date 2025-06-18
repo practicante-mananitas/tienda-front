@@ -18,7 +18,7 @@ export class AuthService {
     phone: string; 
     latitude: number; 
     longitude: number; 
-   }): Observable<any> {
+  }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
@@ -27,14 +27,18 @@ login(data: { email: string; password: string }): Observable<any> {
     this.http.post(`${this.apiUrl}/login`, data).subscribe({
       next: (res: any) => {
         const token = res.access_token;
+        const sessionId = res.session_id;  // <-- aquí obtienes el session_id
         this.saveToken(token);
+
+        // Guardar session_id en localStorage
+        localStorage.setItem('session_id', sessionId.toString());
 
         // ahora pedimos los datos del usuario
         const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
         this.http.get(`${this.apiUrl}/me`, { headers }).subscribe({
           next: (user: any) => {
             localStorage.setItem('usuario', JSON.stringify(user));
-            observer.next({ token, user });
+            observer.next({ token, user, sessionId });
           },
           error: (err) => observer.error(err)
         });
@@ -57,8 +61,26 @@ login(data: { email: string; password: string }): Observable<any> {
     localStorage.setItem('token', token);
   }
 
-  logout() {
-    localStorage.removeItem('token');
+  // Aquí modificamos logout para llamar al backend y eliminar token local después
+  logout(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return new Observable((observer) => {
+      this.http.post(`${this.apiUrl}/logout`, {}, { headers }).subscribe({
+        next: (res) => {
+          this.clearSession();
+          observer.next(res);
+          observer.complete();
+        },
+        error: (err) => {
+          this.clearSession();
+          observer.error(err);
+        }
+      });
+    });
   }
 
   isLoggedIn(): boolean {
@@ -66,28 +88,32 @@ login(data: { email: string; password: string }): Observable<any> {
   }
 
   checkSession(): Observable<boolean> {
-  const token = localStorage.getItem('token');
-  if (!token) return new Observable<boolean>((observer) => observer.next(false));
+    const token = localStorage.getItem('token');
+    if (!token) return new Observable<boolean>((observer) => observer.next(false));
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`
-  });
-
-  return new Observable<boolean>((observer) => {
-    this.http.get(`${this.apiUrl}/me`, { headers }).subscribe({
-      next: () => observer.next(true),
-      error: () => {
-        this.logout();
-        observer.next(false);
-      }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
     });
-  });
-}
 
-obtenerUsuario() {
-  const user = localStorage.getItem('usuario');
-  return user ? JSON.parse(user) : null;
-}
+    return new Observable<boolean>((observer) => {
+      this.http.get(`${this.apiUrl}/me`, { headers }).subscribe({
+        next: () => observer.next(true),
+        error: () => {
+          this.clearSession();
+          observer.next(false);
+        }
+      });
+    });
+  }
 
+  obtenerUsuario() {
+    const user = localStorage.getItem('usuario');
+    return user ? JSON.parse(user) : null;
+  }
 
+  // Limpia sesión local
+  clearSession() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+  }
 }

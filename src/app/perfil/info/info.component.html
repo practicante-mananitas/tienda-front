@@ -1,0 +1,23 @@
+<!-- Botón volver -->
+<div class="back-btn-container">
+  <button class="back-btn" (click)="volver()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Volver
+  </button>
+
+<div class="card">
+  <h3>Tu información</h3>
+  <p>Nombre elegido y datos para identificarte.</p>
+
+  <ul *ngIf="usuario">
+    <li><strong>Nombre:</strong> {{ usuario.name }}</li>
+    <li><strong>Email:</strong> {{ usuario.email }}</li>
+    <li><strong>Teléfono:</strong> {{ usuario.phone || 'No proporcionado' }}</li>
+    <li><strong>Registrado desde:</strong> {{ formatFecha(usuario.created_at) }}</li>
+  </ul>
+
+  <p *ngIf="!usuario">No se pudo obtener la información del usuario.</p>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AddressService } from '../../services/address.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-lista-direcciones',
@@ -15,7 +16,9 @@ export class ListaDireccionesComponent implements OnInit {
   direcciones: any[] = [];
   estados: any[] = [];
 
-  constructor(private addressService: AddressService) {}
+  constructor(private addressService: AddressService,
+    private location: Location
+  ) {}
 
 ngOnInit(): void {
   this.addressService.getEstados().subscribe({
@@ -36,5 +39,8 @@ getNombreEstado(id: number): string {
   return estado ? estado.name : `ID ${id}`;
 }
 
+  volver() {
+  this.location.back();
+}
 
 }

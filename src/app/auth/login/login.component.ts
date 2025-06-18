@@ -25,12 +25,16 @@ export class LoginComponent {
 
         const redirect = localStorage.getItem('redirectAfterLogin');
 
-        if (redirect && redirect !== '/login') {
-          localStorage.removeItem('redirectAfterLogin');
-          this.router.navigateByUrl(redirect);
-        } else {
-          this.router.navigate(['/profile']);
-        }
+          const usuario = res.user;
+
+          if (redirect && redirect !== '/login') {
+            localStorage.removeItem('redirectAfterLogin');
+            this.router.navigateByUrl(redirect);
+          } else if (usuario.role === 'admin') {
+            this.router.navigate(['/admin-panel']);
+          } else {
+            this.router.navigate(['/profile']);
+          }
       },
       error: () => alert('Login incorrecto')
     });

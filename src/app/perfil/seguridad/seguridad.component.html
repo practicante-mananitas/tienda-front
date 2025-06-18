@@ -1,0 +1,90 @@
+<!-- Botón volver -->
+<div class="back-btn-container">
+  <button class="back-btn" (click)="volver()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Volver
+  </button>
+
+<div class="seguridad-container">
+  <h1>Configuración de Seguridad</h1>
+  <p>Aquí podrás cambiar tu contraseña, revisar accesos y cerrar sesiones sospechosas.</p>
+
+  <!-- Cambiar contraseña -->
+  <div class="card">
+    <h3>Cambiar contraseña</h3>
+    <form [formGroup]="passwordForm" (ngSubmit)="cambiarContrasena()">
+
+      <label>
+        Contraseña actual:
+        <input type="password" formControlName="password_actual" />
+      </label>
+      <div *ngIf="passwordForm.get('password_actual')?.touched && passwordForm.get('password_actual')?.invalid" class="error">
+        La contraseña actual es obligatoria.
+      </div>
+
+      <label>
+        Nueva contraseña:
+        <input type="password" formControlName="nueva_password" />
+      </label>
+      <div *ngIf="passwordForm.get('nueva_password')?.touched && passwordForm.get('nueva_password')?.errors" class="error">
+        <div *ngIf="passwordForm.get('nueva_password')?.errors?.['required']">La nueva contraseña es obligatoria.</div>
+        <div *ngIf="passwordForm.get('nueva_password')?.errors?.['minlength']">Debe tener al menos 6 caracteres.</div>
+        <div *ngIf="passwordForm.get('nueva_password')?.errors?.['pattern']">Debe incluir mayúscula, número y carácter especial.</div>
+      </div>
+
+      <label>
+        Confirmar nueva contraseña:
+        <input type="password" formControlName="nueva_password_confirmation" />
+      </label>
+      <div *ngIf="passwordForm.errors?.['noMatch'] && passwordForm.get('nueva_password_confirmation')?.touched" class="error">
+        Las contraseñas no coinciden.
+      </div>
+
+      <button type="submit">Cambiar contraseña</button>
+    </form>
+
+    <div *ngIf="mensaje" class="mensaje-success">{{ mensaje }}</div>
+    <div *ngIf="error" class="mensaje-error">{{ error }}</div>
+  </div>
+
+  <!-- Actividad reciente -->
+  <div class="card">
+    <h3>Actividad reciente</h3>
+    <ul *ngIf="actividades.length > 0; else noActividad">
+      <li *ngFor="let act of actividades">
+        {{ act.login_at | date:'short' }} - IP: {{ act.ip_address }} - Ubicación: {{ act.location || 'No disponible' }} - Navegador: {{ act.user_agent }}
+      </li>
+    </ul>
+    <ng-template #noActividad>
+      <p>No hay actividad reciente.</p>
+    </ng-template>
+    <div *ngIf="errorActividad" class="mensaje-error">{{ errorActividad }}</div>
+  </div>
+
+
+<!-- Sesiones activas -->
+<div class="card">
+  <h3>Sesiones activas</h3>
+  <ul *ngIf="sesionesActivas.length > 0; else noSesiones">
+    <li *ngFor="let sesion of sesionesActivas">
+      {{ sesion.login_at | date:'short' }} - IP: {{ sesion.ip_address }} - Ubicación: {{ sesion.location || 'No disponible' }} - Navegador: {{ sesion.user_agent }}
+
+      <ng-container *ngIf="!esSesionActual(sesion.id); else sesionActual">
+        <button (click)="cerrarSesion(sesion.id)">Cerrar sesión</button>
+      </ng-container>
+
+      <ng-template #sesionActual>
+        <span style="font-weight: bold; color: green;">(Esta es tu sesión actual)</span>
+      </ng-template>
+    </li>
+  </ul>
+  <ng-template #noSesiones>
+    <p>No tienes sesiones activas.</p>
+  </ng-template>
+  <div *ngIf="errorSesiones" class="mensaje-error">{{ errorSesiones }}</div>
+</div>
+
+</div>

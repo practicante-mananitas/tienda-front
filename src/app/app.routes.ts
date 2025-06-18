@@ -19,6 +19,9 @@ import { ListaDireccionesComponent } from './components/lista-direcciones/lista-
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { PagoExitoComponent } from './components/pago-exito/pago-exito.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { adminGuard } from './guards/admin.guard';
+import { SeguridadComponent } from './perfil/seguridad/seguridad.component';
+import { InfoComponent } from './perfil/info/info.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -41,7 +44,9 @@ export const routes: Routes = [
   { path: 'direccion-extra/:id', component: DireccionFormComponent },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'pago/exito', component: PagoExitoComponent},
-  { path: 'admin-panel', component: AdminPanelComponent},
+  { path: 'seguridad', component: SeguridadComponent},
+  { path: 'info', component: InfoComponent},
+  // { path: 'admin-panel', component: AdminPanelComponent, canActivate: [adminGuard]},
   // { path: 'admin-panel/producto-nuevo', component: ProductFormComponent },
    ...adminRoutes,
   { path: '**', redirectTo: 'tienda' }

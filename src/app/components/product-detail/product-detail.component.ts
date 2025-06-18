@@ -155,6 +155,7 @@ export class ProductDetailComponent implements OnInit {
   agregarAlCarrito(): void {
     // Verificar autenticación
     if (!this.authService.isLoggedIn()) {
+      alert('Debes iniciar sesión para continuar.'); // ✅ Muestra el mensaje
       localStorage.setItem('redirectAfterLogin', this.router.url);
       this.router.navigate(['/login']);
       return;

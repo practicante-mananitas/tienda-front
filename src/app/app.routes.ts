@@ -22,6 +22,7 @@ import { AdminPanelComponent } from './components/admin-panel/admin-panel.compon
 import { adminGuard } from './guards/admin.guard';
 import { SeguridadComponent } from './perfil/seguridad/seguridad.component';
 import { InfoComponent } from './perfil/info/info.component';
+import { CategoryDetailComponent } from './components/categorydetail/categorydetail.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,7 +38,7 @@ export const routes: Routes = [
   { path: 'mis-pedidos', component: MisPedidosComponent, canActivate: [authGuard] },
   { path: 'buscar', component: SearchResultsComponent},
   // { path: 'categoria/:id', component: ProductGalleryComponent},
-  { path: 'categoria/1', component: Categoria1Component},
+  // { path: 'categoria/1', component: Categoria1Component},
   { path: 'registrar-direccion', component: DireccionFormComponent},
   { path: 'mis-direcciones', component: ListaDireccionesComponent},
   { path: 'direccion/:id', component: DireccionFormComponent },
@@ -46,6 +47,8 @@ export const routes: Routes = [
   { path: 'pago/exito', component: PagoExitoComponent},
   { path: 'seguridad', component: SeguridadComponent},
   { path: 'info', component: InfoComponent},
+  { path: 'categoria/:id', component: CategoryDetailComponent },
+
   // { path: 'admin-panel', component: AdminPanelComponent, canActivate: [adminGuard]},
   // { path: 'admin-panel/producto-nuevo', component: ProductFormComponent },
    ...adminRoutes,

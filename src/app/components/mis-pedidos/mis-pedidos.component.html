@@ -26,9 +26,13 @@
         <span class="label">Envío:</span>
         <span class="value">${{ order.envio | number:'1.2-2' }}</span>
       </div>
-      <div class="line">
+      <!-- <div class="line">
         <span class="label">Estado:</span>
         <span class="value">{{ order.status | titlecase }}</span>
+      </div> -->
+      <div class="line">
+        <span class="label">Estado:</span>
+        <span class="value">{{ order.shipment_status | titlecase }}</span>
       </div>
       <div class="line" *ngIf="order.fecha_maxima_entrega">
         <span class="label">Fecha Máx. Entrega:</span>

@@ -36,9 +36,17 @@
         <p>Relacionado con tus visitas recientes</p>
       </div>
       <div class="carousel-wrapper">
-        <button class="nav left" (click)="scrollLeft(category.id)">❮</button>
+        <!-- Botón izquierdo: deshabilitado si isLeftNavDisabled() es true -->
+        <button class="nav left"
+        *ngIf="!isLeftNavDisabled(category.id)"
+        (click)="scrollLeft(category.id)">
+          ❮
+        </button>
+
         <div class="gallery" #scrollContainer [attr.data-category-id]="category.id">
-          <div class="card" *ngFor="let product of getProductsByCategory(category.id)" [routerLink]="['/tienda', product.id]">
+          <div class="card" *ngFor="let product of getProductsByCategory(category.id); let i = index"
+              [id]="'producto-' + category.id + '-' + i"
+              [routerLink]="['/tienda', product.id]">
             <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
             <div class="info">
               <h3>{{ product.name }}</h3>
@@ -46,7 +54,12 @@
             </div>
           </div>
         </div>
-        <button class="nav right" (click)="scrollRight(category.id)">❯</button>
+        <!-- Botón derecho: deshabilitado si isRightNavDisabled() es true -->
+        <button class="nav right"
+        *ngIf="!isRightNavDisabled(category.id)"
+        (click)="scrollRight(category.id)">
+          ❯
+        </button>
       </div>
     </div>
 
@@ -88,7 +101,7 @@
           <img [src]="banner.image" [alt]="banner.alt" />
         </div>
       </div>
-    <h2 class="mini-banner-title">ENCUENTRA TAMBIÉN</h2>
+      <h2 class="mini-banner-title">ENCUENTRA TAMBIÉN</h2>
       <div class="mini-banner-bottom-row">
         <div class="mini-banner-small" *ngFor="let banner of miniBanners.slice(2,5)">
           <img [src]="banner.image" [alt]="banner.alt" />
@@ -98,4 +111,3 @@
 
   </ng-container>
 </div>
-

@@ -1,0 +1,77 @@
+<app-slider></app-slider>
+
+<div class="background-gradient" *ngIf="category">
+
+  <!-- Promos iniciales -->
+  <div class="promo-section">
+    <div class="promo-row">
+      <div class="promo-box" *ngFor="let promo of promos.slice(0,2)">
+        <img [src]="promo.image" [alt]="promo.alt" />
+      </div>
+    </div>
+    <div class="promo-single">
+      <img [src]="promos[2].image" [alt]="promos[2].alt" />
+    </div>
+    <br>
+    <div class="promo-single">
+      <img [src]="promos[3].image" [alt]="promos[3].alt" />
+    </div>
+  </div>
+
+  <!-- Datos categoría -->
+  <div class="category-detail-container">
+    <h1>{{ category.name }}</h1>
+    <p *ngIf="category.description">{{ category.description }}</p>
+
+    <!-- 🔁 Carrusel por subcategoría -->
+    <div class="subcategory-section" 
+         [class.no-divider]="i === 1"
+         *ngFor="let subcat of subcategories; let i = index">
+      <div class="subcategory-title">
+        <h2>{{ subcat.name }}</h2>
+        <p *ngIf="subcat.description">{{ subcat.description }}</p>
+      </div>
+
+      <div class="carousel-wrapper">
+        <button class="nav left"
+                *ngIf="!isLeftNavDisabled(subcat.id)"
+                (click)="scrollLeft(subcat.id)">❮</button>
+
+        <div class="gallery" [attr.data-subcategory-id]="subcat.id">
+          <div class="card"
+              *ngFor="let product of getProductsBySubcategory(subcat.id); let j = index"
+              [id]="'product-' + subcat.id + '-' + j"
+              [routerLink]="['/tienda', product.id]">
+            <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
+            <div class="info">
+              <h3>{{ product.name }}</h3>
+              <p class="price">$ {{ product.price }}</p>
+            </div>
+          </div>
+        </div>
+
+        <button class="nav right"
+                *ngIf="!isRightNavDisabled(subcat.id)"
+                (click)="scrollRight(subcat.id)">❯</button>
+      </div>
+
+      <!-- DIVISOR visible solo antes del minibanner en i === 1 -->
+      <div *ngIf="i === 1 && mostWanted.length" class="divider-before-minibanner"></div>
+
+      <!-- Mostrar mini banners después de la segunda subcategoría -->
+      <div *ngIf="i === 1 && mostWanted.length" class="mini-banner-section">
+        <div class="mini-banner-top-row">
+          <div class="mini-banner-large" *ngFor="let banner of miniBanners.slice(0,2)">
+            <img [src]="banner.image" [alt]="banner.alt" />
+          </div>
+        </div>
+        <h2 class="mini-banner-title">ENCUENTRA TAMBIÉN</h2>
+        <div class="mini-banner-bottom-row">
+          <div class="mini-banner-small" *ngFor="let banner of miniBanners.slice(2,5)">
+            <img [src]="banner.image" [alt]="banner.alt" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

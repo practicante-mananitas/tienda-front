@@ -30,20 +30,26 @@ export class NavbarComponent implements OnInit {
     private productService: ProductService
   ) {}
 
-  ngOnInit(): void {
-  // Verificar token real con el backend
+ngOnInit(): void {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    // Usuario invitado, no hacemos nada con el carrito aún
+    return;
+  }
+
   this.authService.checkSession().subscribe((isValid) => {
     if (isValid) {
-      this.cartService.getCart().subscribe(); // carga inicial
+      this.cartService.getCart().subscribe();
       this.cartService.cartCount$.subscribe(count => {
         this.cartCount = count;
       });
     } else {
       this.authService.logout();
-      // Opcional: mostrar mensaje o redirigir
-      // alert('Tu sesión ha expirado, por favor inicia sesión');
-      // this.router.navigate(['/login']);
+      // No redirigimos, solo limpiamos la sesión
     }
+  }, error => {
+    console.warn('Error al validar sesión:', error);
   });
 
   // Cargar categorías siempre

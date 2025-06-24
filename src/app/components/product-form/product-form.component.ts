@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core'; // Añadimos OnInit
-import { FormsModule, NgForm } from '@angular/forms'; // Añadimos NgForm
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
+import { SubcategoryService } from '../../services/subcategory.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Output, EventEmitter } from '@angular/core';
-
 
 @Component({
   selector: 'app-product-form',
@@ -14,29 +14,32 @@ import { Output, EventEmitter } from '@angular/core';
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })
-export class ProductFormComponent implements OnInit { // Implementamos OnInit
+export class ProductFormComponent implements OnInit {
   product = {
     name: '',
     description: '',
     price: 0,
     category_id: '',
+    subcategory_id: '', // <--- NUEVO: propiedad para la subcategoría
     weight: 0,
     height: 0,
     width: 0,
     length: 0,
-    stock: 0 // <--- NUEVO: Propiedad para el stock
+    stock: 0
   };
 
   categories: any[] = [];
+  subcategories: any[] = [];
+  galleryFiles: File[] = [];
   selectedFile: File | null = null;
   formIntentado = false;
   @Output() productoCreado = new EventEmitter<void>();
 
-
   constructor(
-    private productService: ProductService, 
+    private productService: ProductService,
+    private subcategoryService: SubcategoryService,
     public router: Router,
-    private http: HttpClient // Se mantiene si lo usas en otro lado (aunque no veo uso directo de 'http' aquí fuera de productService)
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -44,27 +47,35 @@ export class ProductFormComponent implements OnInit { // Implementamos OnInit
       next: (res) => this.categories = res,
       error: (err) => console.error('Error al cargar categorías', err)
     });
-    
   }
-  
+
+  onGalleryChange(event: any) {
+    this.galleryFiles = Array.from(event.target.files);
+  }
+
+  onCategoryChange(categoryId: number) {
+    this.product.subcategory_id = ''; // limpiar subcategoría
+    this.subcategoryService.getByCategory(categoryId).subscribe({
+      next: (subs) => this.subcategories = subs,
+      error: (err) => console.error('Error al cargar subcategorías', err)
+    });
+  }
+
   onFileChange(event: any) {
     const file = event.target.files[0];
     this.selectedFile = file;
   }
 
-  onSubmit(form: NgForm) { // Tipamos el formulario como NgForm
+  onSubmit(form: NgForm) {
     this.formIntentado = true;
 
     if (form.invalid) {
-      // Marca todos los campos como tocados
       Object.values(form.controls).forEach((control: any) => {
         control.markAsTouched();
       });
 
-      // Mostrar alerta
       alert('⚠️ Por favor, completa todos los campos obligatorios correctamente.');
 
-      // Scroll hacia la alerta visual
       setTimeout(() => {
         const warning = document.querySelector('.form-warning');
         if (warning) {
@@ -80,21 +91,26 @@ export class ProductFormComponent implements OnInit { // Implementamos OnInit
     formData.append('description', this.product.description);
     formData.append('price', this.product.price.toString());
     formData.append('category_id', this.product.category_id);
+    formData.append('subcategory_id', this.product.subcategory_id); // <--- Añadir subcategoría
     formData.append('weight', this.product.weight.toString());
     formData.append('height', this.product.height.toString());
     formData.append('width', this.product.width.toString());
     formData.append('length', this.product.length.toString());
-    formData.append('stock', this.product.stock.toString()); // <--- NUEVO: Añadir el stock al FormData
+    formData.append('stock', this.product.stock.toString());
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
 
+    this.galleryFiles.forEach(file => {
+      formData.append('gallery[]', file);
+    });
+
     this.productService.createProduct(formData).subscribe({
       next: () => {
         alert('Producto creado correctamente');
         this.productoCreado.emit();
-        this.router.navigate(['/admin-panel']); // Redirigir al panel de administración
+        this.router.navigate(['/admin-panel']);
       },
       error: err => {
         console.error('Error al crear producto:', err);

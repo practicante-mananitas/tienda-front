@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
+import { SubcategoryService } from '../../services/subcategory.service';
 
 @Component({
   selector: 'app-product-edit',
@@ -18,49 +19,90 @@ export class ProductEditComponent implements OnInit {
     price: 0,
     image: '',
     category_id: null,
+    subcategory_id: null,
     weight: null,
     height: null,
     width: null,
     length: null,
-    stock: 0 // <--- NUEVO: Inicializa el stock
+    stock: 0
   };
 
   categories: any[] = [];
-  selectedFile: File | null = null;
+  subcategories: any[] = [];
+  gallery: any[] = [];       // Imágenes actuales de la galería
+  galleryFiles: File[] = []; // Nuevas imágenes para subir
+  selectedFile: File | null = null; // Imagen principal nueva
   productId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
+    private subcategoryService: SubcategoryService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.productId = +this.route.snapshot.paramMap.get('id')!;
-  
-    // Obtener datos del producto
+
+    // Obtener producto con galería incluida
     this.productService.getProduct(this.productId).subscribe({
       next: data => {
         this.product = data;
-        // Asegurarse de que el stock se inicialice correctamente si es null o undefined desde la API
-        if (typeof this.product.stock === 'undefined' || this.product.stock === null) {
-          this.product.stock = 0; 
+        this.gallery = data.images || [];
+
+        if (this.product.stock === null || typeof this.product.stock === 'undefined') {
+          this.product.stock = 0;
+        }
+
+        if (this.product.category_id) {
+          this.loadSubcategories(this.product.category_id);
         }
       },
       error: () => alert('Producto no encontrado')
     });
-  
-    // Obtener categorías
+
+    // Cargar categorías
     this.productService.getCategories().subscribe({
       next: cats => this.categories = cats,
       error: () => alert('Error al cargar categorías')
     });
   }
-  
+
+  eliminarImagenGaleria(id: number) {
+    if (confirm('¿Seguro que quieres eliminar esta imagen?')) {
+      this.productService.deleteGalleryImage(id).subscribe({
+        next: () => {
+          this.gallery = this.gallery.filter(img => img.id !== id);
+        },
+        error: err => {
+          console.error('Error al eliminar imagen:', err);
+          alert('Error al eliminar la imagen.');
+        }
+      });
+    }
+  }
+
+  loadSubcategories(categoryId: number) {
+    this.subcategoryService.getByCategory(categoryId).subscribe({
+      next: res => this.subcategories = res,
+      error: err => console.error('Error al cargar subcategorías:', err)
+    });
+  }
+
+  onCategoryChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.product.category_id = +value;
+    this.product.subcategory_id = null;
+    this.loadSubcategories(this.product.category_id);
+  }
 
   onFileChange(event: any) {
     const file = event.target.files[0];
     this.selectedFile = file;
+  }
+
+  onGalleryChange(event: any) {
+    this.galleryFiles = Array.from(event.target.files);
   }
 
   onSubmit() {
@@ -69,7 +111,8 @@ export class ProductEditComponent implements OnInit {
     formData.append('description', this.product.description);
     formData.append('price', this.product.price.toString());
     formData.append('category_id', this.product.category_id);
-    formData.append('stock', this.product.stock.toString()); // <--- NUEVO: Añadir el stock al FormData
+    formData.append('subcategory_id', this.product.subcategory_id);
+    formData.append('stock', this.product.stock.toString());
 
     formData.append('weight', this.product.weight?.toString() || '');
     formData.append('height', this.product.height?.toString() || '');
@@ -79,6 +122,10 @@ export class ProductEditComponent implements OnInit {
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
+
+    this.galleryFiles.forEach(file => {
+      formData.append('gallery[]', file);
+    });
 
     this.productService.updateProduct(this.productId, formData).subscribe({
       next: () => {

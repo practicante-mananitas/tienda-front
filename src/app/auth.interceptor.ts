@@ -9,7 +9,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service'; // Ajusta la ruta si es necesario
+import { AuthService } from './services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -19,7 +19,17 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
 
-    if (token) {
+    // Lista de endpoints públicos (puedes agregar más si los necesitas)
+    const publicEndpoints = [
+      '/login',
+      '/register',
+      '/categories',
+      '/highlight-sections'
+    ];
+
+    const isPublic = publicEndpoints.some(url => request.url.includes(url));
+
+    if (token && !isPublic) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -30,9 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // ⚠️ Verifica si es una solicitud a login o register
-          const isLoginOrRegister =
-            request.url.includes('/login') || request.url.includes('/register');
+          const isLoginOrRegister = request.url.includes('/login') || request.url.includes('/register');
 
           if (!isLoginOrRegister) {
             const mensaje = error.error?.mensaje || 'Tu sesión ha expirado o es inválida.';

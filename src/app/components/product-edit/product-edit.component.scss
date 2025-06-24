@@ -41,6 +41,37 @@ form {
       resize: vertical;
       min-height: 100px;
     }
+
+    .gallery-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .thumb {
+        position: relative;
+
+        img {
+          border-radius: 6px;
+          box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .delete-button {
+          position: absolute;
+          top: 0;
+          right: 0;
+          background: red;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          font-size: 14px;
+          cursor: pointer;
+          transform: translate(50%, -50%);
+        }
+      }
+    }
+
   }
 
   fieldset {

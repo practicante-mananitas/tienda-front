@@ -8,7 +8,28 @@
 
 <div *ngIf="product" class="detail-container">
   <div class="left-section">
-    <img *ngIf="product.image" [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="Producto" />
+    <img *ngIf="selectedImage" [src]="'http://127.0.0.1:8000/storage/' + selectedImage" alt="Imagen seleccionada" class="main-image" />
+      <div class="thumbnails">
+        <!-- Imagen principal -->
+        <img 
+          *ngIf="product.image" 
+          [src]="'http://127.0.0.1:8000/storage/' + product.image" 
+          alt="Principal" 
+          class="thumb" 
+          [class.active]="selectedImage === product.image"
+          (click)="selectedImage = product.image"
+        />
+
+        <!-- Galería -->
+        <img 
+          *ngFor="let img of product.images" 
+          [src]="'http://127.0.0.1:8000/storage/' + img.image" 
+          alt="Galería" 
+          class="thumb" 
+          [class.active]="selectedImage === img.image"
+          (click)="selectedImage = img.image"
+        />
+      </div>
   </div>
 
   <!-- AÑADIDO: Clase 'out-of-stock' cuando el producto no tiene stock -->

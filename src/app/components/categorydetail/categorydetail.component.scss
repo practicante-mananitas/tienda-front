@@ -289,6 +289,65 @@
   }
 }
 
+// Categorias por punto
+.category-showcase {
+  padding: 40px 20px;
+  text-align: center;
+
+  .title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #111;
+  }
+
+  .category-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .category-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    cursor: pointer;
+
+    .circle {
+      background: radial-gradient(circle, #ff3c3c 0%, #c10606 80%);
+      border-radius: 50%;
+      width: 85px;
+      height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+      img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+      }
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    &:hover p {
+      color: #c10606;
+    }
+  }
+}
+
+
+
 /* Responsive */
 @media (max-width: 767px) {
   .subcategory-nav {

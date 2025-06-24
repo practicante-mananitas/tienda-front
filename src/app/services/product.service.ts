@@ -68,7 +68,11 @@ export class ProductService {
   }
   
   getHighlightSections(): Observable<any[]> {
-  return this.http.get<any[]>('http://127.0.0.1:8000/api/highlight-sections');
-}
+    return this.http.get<any[]>('http://127.0.0.1:8000/api/highlight-sections');
+  }
+
+  deleteGalleryImage(id: number) {
+    return this.http.delete(`http://127.0.0.1:8000/api/gallery-images/${id}`);
+  }
 
 }

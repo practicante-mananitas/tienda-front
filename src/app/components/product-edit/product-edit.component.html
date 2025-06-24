@@ -24,11 +24,20 @@
 
   <div class="form-group">
     <label>Categoría:</label>
-    <select [(ngModel)]="product.category_id" name="category_id" required>
+    <select name="category_id" required (change)="onCategoryChange($event)">
       <option value="" disabled>Selecciona una categoría</option>
       <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
     </select>
   </div>
+
+  <div class="form-group">
+    <label>Subcategoría:</label>
+    <select [(ngModel)]="product.subcategory_id" name="subcategory_id" required>
+      <option value="" disabled>Selecciona una subcategoría</option>
+      <option *ngFor="let sub of subcategories" [value]="sub.id">{{ sub.name }}</option>
+    </select>
+  </div>
+
 
   <fieldset>
     <legend>Medidas (cm / kg)</legend>
@@ -71,8 +80,23 @@
   </div>
 
   <div class="form-group">
+    <label>Galería actual:</label>
+    <div class="gallery-preview">
+      <div *ngFor="let img of gallery" class="thumb">
+        <img [src]="'http://127.0.0.1:8000/storage/' + img.image" alt="Galería" width="100">
+        <button type="button" class="delete-button" (click)="eliminarImagenGaleria(img.id)">❌</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
     <label>Nueva imagen (opcional):</label>
     <input type="file" (change)="onFileChange($event)">
+  </div>
+
+  <div class="form-group">
+    <label>Agregar nuevas imágenes a la galería:</label>
+    <input type="file" (change)="onGalleryChange($event)" multiple>
   </div>
 
   <button type="submit">Actualizar</button>

@@ -71,7 +71,10 @@
       </h2>
       <p class="highlight-subtitle">Recomendado por el administrador</p>
       <div class="highlight-products">
-        <div class="highlight-card" *ngFor="let product of getHighlightSection(i).productos">
+        <div class="highlight-card"
+            *ngFor="let product of getHighlightSection(i).productos"
+            [routerLink]="['/tienda', product.id]"
+            style="cursor: pointer">
           <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="producto" />
           <div class="text">
             <h3>{{ product.name }}</h3>

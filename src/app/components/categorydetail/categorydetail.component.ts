@@ -17,6 +17,12 @@ export class CategoryDetailComponent implements OnInit {
   category: any;
   subcategories: any[] = [];
   products: any[] = [];
+  
+  // Imágenes para categorías (si las usas)
+  categoryCircleImages: { [key: number]: string } = {};
+
+  // Imágenes para subcategorías (nuevo)
+  subcategoryCircleImages: { [key: number]: string } = {};
 
   private scrollIndexMap: { [key: number]: number } = {};
 
@@ -68,15 +74,41 @@ export class CategoryDetailComponent implements OnInit {
   loadSubcategories(categoryId: number) {
     this.subcategoryService.getByCategory(categoryId).subscribe(subcats => {
       this.subcategories = subcats;
+
       subcats.forEach(sub => {
         this.scrollIndexMap[sub.id] = 0;
       });
+
+      // Intentar asignar imágenes si productos ya están cargados
+      if(this.products.length > 0) {
+        this.assignSubcategoryImages();
+      }
     });
   }
 
   loadProducts(categoryId: number) {
     this.productService.getProductsByCategory(categoryId).subscribe(products => {
       this.products = products;
+
+      // Intentar asignar imágenes si subcategorías ya están cargadas
+      if(this.subcategories.length > 0) {
+        this.assignSubcategoryImages();
+      }
+    });
+  }
+
+  // Asignar imágenes aleatorias para cada subcategoría
+  assignSubcategoryImages() {
+    this.subcategoryCircleImages = {};
+
+    this.subcategories.forEach(subcat => {
+      const productos = this.products.filter(p => p.subcategory_id === subcat.id);
+      if (productos.length > 0) {
+        const rand = Math.floor(Math.random() * productos.length);
+        this.subcategoryCircleImages[subcat.id] = 'http://127.0.0.1:8000/storage/' + productos[rand].image;
+      } else {
+        this.subcategoryCircleImages[subcat.id] = '/assets/categorias/default.png';
+      }
     });
   }
 
@@ -123,4 +155,10 @@ export class CategoryDetailComponent implements OnInit {
     return this.subcategories.length > 1 && this.mostWanted.length > 0;
   }
 
+  scrollToCategory(subcategoryId: number) {
+    const container = document.querySelector(`.subcategory-section[data-subcategory-id="${subcategoryId}"]`) as HTMLElement;
+    if (container) {
+      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }

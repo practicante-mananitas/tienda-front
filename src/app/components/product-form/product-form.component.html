@@ -111,15 +111,32 @@
     </div>
 
     <label>
-      Imagen:
+      Imagen Primaria:
       <input type="file" name="image" (change)="onFileChange($event)" />
     </label>
 
     <label>
+      Galería de Imágenes (puedes subir varias):
+      <input type="file" name="gallery" (change)="onGalleryChange($event)" multiple />
+    </label>
+ 
+    <p *ngIf="galleryFiles.length > 0">
+      {{ galleryFiles.length }} imágenes seleccionadas para galería.
+    </p>
+
+    <label>
       Categoría:
-      <select [(ngModel)]="product.category_id" name="category_id" required>
-        <option value="" disabled selected>Selecciona una categoría</option>
-        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+      <select [(ngModel)]="product.category_id" name="category_id" required (ngModelChange)="onCategoryChange($event)">
+      <option value="" disabled selected>Selecciona una categoría</option>
+      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+    </select>
+    </label>
+
+    <label *ngIf="subcategories.length > 0">
+      Subcategoría:
+      <select [(ngModel)]="product.subcategory_id" name="subcategory_id" required>
+        <option value="" disabled selected>Selecciona una subcategoría</option>
+        <option *ngFor="let sub of subcategories" [value]="sub.id">{{ sub.name }}</option>
       </select>
     </label>
 

@@ -1,53 +1,74 @@
 .detail-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
-  padding: 30px;
+  gap: 20px;
+  padding: 20px;
   justify-content: center;
   align-items: flex-start;
 
   .left-section {
     flex: 1;
-    max-width: 500px;
+    max-width: 400px;
 
-    img {
+    .main-image {
       width: 100%;
-      height: 480px;
-      border-radius: 10px;
+      height: 320px;
+      border-radius: 8px;
       object-fit: contain;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .thumbnails {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      .thumb {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: border 0.2s ease;
+
+        &.active,
+        &:hover {
+          border-color: #007bff;
+        }
+      }
     }
   }
 
   .right-section {
     flex: 1;
-    min-width: 300px;
-    max-width: 500px;
+    min-width: 260px;
+    max-width: 400px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    // La transición de filtro eliminada de aquí, ya que no se aplicará globalmente
-  }
+    gap: 10px;
 
     h2 {
-      font-size: 24px;
+      font-size: 20px;
       margin: 0;
     }
 
     .price {
-      font-size: 26px;
+      font-size: 22px;
       color: #1a8917;
       font-weight: bold;
     }
 
     .description {
       background-color: #fafafa;
-      padding: 15px;
+      padding: 12px;
       border-radius: 6px;
       border: 1px solid #ddd;
 
       .desc {
         white-space: pre-line;
-        font-size: 15px;
+        font-size: 14px;
         color: #555;
       }
     }
@@ -55,28 +76,24 @@
     .quantity-selector {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-      transition: opacity 0.2s ease; // Mantener la transición de opacidad si se ajusta
+      gap: 8px;
+      margin-top: 5px;
+      transition: opacity 0.2s ease;
 
-      // ESTILOS ELIMINADOS: filter y opacity para .out-of-stock en quantity-selector
       &.out-of-stock {
-        // filter: grayscale(80%) blur(1px); // ELIMINADO
-        opacity: 0.5; // Ajustado a una opacidad más sutil si deseas un ligero "apagado" sin blur.
-                     // Si quieres que no haya ninguna opacidad, pon 'opacity: 1;' o elimina esta línea.
+        opacity: 0.5;
       }
 
       .btn-quantity {
-        width: 40px;
-        height: 40px;
+        width: 34px;
+        height: 34px;
         background-color: #f0f0f0;
         border: 1px solid #ccc;
         border-radius: 50%;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         font-weight: bold;
         color: #555;
         cursor: pointer;
-        transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -85,40 +102,43 @@
           background-color: #e0e0e0;
           border-color: #aaa;
         }
+
         &:active:not([disabled]) {
           background-color: #d0d0d0;
         }
+
         &:disabled {
-          opacity: 0.4; // Menor opacidad para los botones deshabilitados
-          cursor: not-allowed; // Cursor de "no permitido"
-          background-color: #f0f0f0; // Resetea el color de fondo si estaba en hover
-          border-color: #ddd; // Borde más claro
+          opacity: 0.4;
+          cursor: not-allowed;
+          background-color: #f0f0f0;
+          border-color: #ddd;
         }
       }
 
       .quantity-input {
-        width: 60px;
-        height: 40px;
-        padding: 0 10px;
+        width: 50px;
+        height: 34px;
+        padding: 0 8px;
         text-align: center;
-        font-size: 1.2rem;
+        font-size: 1rem;
         border: 1px solid #ccc;
         border-radius: 6px;
         -moz-appearance: textfield;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
           -webkit-appearance: none;
           margin: 0;
         }
+
         &:focus {
           outline: none;
           border-color: #3483fa;
           box-shadow: 0 0 0 2px rgba(52, 131, 250, 0.2);
         }
+
         &:disabled {
-          opacity: 0.6; // Menor opacidad para el input deshabilitado
+          opacity: 0.6;
           background-color: #f5f5f5;
           cursor: not-allowed;
         }
@@ -126,64 +146,54 @@
     }
 
     .stock-message {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      margin-top: -5px;
       text-align: center;
-      color: #28a745;
+      margin-top: -5px;
 
       &.low-stock {
         color: #ffc107;
-        font-weight: bold;
       }
+
       &.no-stock {
         color: #dc3545;
-        font-weight: bold;
         text-transform: uppercase;
       }
     }
 
     .btn-cart {
-      margin-top: 10px;
-      padding: 12px 20px;
-      font-size: 16px;
+      padding: 10px 16px;
+      font-size: 15px;
       background-color: #3483fa;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s ease, opacity 0.3s ease; // filter eliminado de la transición
+      transition: background 0.3s ease;
 
       &:hover:not([disabled]) {
         background-color: #2968c8;
       }
-      // Estilo específico para el botón deshabilitado
-      &:disabled {
-        background-color: #cccccc; // Gris claro
-        cursor: not-allowed;
-        opacity: 0.6; // Opacidad sutil para el deshabilitado
-        // filter: grayscale(100%); // ELIMINADO
-      }
-      // ESTILOS ELIMINADOS: filter y opacity para .out-of-stock en btn-cart
+
+      &:disabled,
       &.out-of-stock {
-        // filter: grayscale(100%) blur(1px); // ELIMINADO
-        opacity: 0.6; // Ajustado a una opacidad más sutil para los botones agotados.
-                      // Si quieres que no haya ninguna opacidad, pon 'opacity: 1;' o elimina esta línea.
+        background-color: #cccccc;
         cursor: not-allowed;
-        background-color: #cccccc; // Para que el botón agotado siempre sea gris
+        opacity: 0.6;
       }
     }
+  }
 }
 
 .back-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 20px;
+  gap: 6px;
+  margin: 15px;
   background: none;
   border: none;
   color: #3483fa;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   font-weight: bold;
   transition: color 0.2s ease;
@@ -207,14 +217,18 @@
   .detail-container {
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
 
     .left-section {
       max-width: 100%;
 
-      img {
+      .main-image {
         height: auto;
-        max-height: 300px;
+        max-height: 240px;
+      }
+
+      .thumbnails {
+        justify-content: center;
       }
     }
 
@@ -223,17 +237,18 @@
       text-align: center;
 
       h2 {
-        font-size: 20px;
+        font-size: 18px;
       }
 
       .price {
-        font-size: 22px;
+        font-size: 20px;
       }
 
       .description {
         text-align: left;
+
         .desc {
-          font-size: 14px;
+          font-size: 13px;
         }
       }
 
@@ -248,8 +263,8 @@
   }
 
   .back-btn {
-    margin: 10px 20px;
-    font-size: 14px;
-    gap: 6px;
+    margin: 10px 15px;
+    font-size: 13px;
+    gap: 5px;
   }
 }

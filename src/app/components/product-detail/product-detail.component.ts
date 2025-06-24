@@ -19,6 +19,7 @@ export class ProductDetailComponent implements OnInit {
   isProductOutOfStock: boolean = false; // Indica si el producto está agotado (stock <= 0)
   isProductPaused: boolean = false;    // NUEVO: Indica si el producto está pausado (status === 'paused')
   stockMessage: string = '';
+  selectedImage: string = ''; // Imagen grande que se está mostrando
 
   constructor(
     private route: ActivatedRoute,
@@ -36,18 +37,22 @@ export class ProductDetailComponent implements OnInit {
         this.productService.getProduct(Number(productId)).subscribe({
           next: (data) => {
             this.product = data;
-            // Al cargar el producto, inicializa las banderas de estado
-            this.isProductPaused = this.product.status === 'paused';
-            this.isProductOutOfStock = this.product.stock <= 0; // Inicialmente basado en stock real
 
-            // Ajusta la cantidad inicial y el mensaje según el estado principal
-            if (this.isProductPaused || this.isProductOutOfStock) {
-                this.quantity = 0; // Si está pausado o agotado, la cantidad por defecto es 0
+            // ✅ Imagen seleccionada por defecto
+            if (this.product.images && this.product.images.length > 0) {
+              this.selectedImage = this.product.images[0].image;
             } else {
-                this.quantity = 1; // De lo contrario, la cantidad inicial es 1
+              this.selectedImage = this.product.image;
             }
-            
-            this.updateDisplayStatus(); // Actualiza los mensajes y estados de visualización
+
+            // Estado de producto
+            this.isProductPaused = this.product.status === 'paused';
+            this.isProductOutOfStock = this.product.stock <= 0;
+
+            // Cantidad inicial
+            this.quantity = (this.isProductPaused || this.isProductOutOfStock) ? 0 : 1;
+
+            this.updateDisplayStatus();
           },
           error: (err) => {
             console.error('Error al cargar detalles del producto:', err);
@@ -58,6 +63,7 @@ export class ProductDetailComponent implements OnInit {
       }
     });
   }
+
 
   volver(): void {
     this.location.back();

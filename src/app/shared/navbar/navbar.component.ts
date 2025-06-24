@@ -31,10 +31,16 @@ export class NavbarComponent implements OnInit {
   ) {}
 
 ngOnInit(): void {
+  // 🔄 Cargar categorías SIEMPRE, incluso si no hay token
+  this.productService.getCategories().subscribe({
+    next: (res) => this.categories = res,
+    error: (err) => console.error('Error al cargar categorías', err)
+  });
+
   const token = localStorage.getItem('token');
-  
+
   if (!token) {
-    // Usuario invitado, no hacemos nada con el carrito aún
+    // Usuario invitado: no cargamos carrito ni sesión, pero ya cargamos categorías arriba
     return;
   }
 
@@ -46,21 +52,15 @@ ngOnInit(): void {
       });
     } else {
       this.authService.logout();
-      // No redirigimos, solo limpiamos la sesión
     }
   }, error => {
     console.warn('Error al validar sesión:', error);
   });
 
-  // Cargar categorías siempre
-  this.productService.getCategories().subscribe({
-    next: (res) => this.categories = res,
-    error: (err) => console.error('Error al cargar categorías', err)
-  });
-
   this.checkIfMobile();
   window.addEventListener('resize', this.checkIfMobile.bind(this));
 }
+
 
   
   checkIfMobile() {

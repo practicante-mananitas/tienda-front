@@ -1,4 +1,5 @@
 <app-slider></app-slider>
+
 <div class="background-gradient">
   <!-- Promos iniciales -->
   <div class="promo-section">
@@ -16,11 +17,13 @@
     </div>
   </div>
 
+  <!-- Sección "DESCUBRE PRECIOS IRRESISTIBLES" con círculos usando imágenes de todos los productos -->
   <div class="category-showcase">
     <h2 class="title">DESCUBRE PRECIOS IRRESISTIBLES</h2>
     <div class="category-icons">
       <div class="category-icon" *ngFor="let cat of categories" (click)="scrollToCategory(cat.id)">
         <div class="circle">
+          <!-- Aquí se usan imágenes de cualquier producto de la categoría -->
           <img [src]="categoryCircleImages[cat.id] || '/assets/categorias/default.png'" [alt]="cat.name" />
         </div>
         <p>{{ cat.name }}</p>
@@ -28,7 +31,7 @@
     </div>
   </div>
 
-  <!-- 👇 Bucle de categorías -->
+  <!-- Bucle de categorías: sliders con productos destacados SOLO -->
   <ng-container *ngFor="let category of categories; let i = index">
     <div class="product-section" [attr.data-category-id]="category.id">
       <div class="category-title">
@@ -36,14 +39,14 @@
         <p>Relacionado con tus visitas recientes</p>
       </div>
       <div class="carousel-wrapper">
-        <!-- Botón izquierdo: deshabilitado si isLeftNavDisabled() es true -->
         <button class="nav left"
-        *ngIf="!isLeftNavDisabled(category.id)"
-        (click)="scrollLeft(category.id)">
+          *ngIf="!isLeftNavDisabled(category.id)"
+          (click)="scrollLeft(category.id)">
           ❮
         </button>
 
         <div class="gallery" #scrollContainer [attr.data-category-id]="category.id">
+          <!-- Aquí se muestran SOLO productos destacados -->
           <div class="card" *ngFor="let product of getProductsByCategory(category.id); let i = index"
               [id]="'producto-' + category.id + '-' + i"
               [routerLink]="['/tienda', product.id]">
@@ -54,16 +57,16 @@
             </div>
           </div>
         </div>
-        <!-- Botón derecho: deshabilitado si isRightNavDisabled() es true -->
+
         <button class="nav right"
-        *ngIf="!isRightNavDisabled(category.id)"
-        (click)="scrollRight(category.id)">
+          *ngIf="!isRightNavDisabled(category.id)"
+          (click)="scrollRight(category.id)">
           ❯
         </button>
       </div>
     </div>
 
-    <!-- 🔥 Sección destacada -->
+    <!-- Sección destacada -->
     <div class="highlight-block" *ngIf="i > 0 && i % 2 === 1 && getHighlightSection(i)">
       <h2 class="highlight-title">
         <span class="emoji">{{ getHighlightSection(i).icono }}</span>
@@ -84,7 +87,7 @@
       </div>
     </div>
 
-    <!-- ✅ Most Wanted SOLO una vez -->
+    <!-- Most Wanted: SOLO una vez -->
     <div class="most-wanted-block" *ngIf="i === 1 && mostWanted.length">
       <h2 class="title">PROMOCIONES CON HASTA 30% OFF</h2>
       <div class="most-wanted-carousel">

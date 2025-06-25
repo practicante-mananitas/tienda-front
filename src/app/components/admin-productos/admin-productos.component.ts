@@ -14,65 +14,89 @@ import { faTrash, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-so
 })
 export class AdminProductosComponent implements OnInit {
   categorias: any[] = [];
-  productosPorCategoria: { [key: string]: any[] } = {};
 
   faTrash = faTrash;
   faEdit = faEdit;
   faArrowLeft = faArrowLeft;
   faArrowRight = faArrowRight;
+
   scrollToId: string | null = null;
 
-  constructor(private adminService: AdminService, 
+  constructor(
+    private adminService: AdminService, 
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
-ngOnInit(): void {
-  // Primero guardamos el scrollToId del query param
-  this.route.queryParams.subscribe(params => {
-    this.scrollToId = params['scrollTo'] || null;
-  });
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.scrollToId = params['scrollTo'] || null;
+    });
 
-  // Luego cargamos categorías y productos
-  this.cargarCategoriasYProductos();
-}
+    this.cargarCategoriasConSubcategorias();
+  }
 
-  cargarCategoriasYProductos(): void {
-  this.adminService.getCategorias().subscribe(cats => {
-    this.categorias = cats;
-    this.productosPorCategoria = {};
+  cargarCategoriasConSubcategorias(): void {
+    this.adminService.getCategoriasConSubcategoriasYProductos().subscribe({
+      next: (data) => {
+        // Inicializamos productos con featuredId = null
+        this.categorias = data.map(cat => {
+          cat.subcategories.forEach((subcat: any) => {
+            subcat.products.forEach((prod: any) => {
+              prod.featuredId = null;
+            });
+          });
+          return { ...cat, abierta: false };
+        });
 
-    let categoriasCargadas = 0;
+        // ✅ Luego, para cada categoría, obtenemos sus productos destacados
+        this.categorias.forEach(categoria => {
+          this.adminService.getFeaturedProductsByCategory(categoria.id).subscribe({
+            next: (destacados: any[]) => {
+              destacados.forEach(item => {
+                const prodId = item.product_id;
+                const featuredId = item.id;
 
-    cats.forEach(cat => {
-      this.adminService.getProductosPorCategoria(cat.id).subscribe(prods => {
-        this.productosPorCategoria[cat.id] = prods;
-        categoriasCargadas++;
+                categoria.subcategories.forEach((sub: any) => {
+                  sub.products.forEach((p: any) => {
+                    if (p.id === prodId) {
+                      p.featuredId = featuredId;
+                    }
+                  });
+                });
+              });
+            },
+            error: err => {
+              console.error(`Error cargando destacados de categoría ${categoria.name}:`, err);
+            }
+          });
+        });
 
-        if (categoriasCargadas === cats.length && this.scrollToId) {
+        // Scroll si aplica
+        if (this.scrollToId) {
           setTimeout(() => {
             const el = document.getElementById('producto-' + this.scrollToId);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.classList.add('highlight');
+              setTimeout(() => el.classList.remove('highlight'), 3000);
             }
-            this.scrollToId = null; // limpiamos para no repetir scroll
-            if (el) {
-                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  el.classList.add('highlight');
-                  setTimeout(() => {
-                    el.classList.remove('highlight');
-                  }, 3000); // remueve el resaltado tras 3 segundos
-                }
+            this.scrollToId = null;
           }, 0);
         }
-      });
+      },
+      error: err => {
+        console.error('Error al cargar categorías con subcategorías:', err);
+        alert('Error al cargar las categorías.');
+      }
     });
-  }, error => {
-    console.error('Error al cargar categorías:', error);
-    alert('Error al cargar las categorías.');
-  });
-}
+  }
 
+  toggleCategoria(categoriaId: number): void {
+    this.categorias = this.categorias.map(cat =>
+      cat.id === categoriaId ? { ...cat, abierta: !cat.abierta } : cat
+    );
+  }
 
   editar(id: number) {
     this.router.navigate(['/admin-panel/productos/editar', id]);
@@ -83,7 +107,7 @@ ngOnInit(): void {
       this.adminService.eliminarProducto(id).subscribe({
         next: () => {
           alert('Producto eliminado con éxito.');
-          this.cargarCategoriasYProductos(); 
+          this.cargarCategoriasConSubcategorias();
         },
         error: (err) => {
           console.error('Error al eliminar producto:', err);
@@ -93,62 +117,65 @@ ngOnInit(): void {
     }
   }
 
-  /**
-   * Alterna el estado de un producto entre 'active' y 'paused'.
-   * Si el estado actual es 'disabled' o cualquier otro, lo cambiará a 'active'.
-   * @param producto El objeto producto a actualizar.
-   */
   toggleStatus(producto: any) {
-    let newStatus: string;
-
-    if (producto.status === 'active') {
-      newStatus = 'paused';
-    } else {
-      newStatus = 'active'; 
-    }
+    let newStatus: string = producto.status === 'active' ? 'paused' : 'active';
 
     this.adminService.actualizarEstadoProducto(producto.id, newStatus).subscribe({
       next: (res) => {
-        // --- INICIO DE LA CORRECCIÓN CLAVE ---
-        // Esto es crucial para depurar y entender la estructura de la respuesta.
-        console.log('Respuesta completa de la API para toggleStatus:', res); 
-
-        // Verificar si la respuesta es un objeto y si contiene la propiedad 'message'
         if (res && typeof res === 'object' && 'message' in res) {
-          producto.status = newStatus; // Actualiza el estado en el objeto local para la UI
-          alert(res.message); // Usa el mensaje del servidor
+          producto.status = newStatus;
+          alert(res.message);
         } else {
-          // Fallback si la estructura de la respuesta es inesperada o no hay 'message'
-          producto.status = newStatus; // Aún actualiza el estado localmente
-          alert(`Estado de producto actualizado a ${newStatus}. El mensaje de la API no estaba disponible.`);
+          producto.status = newStatus;
+          alert(`Estado de producto actualizado a ${newStatus}.`);
         }
-        // --- FIN DE LA CORRECCIÓN CLAVE ---
       },
       error: (err) => {
         console.error('Error al actualizar estado:', err);
-        // Intentar obtener un mensaje de error más específico del objeto de error HTTP
         let errorMessage = 'Error al actualizar el estado del producto. Intenta de nuevo.';
-        if (err.error && err.error.message) {
-          errorMessage = err.error.message;
-        } else if (err.message) {
-          errorMessage = err.message;
-        }
+        if (err.error?.message) errorMessage = err.error.message;
+        else if (err.message) errorMessage = err.message;
         alert(errorMessage);
       }
     });
   }
 
-  scrollIzquierda(categoriaId: number) {
-    const contenedor = document.querySelector(`.productos-scroll-container[data-cat-id="${categoriaId}"]`);
-    if (contenedor) {
-      contenedor.scrollBy({ left: -300, behavior: 'smooth' });
+  toggleFeatured(producto: any, categoriaId: number) {
+    if (producto.featuredId !== null) {
+      // Quitar destacado usando el id del destacado
+      this.adminService.eliminarDestacado(producto.featuredId).subscribe({
+        next: () => {
+          producto.featuredId = null;
+          alert('Producto removido de destacados');
+        },
+        error: (err) => {
+          console.error('Error quitando destacado:', err);
+          alert('Error al quitar destacado. Intenta de nuevo.');
+        }
+      });
+    } else {
+      // Agregar destacado enviando category_id y product_id
+      this.adminService.agregarDestacado({ category_id: categoriaId, product_id: producto.id }).subscribe({
+        next: (res: any) => {
+          // La respuesta debe incluir el nuevo registro creado con id
+          producto.featuredId = res.id;
+          alert('Producto agregado a destacados');
+        },
+        error: (err) => {
+          console.error('Error agregando destacado:', err);
+          alert('Error al agregar destacado. Intenta de nuevo.');
+        }
+      });
     }
   }
 
-  scrollDerecha(categoriaId: number) {
-    const contenedor = document.querySelector(`.productos-scroll-container[data-cat-id="${categoriaId}"]`);
-    if (contenedor) {
-      contenedor.scrollBy({ left: 300, behavior: 'smooth' });
-    }
+  scrollIzquierdaSub(subId: number) {
+    const contenedor = document.querySelector(`.productos-scroll-container[data-sub-id="${subId}"]`);
+    if (contenedor) contenedor.scrollBy({ left: -300, behavior: 'smooth' });
+  }
+
+  scrollDerechaSub(subId: number) {
+    const contenedor = document.querySelector(`.productos-scroll-container[data-sub-id="${subId}"]`);
+    if (contenedor) contenedor.scrollBy({ left: 300, behavior: 'smooth' });
   }
 }

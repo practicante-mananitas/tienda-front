@@ -14,7 +14,7 @@ export class AuthService {
     name: string; 
     email: string; 
     password: string;
-    address: string; 
+    // address: string;  
     phone: string; 
     latitude: number; 
     longitude: number; 

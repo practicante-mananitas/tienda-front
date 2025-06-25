@@ -3,7 +3,7 @@ import { CartService } from '../../services/cart.service';
 import { AddressService } from '../../services/address.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -30,7 +30,8 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private addressService: AddressService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +46,10 @@ export class CheckoutComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  volver() {
+    this.location.back();
   }
 
   loadDirecciones() {

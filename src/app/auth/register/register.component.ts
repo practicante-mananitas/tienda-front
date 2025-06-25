@@ -16,7 +16,7 @@ export class RegisterComponent {
   phone = '';
   address = '';
   email = '';
-  password = '';
+  password = ''; 
   latitude: number = 0;
   longitude: number = 0;
 
@@ -32,21 +32,35 @@ export class RegisterComponent {
   }
   
   onRegister() {
+    if (!this.esPasswordValida(this.password)) {
+      alert('La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo.');
+      return;
+    }
+
     this.authService.register({
       name: this.name,
       email: this.email,
       password: this.password,
       phone: this.phone,
-      address: this.address,
       latitude: this.latitude,
       longitude: this.longitude,
     }).subscribe({
       next: res => {
-        this.authService.saveToken(res.token);
-        this.router.navigate(['/login']);
+        // No guardamos token porque el usuario no está verificado
+        this.router.navigate(['/verify-email']);
       },
-      error: () => alert('Error al registrar')
+      error: err => {
+        const msg = err.error?.message || err.error?.errors?.password?.[0] || 'Error al registrar';
+        alert(msg);
+      }
     });
   }
+
+
+  esPasswordValida(password: string): boolean {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return regex.test(password);
+  }
+
   
 }

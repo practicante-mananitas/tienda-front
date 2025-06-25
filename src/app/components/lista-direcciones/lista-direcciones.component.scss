@@ -86,3 +86,20 @@
     }
   }
 }
+
+.btn-eliminar {
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: auto;
+  align-self: center;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #cc0000;
+  }
+}

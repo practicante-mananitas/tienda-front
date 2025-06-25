@@ -22,6 +22,27 @@
       color: #555;
     }
 
+    // NUEVO: estilos para el título clickeable de categoría
+    .categoria-titulo {
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s ease, transform 0.3s ease;
+      margin-left: 10px;
+
+      &:hover {
+        color: #007bff;
+        transform: scale(1.05);
+      }
+
+      .toggle-icon {
+        font-size: 0.8rem;
+        transition: transform 0.3s ease;
+      }
+    }
+
     .scroll-wrapper {
       position: relative;
       display: flex;
@@ -60,9 +81,7 @@
       flex-shrink: 1;
       min-width: 0;
 
-      /* === INICIO: NUEVAS PROPIEDADES PARA SCROLL SNAP === */
-      scroll-snap-type: x mandatory; /* Habilita el snap horizontal, fuerza el encaje */
-      /* === FIN: NUEVAS PROPIEDADES PARA SCROLL SNAP === */
+      scroll-snap-type: x mandatory;
 
       &::-webkit-scrollbar {
         height: 8px;
@@ -89,10 +108,7 @@
       transition: transform 0.2s ease;
       flex-shrink: 0;
       width: 220px;
-
-      /* === INICIO: NUEVAS PROPIEDADES PARA SCROLL SNAP === */
-      scroll-snap-align: start; /* Hace que cada tarjeta encaje al inicio de la vista del scroll */
-      /* === FIN: NUEVAS PROPIEDADES PARA SCROLL SNAP === */
+      scroll-snap-align: start;
 
       &:hover {
         transform: translateY(-4px);
@@ -166,16 +182,14 @@
   border: 2px solid #007bff;
   background-color: #e6f0ff;
   transform: translateY(-8px) scale(1.03);
-  transition: 
-    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-    border 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+  transition:
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 5; /* para que se superponga a otros elementos */
+  z-index: 5;
   cursor: pointer;
 }
-
-
 
 // Responsivo
 @media (max-width: 768px) {
@@ -193,7 +207,7 @@
 
     .producto-card {
       width: 160px;
-      min-width: 160px; // Asegura el min-width en móvil
+      min-width: 160px;
     }
 
     h1 {

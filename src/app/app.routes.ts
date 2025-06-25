@@ -23,6 +23,11 @@ import { adminGuard } from './guards/admin.guard';
 import { SeguridadComponent } from './perfil/seguridad/seguridad.component';
 import { InfoComponent } from './perfil/info/info.component';
 import { CategoryDetailComponent } from './components/categorydetail/categorydetail.component';
+import { VerifyEmailComponent } from './auth/verify-email/verify-email.component';
+import { EmailVerifiedComponent } from './auth/email-verified/email-verified.component';
+import { EmailVerifyComponent } from './auth/email-verify/email-verify.component';
+// import { EmailAlreadyVerifiedComponent } from './auth/email-already-verified/email-already-verified.component';
+// import { EmailVerificationFailedComponent } from './auth/email-verification-failed/email-verification-failed.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -48,6 +53,12 @@ export const routes: Routes = [
   { path: 'seguridad', component: SeguridadComponent},
   { path: 'info', component: InfoComponent},
   { path: 'categoria/:id', component: CategoryDetailComponent },
+  { path: 'verify-email', component: VerifyEmailComponent},
+  { path: 'email/verified', component: EmailVerifiedComponent },
+    { path: 'email-verify/:id/:hash', component: EmailVerifyComponent},
+  { path: 'email-verified', component: EmailVerifiedComponent },
+  // { path: 'email/already-verified', component: EmailAlreadyVerifiedComponent },
+  // { path: 'email/verification-failed', component: EmailVerificationFailedComponent },
 
   // { path: 'admin-panel', component: AdminPanelComponent, canActivate: [adminGuard]},
   // { path: 'admin-panel/producto-nuevo', component: ProductFormComponent },

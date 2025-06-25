@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- Importa ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SliderComponent } from '../slider/slider.component';
-import { ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-product-gallery',
@@ -14,23 +13,21 @@ import { ViewChild, ElementRef } from '@angular/core';
 })
 export class ProductGalleryComponent implements OnInit {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
-  products: any[] = [];
+
   categories: any[] = [];
+  allProducts: any[] = [];  // Todos los productos
   highlightSections: any[] = [];
   categoryCircleImages: { [key: number]: string } = {};
   private scrollIndexMap: { [key: number]: number } = {};
+
+  // Productos destacados por categoría para sliders/carouseles
+  featuredProductsByCategory: { [categoryId: number]: any[] } = {};
 
   promos = [
     { image: 'assets/banner-promo/promo2.png', alt: '10% en moda' },
     { image: 'assets/banner-promo/promo3.png', alt: '15% en deportes' },
     { image: 'assets/banner-promo/promo4.png', alt: '15% en deportes' },
     { image: 'assets/banner-promo/promo5.png', alt: '20% en deportes' }
-  ];
-
-  categorias = [
-    { name: 'Gaming', image: 'gaming.png' },
-    { name: 'Computadoras', image: 'laptop.png' },
-    { name: 'Perfumes', image: 'perfume.png' },
   ];
 
   mostWanted = [
@@ -53,34 +50,49 @@ export class ProductGalleryComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef // <-- Inyecta ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.productService.getCategories().subscribe(categories => {
       this.categories = categories;
 
+      // Cargar todos los productos para uso en círculos y sección "descubre"
       this.productService.getProducts().subscribe({
-        next: products => {
-          this.products = products;
+        next: (products) => {
+          this.allProducts = products;
 
-          // Initialize scrollIndexMap for each category to 0
+          // Asignar imagen círculo por categoría usando cualquier producto de esa categoría
           this.categories.forEach(cat => {
-            this.scrollIndexMap[cat.id] = 0;
-          });
+            const productosDeCategoria = this.allProducts.filter(p => p.category_id === cat.id);
 
-          // Precachear imagen aleatoria para los círculos
-          this.categories.forEach(cat => {
-            const productos = this.products.filter(p => p.category_id === cat.id);
-            if (productos.length > 0) {
-              const rand = Math.floor(Math.random() * productos.length);
-              this.categoryCircleImages[cat.id] = 'http://127.0.0.1:8000/storage/' + productos[rand].image;
+            if (productosDeCategoria.length > 0) {
+              const rand = Math.floor(Math.random() * productosDeCategoria.length);
+              this.categoryCircleImages[cat.id] = 'http://127.0.0.1:8000/storage/' + productosDeCategoria[rand].image;
             } else {
               this.categoryCircleImages[cat.id] = '/assets/categorias/default.png';
             }
+
+            this.scrollIndexMap[cat.id] = 0;
           });
+
+          this.cdr.detectChanges();
         },
         error: err => console.error('Error cargando productos', err)
+      });
+
+      // Cargar productos destacados (para sliders)
+      this.categories.forEach(cat => {
+        this.productService.getFeaturedOnlyProductsByCategory(cat.id).subscribe({
+          next: (featuredProducts) => {
+            this.featuredProductsByCategory[cat.id] = featuredProducts;
+            this.cdr.detectChanges();
+          },
+          error: err => {
+            console.error(`Error cargando productos destacados para categoría ${cat.id}`, err);
+            this.featuredProductsByCategory[cat.id] = [];
+          }
+        });
       });
     });
 
@@ -90,13 +102,6 @@ export class ProductGalleryComponent implements OnInit {
     });
   }
 
-  /**
-   * Desplaza el contenedor del slider a una tarjeta de producto específica
-   * para una categoría dada, asegurando que solo el carrusel horizontal se desplace
-   * y la ventana principal permanezca en su posición.
-   * @param categoryId El ID de la categoría a la que pertenece el producto.
-   * @param index El índice del producto dentro de la lista de productos de esa categoría.
-   */
   scrollToProduct(categoryId: number, index: number) {
     const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
     const card = document.getElementById(`producto-${categoryId}-${index}`);
@@ -107,26 +112,16 @@ export class ProductGalleryComponent implements OnInit {
 
       container.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
 
-      // Always update the index map after a scroll operation
       this.scrollIndexMap[categoryId] = index;
 
-      // Importante: Forzar una detección de cambios después de un pequeño retraso.
-      // Esto permite que la animación de scroll termine y la propiedad scrollLeft se actualice
-      // antes de que Angular reevalúe las condiciones de deshabilitado de los botones.
-      // 400 ms es un buen valor ya que las animaciones "smooth" suelen durar alrededor de 300-500 ms.
       setTimeout(() => {
         this.cdr.detectChanges();
-      }, 400); // Ajusta este valor si la animación es más lenta o más rápida
+      }, 400);
     } else {
       console.warn(`Producto o contenedor no encontrado para categoryId: ${categoryId}, index: ${index}`);
     }
   }
 
-  /**
-   * Desplaza el slider de una categoría hacia la derecha (siguiente producto).
-   * Calcula el siguiente índice válido y llama a scrollToProduct.
-   * @param categoryId El ID de la categoría del slider a desplazar.
-   */
   scrollRight(categoryId: number) {
     const productos = this.getProductsByCategory(categoryId);
     const totalProducts = productos.length;
@@ -137,14 +132,8 @@ export class ProductGalleryComponent implements OnInit {
     if (currentIndex < totalProducts - 1) {
       this.scrollToProduct(categoryId, nextIndex);
     }
-    // No else needed here, as the disabled state will prevent clicks at the end
   }
 
-  /**
-   * Desplaza el slider de una categoría hacia la izquierda (producto anterior).
-   * Calcula el índice anterior válido y llama a scrollToProduct.
-   * @param categoryId El ID de la categoría del slider a desplazar.
-   */
   scrollLeft(categoryId: number) {
     const currentIndex = this.scrollIndexMap[categoryId] || 0;
     const prevIndex = Math.max(currentIndex - 1, 0);
@@ -152,45 +141,40 @@ export class ProductGalleryComponent implements OnInit {
     if (currentIndex > 0) {
       this.scrollToProduct(categoryId, prevIndex);
     }
-    // No else needed here, as the disabled state will prevent clicks at the beginning
   }
 
   isLeftNavDisabled(categoryId: number): boolean {
-  const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
-  if (!container) return true;
+    const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
+    if (!container) return true;
 
-  const hasScrollableContent = container.scrollWidth > container.clientWidth;
-  const isAtStart = container.scrollLeft <= 5;
+    const hasScrollableContent = container.scrollWidth > container.clientWidth;
+    const isAtStart = container.scrollLeft <= 5;
 
-  return !hasScrollableContent || isAtStart;
-}
+    return !hasScrollableContent || isAtStart;
+  }
 
-isRightNavDisabled(categoryId: number): boolean {
-  const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
-  if (!container) return true;
+  isRightNavDisabled(categoryId: number): boolean {
+    const container = document.querySelector(`.gallery[data-category-id="${categoryId}"]`) as HTMLElement;
+    if (!container) return true;
 
-  const hasScrollableContent = container.scrollWidth > container.clientWidth;
-  const isAtEnd = (container.scrollLeft + container.clientWidth + 5) >= container.scrollWidth;
+    const hasScrollableContent = container.scrollWidth > container.clientWidth;
+    const isAtEnd = (container.scrollLeft + container.clientWidth + 5) >= container.scrollWidth;
 
-  return !hasScrollableContent || isAtEnd;
-}
+    return !hasScrollableContent || isAtEnd;
+  }
 
-
-
+  // Devuelve sólo productos destacados para los sliders/carouseles
   getProductsByCategory(categoryId: number) {
-    return this.products.filter(p => p.category_id === categoryId);
+    return this.featuredProductsByCategory[categoryId] || [];
+  }
+
+  // Devuelve todos los productos de la categoría para otras secciones (ej. los círculos)
+  getAllProductsByCategory(categoryId: number) {
+    return this.allProducts.filter(p => p.category_id === categoryId);
   }
 
   getHighlightSection(index: number): any {
     return this.highlightSections[Math.floor(index / 2)];
-  }
-
-  getImageForCategory(categoryId: number): string | null {
-    const productos = this.products.filter(p => p.category_id === categoryId);
-    if (productos.length === 0) return null;
-
-    const random = Math.floor(Math.random() * productos.length);
-    return 'http://127.0.0.1:8000/storage/' + productos[random].image;
   }
 
   scrollToCategory(categoryId: number) {

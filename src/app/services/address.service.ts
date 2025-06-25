@@ -31,9 +31,16 @@ export class AddressService {
     });
   }
 
-  // 👉 Actualizar dirección (si decides permitirlo)
+  // 👉 Actualizar dirección
   updateAddress(id: number, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/address/${id}`, data, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  // 👉 Eliminar dirección
+  deleteAddress(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/direcciones/${id}`, {
       headers: this.getAuthHeaders()
     });
   }
@@ -43,19 +50,18 @@ export class AddressService {
   }
 
   getMunicipiosByEstado(stateId: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/estados/${stateId}/municipios`);
-}
+    return this.http.get<any[]>(`${this.apiUrl}/estados/${stateId}/municipios`);
+  }
 
-saveDireccionExtra(data: any): Observable<any> {
-  return this.http.post(`${this.apiUrl}/direccion-extra`, data, {
-    headers: this.getAuthHeaders()
-  });
-}
+  saveDireccionExtra(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/direccion-extra`, data, {
+      headers: this.getAuthHeaders()
+    });
+  }
 
-getDireccionCompleta(id: number): Observable<any> {
-  return this.http.get(`${this.apiUrl}/direccion-completa/${id}`, {
-    headers: this.getAuthHeaders()
-  });
-}
-
+  getDireccionCompleta(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/direccion-completa/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 }

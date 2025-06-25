@@ -7,6 +7,7 @@
     </svg>
     Volver
   </button>
+</div>
 
 <div class="direccion-lista">
   <div *ngFor="let dir of direcciones" class="direccion-card">
@@ -15,16 +16,21 @@
       <div class="calle"><strong>{{ dir.calle }} {{ dir.numero_interior }}</strong></div>
       <div class="cp">{{ dir.codigo_postal }} - {{ getNombreEstado(dir.estado) }} - {{ dir.municipio }}</div>
       <div class="info-extra">wiki hard - 7772199500</div>
-    <!-- Si no tiene datos extra -->
-    <a *ngIf="!dir.extra_info" [routerLink]="['/direccion-extra', dir.id]" class="link-agregar">
-    Agregar datos y horarios del lugar
-    </a>
+      
+      <!-- Links datos extra -->
+      <a *ngIf="!dir.extra_info" [routerLink]="['/direccion-extra', dir.id]" class="link-agregar">
+        Agregar datos y horarios del lugar
+      </a>
 
-    <!-- Si ya tiene datos extra -->
-    <a *ngIf="dir.extra_info" [routerLink]="['/direccion', dir.id]" class="link-editar">
-    Editar datos del lugar
-    </a>
+      <a *ngIf="dir.extra_info" [routerLink]="['/direccion', dir.id]" class="link-editar">
+        Editar datos del lugar
+      </a>
     </div>
+
+    <!-- Botón eliminar -->
+    <button (click)="eliminarDireccion(dir.id)" class="btn-eliminar" title="Eliminar dirección">
+      🗑️ Eliminar
+    </button>
   </div>
 
   <div class="agregar-direccion">

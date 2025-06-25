@@ -2,47 +2,68 @@
   <h1>📊 Productos por Categoría</h1>
 
   <div *ngFor="let categoria of categorias" class="categoria-bloque">
-    <h2>{{ categoria.name }}</h2>
+    <h2 (click)="toggleCategoria(categoria.id)" class="categoria-titulo">
+      {{ categoria.name }}
+      <span class="toggle-icon">{{ categoria.abierta ? '▲' : '▼' }}</span>
+    </h2>
 
-    <div class="scroll-wrapper">
-      <button class="scroll-button left" (click)="scrollIzquierda(categoria.id)">
-        <fa-icon [icon]="faArrowLeft"></fa-icon>
-      </button>
+    <div *ngIf="categoria.abierta">
+      <div *ngFor="let sub of categoria.subcategories" class="subcategoria-bloque">
+        <h3>{{ sub.name }}</h3>
 
-      <div class="productos-scroll-container" [attr.data-cat-id]="categoria.id">
-        <div class="producto-card" *ngFor="let producto of productosPorCategoria[categoria.id]" [id]="'producto-' + producto.id">
-          <!-- Asegúrate de que la URL de la imagen sea correcta si cambias el backend -->
-          <img [src]="'http://127.0.0.1:8000/storage/' + producto.image" alt="{{ producto.name }}" />
-          <h3>{{ producto.name }}</h3>
-          <p>${{ producto.price }}</p>
+        <div class="scroll-wrapper">
+          <button class="scroll-button left" (click)="scrollIzquierdaSub(sub.id)">
+            <fa-icon [icon]="faArrowLeft"></fa-icon>
+          </button>
 
-          <div class="acciones">
-            <button (click)="editar(producto.id)">
-              <fa-icon [icon]="faEdit"></fa-icon> Editar
-            </button>
-            <button (click)="eliminar(producto.id)" class="danger">
-              <fa-icon [icon]="faTrash"></fa-icon> Eliminar
-            </button>
-            <!-- INICIO DE LA CORRECCIÓN CLAVE EN EL BOTÓN DE ESTADO -->
-            <!-- 1. Cambiar `toggleActivo` a `toggleStatus` -->
-            <!-- 2. Ajustar la clase `paused` para que dependa de `producto.status === 'paused'` -->
-            <!-- 3. Ajustar el texto mostrado para reflejar el `status` -->
-            <button
-              (click)="toggleStatus(producto)"
-              [class.paused]="producto.status === 'paused'"
-              [class.active]="producto.status === 'active'"
-              [class.disabled]="producto.status === 'disabled'"
+          <div class="productos-scroll-container" [attr.data-sub-id]="sub.id">
+            <div
+              class="producto-card"
+              *ngFor="let producto of sub.products"
+              [id]="'producto-' + producto.id"
             >
-              {{ producto.status === 'active' ? 'Pausar' : (producto.status === 'paused' ? 'Despausar' : 'Deshabilitado') }}
-            </button>
-            <!-- FIN DE LA CORRECCIÓN CLAVE -->
+              <img [src]="'http://127.0.0.1:8000/storage/' + producto.image" alt="{{ producto.name }}" />
+              <h3>{{ producto.name }}</h3>
+              <p>${{ producto.price }}</p>
+
+              <div class="acciones">
+                <button (click)="editar(producto.id)">
+                  <fa-icon [icon]="faEdit"></fa-icon> Editar
+                </button>
+                <button (click)="eliminar(producto.id)" class="danger">
+                  <fa-icon [icon]="faTrash"></fa-icon> Eliminar
+                </button>
+                <button
+                  (click)="toggleStatus(producto)"
+                  [class.paused]="producto.status === 'paused'"
+                  [class.active]="producto.status === 'active'"
+                  [class.disabled]="producto.status === 'disabled'"
+                >
+                  {{
+                    producto.status === 'active'
+                      ? 'Pausar'
+                      : producto.status === 'paused'
+                      ? 'Despausar'
+                      : 'Deshabilitado'
+                  }}
+                </button>
+
+                <!-- BOTÓN DE DESTACAR / QUITAR DESTACADO -->
+                <button
+                  (click)="toggleFeatured(producto, categoria.id)"
+                  [class.featured]="producto.featuredId !== null"
+                >
+                  {{ producto.featuredId !== null ? 'Quitar destacado' : 'Destacar' }}
+                </button>
+              </div>
+            </div>
           </div>
+
+          <button class="scroll-button right" (click)="scrollDerechaSub(sub.id)">
+            <fa-icon [icon]="faArrowRight"></fa-icon>
+          </button>
         </div>
       </div>
-
-      <button class="scroll-button right" (click)="scrollDerecha(categoria.id)">
-        <fa-icon [icon]="faArrowRight"></fa-icon>
-      </button>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe, NgIf, NgFor, TitleCasePipe } from '@angular/common'; // Importa DatePipe, NgIf, NgFor, TitleCasePipe
+import { CommonModule, DatePipe, NgIf, NgFor, TitleCasePipe, Location } from '@angular/common'; // Importa DatePipe, NgIf, NgFor, TitleCasePipe
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service'; // Asegúrate de que OrderService exista y lo estés usando para misPedidos
 import { Router, RouterLink } from '@angular/router'; // Importar RouterLink para los botones
@@ -43,7 +43,8 @@ export class MisPedidosComponent implements OnInit {
     private orderService: OrderService, // Si usas este para obtener los pedidos del usuario
     private router: Router,
     private pedidoService: PedidoService, // Asumiendo que es el servicio que llama al backend para misPedidos
-    private cartService: CartService
+    private cartService: CartService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +64,10 @@ export class MisPedidosComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  volver(): void {
+    this.location.back();
   }
 
   // Función para obtener el nombre del estado

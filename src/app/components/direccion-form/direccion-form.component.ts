@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AddressService } from '../../services/address.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-direccion-form',
@@ -66,7 +68,8 @@ export class DireccionFormComponent implements OnInit {
 
   constructor(private addressService: AddressService, 
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location,
   ) {}
 
 ngOnInit(): void {
@@ -135,6 +138,8 @@ ngOnInit(): void {
     });
 }
 
+
+
 this.route.url.subscribe(segments => {
   const path = segments.map(s => s.path).join('/');
   if (path.startsWith('direccion-extra')) {
@@ -145,6 +150,10 @@ this.route.url.subscribe(segments => {
 });
 
 }
+
+volver(): void {
+    this.location.back();
+  }
 
 
   onEstadoChange(event: Event): void {

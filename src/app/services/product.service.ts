@@ -75,4 +75,8 @@ export class ProductService {
     return this.http.delete(`http://127.0.0.1:8000/api/gallery-images/${id}`);
   }
 
+  getFeaturedOnlyProductsByCategory(categoryId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/categories/${categoryId}/featured-only-products`);
+  }
+
 }

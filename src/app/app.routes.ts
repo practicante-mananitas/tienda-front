@@ -26,11 +26,16 @@ import { CategoryDetailComponent } from './components/categorydetail/categorydet
 import { VerifyEmailComponent } from './auth/verify-email/verify-email.component';
 import { EmailVerifiedComponent } from './auth/email-verified/email-verified.component';
 import { EmailVerifyComponent } from './auth/email-verify/email-verify.component';
+import { loginGuard } from './guards/login.guard';
+import { FavoritesComponent } from './perfil/favorites/favorites.component';
+import { SoporteComponent } from './perfil/soporte/soporte.component';
+import { TerminosComponent } from './footer/terminos/terminos.component';
+import { AvisoPrivacidadComponent } from './footer/aviso-privacidad/aviso-privacidad.component';
 // import { EmailAlreadyVerifiedComponent } from './auth/email-already-verified/email-already-verified.component';
 // import { EmailVerificationFailedComponent } from './auth/email-verification-failed/email-verification-failed.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'productos', component: ProductListComponent, canActivate: [authGuard]},
@@ -57,6 +62,10 @@ export const routes: Routes = [
   { path: 'email/verified', component: EmailVerifiedComponent },
     { path: 'email-verify/:id/:hash', component: EmailVerifyComponent},
   { path: 'email-verified', component: EmailVerifiedComponent },
+  { path: 'favoritos', component: FavoritesComponent},
+  { path: 'soporte', component: SoporteComponent},
+  { path: 'terminos', component: TerminosComponent},
+  { path: 'aviso-privacidad', component: AvisoPrivacidadComponent},
   // { path: 'email/already-verified', component: EmailAlreadyVerifiedComponent },
   // { path: 'email/verification-failed', component: EmailVerificationFailedComponent },
 

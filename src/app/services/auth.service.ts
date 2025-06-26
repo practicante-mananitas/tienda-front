@@ -27,8 +27,12 @@ login(data: { email: string; password: string }): Observable<any> {
     this.http.post(`${this.apiUrl}/login`, data).subscribe({
       next: (res: any) => {
         const token = res.access_token;
-        const sessionId = res.session_id;  // <-- aquí obtienes el session_id
+        const refreshToken = res.refresh_token;
+        const sessionId = res.session_id;
+
         this.saveToken(token);
+        localStorage.setItem('refresh_token', refreshToken);
+
 
         // Guardar session_id en localStorage
         localStorage.setItem('session_id', sessionId.toString());
@@ -47,6 +51,27 @@ login(data: { email: string; password: string }): Observable<any> {
     });
   });
 }
+
+  refreshAccessToken(): Observable<string> {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) return new Observable((observer) => observer.error('No hay refresh token'));
+
+    return new Observable((observer) => {
+      this.http.post(`${this.apiUrl}/refresh-token`, { refresh_token: refreshToken }).subscribe({
+        next: (res: any) => {
+          const newToken = res.access_token;
+          this.saveToken(newToken);
+          observer.next(newToken);
+          observer.complete();
+        },
+        error: (err) => {
+          this.clearSession();
+          observer.error(err);
+        }
+      });
+    });
+  }
+
 
 
   getProfile(): Observable<any> {
@@ -115,5 +140,6 @@ login(data: { email: string; password: string }): Observable<any> {
   clearSession() {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
+    localStorage.removeItem('refresh_token');
   }
 }

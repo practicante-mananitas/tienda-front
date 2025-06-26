@@ -31,25 +31,26 @@ export class AdminProductosComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.scrollToId = params['scrollTo'] || null;
-    });
+      const categoryId = params['categoryId'] ? +params['categoryId'] : null;
 
-    this.cargarCategoriasConSubcategorias();
+      this.cargarCategoriasConSubcategorias(categoryId);
+    });
   }
 
-  cargarCategoriasConSubcategorias(): void {
+  cargarCategoriasConSubcategorias(categoryIdToOpen?: number | null): void {
     this.adminService.getCategoriasConSubcategoriasYProductos().subscribe({
       next: (data) => {
-        // Inicializamos productos con featuredId = null
         this.categorias = data.map(cat => {
           cat.subcategories.forEach((subcat: any) => {
             subcat.products.forEach((prod: any) => {
               prod.featuredId = null;
             });
           });
-          return { ...cat, abierta: false };
+          // Abrir la categoría que coincida con el parámetro
+          return { ...cat, abierta: categoryIdToOpen === cat.id };
         });
 
-        // ✅ Luego, para cada categoría, obtenemos sus productos destacados
+        // Cargar productos destacados
         this.categorias.forEach(categoria => {
           this.adminService.getFeaturedProductsByCategory(categoria.id).subscribe({
             next: (destacados: any[]) => {
@@ -72,7 +73,7 @@ export class AdminProductosComponent implements OnInit {
           });
         });
 
-        // Scroll si aplica
+        // Scroll al producto si se indica
         if (this.scrollToId) {
           setTimeout(() => {
             const el = document.getElementById('producto-' + this.scrollToId);
@@ -82,7 +83,7 @@ export class AdminProductosComponent implements OnInit {
               setTimeout(() => el.classList.remove('highlight'), 3000);
             }
             this.scrollToId = null;
-          }, 0);
+          }, 300);
         }
       },
       error: err => {
@@ -157,7 +158,6 @@ export class AdminProductosComponent implements OnInit {
       // Agregar destacado enviando category_id y product_id
       this.adminService.agregarDestacado({ category_id: categoriaId, product_id: producto.id }).subscribe({
         next: (res: any) => {
-          // La respuesta debe incluir el nuevo registro creado con id
           producto.featuredId = res.id;
           alert('Producto agregado a destacados');
         },

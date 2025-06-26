@@ -1,0 +1,33 @@
+  <div class="back-btn-container">
+  <button class="back-btn" (click)="volver()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Volver
+  </button>
+  </div>
+
+<div class="favorites-container">
+  <h2>Mis productos favoritos</h2>
+
+  <div *ngIf="favorites.length > 0; else noFavorites">
+    <ul class="favorites-list">
+      <li *ngFor="let product of favorites" (click)="irADetalle(product.id)" tabindex="0" role="button" class="favorite-item">
+        <img [src]="'http://127.0.0.1:8000/storage/' + (product.images?.[0]?.image || product.image)" alt="{{ product.name }}" class="fav-img" />
+        <div class="fav-info">
+          <h3>{{ product.name }}</h3>
+          <p class="price">$ {{ product.price | number:'1.2-2' }} mx</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noFavorites>
+    <div class="no-favorites">
+        <div class="icon">⭐</div>
+        <p>No tienes productos favoritos aún.</p>
+        <button (click)="irATienda()" class="btn-explore">Explorar productos</button>
+    </div>
+    </ng-template>
+</div>

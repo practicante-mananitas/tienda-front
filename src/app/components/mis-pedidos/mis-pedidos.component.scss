@@ -1,82 +1,99 @@
-.back-btn {
+/* Contenedor del botón volver */
+.back-btn-container {
+  // max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 20px 0;
   display: flex;
+  justify-content: flex-start; /* Alinea contenido a la izquierda */
+}
+
+/* Botón Volver */
+.back-btn {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 20px; /* Manteniendo el margen original */
   background: none;
   border: none;
   color: #3483fa;
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: bold;
   transition: color 0.2s ease;
 
-  .back-btn-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px 20px 0; // iguala el padding del .seguridad-container
-}
-
-
-  svg {
+  svg.icon {
     stroke: #3483fa;
     transition: transform 0.2s ease;
   }
 
   &:hover {
-    // color: #0056b3;
+    color: #0056b3;
 
-    svg {
-      transform: translateX(-2px);
+    svg.icon {
+      transform: translateX(-4px);
       stroke: #0056b3;
     }
   }
 }
 
+/* Título principal */
 .title {
+  max-width: 800px;
+  margin: 1.5rem auto 2.5rem;
   text-align: center;
-  margin: 2rem 0;
-  color: #333;
   font-size: 2.2rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.2;
+  padding: 0 15px;
 }
 
-.loading-spinner, .error-message {
-  text-align: center;
-  padding: 2rem;
+/* Mensajes de carga y error */
+.loading-spinner,
+.error-message {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
   font-size: 1.1rem;
   color: #666;
+  text-align: center;
+  border-radius: 6px;
+  background-color: #fafafa;
 }
 
 .error-message {
   color: #dc3545;
-  font-weight: bold;
+  font-weight: 700;
+  background-color: #ffe6e6;
+  border: 1px solid #dc3545;
 }
 
+/* Grid de pedidos */
 .orders-grid {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  padding: 0 20px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  grid-auto-rows: 1fr; /* AGREGADO: Esto hace que todas las filas tengan la misma altura */
   gap: 25px;
-  padding: 25px;
-  max-width: 1200px;
-  margin: 0 auto;
+  align-items: stretch;
 }
 
+/* Tarjeta de pedido */
 .order-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  height: 100%; /* AGREGADO: Asegura que la tarjeta ocupe toda la altura de su celda de cuadrícula */
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   }
 
+  /* Header del pedido */
   .order-header {
     background-color: #f8f9fa;
     padding: 18px 20px;
@@ -92,29 +109,28 @@
       color: #555;
 
       .label {
-        font-weight: bold;
+        font-weight: 700;
         color: #333;
       }
+
       .value {
         text-align: right;
       }
-    }
-    .total {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #1a8917;
-      border-top: 1px dashed #ced4da;
-      padding-top: 8px;
-      margin-top: 8px;
+
+      .value-estado {
+        text-align: right;
+        font-weight: 700;
+        color: #dc3545;
+      }
     }
   }
 
+  /* Secciones generales */
   .order-section {
+    flex-grow: 1;
     padding: 15px 20px;
     border-bottom: 1px solid #eee;
-    /* AGREGADO: Para asegurar que el contenido dentro de la sección empuje hacia abajo */
-    flex-grow: 1; 
-    
+
     &:last-of-type {
       border-bottom: none;
     }
@@ -122,53 +138,59 @@
     h4 {
       font-size: 1.15rem;
       color: #007bff;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       padding-bottom: 5px;
       border-bottom: 1px solid #e9ecef;
+      font-weight: 600;
     }
+
     h5 {
       font-size: 1rem;
       color: #444;
       margin-top: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+      font-weight: 600;
     }
-    h6 {
-      font-size: 0.9rem;
-      color: #555;
-      margin-top: 8px;
-      margin-bottom: 4px;
-    }
+
     p {
       font-size: 0.9rem;
-      margin: 4px 0;
-      color: #666;
+      color: #555;
+      margin: 5px 0;
+
       strong {
         color: #333;
       }
     }
+
     ul {
       list-style: none;
       padding: 0;
       margin: 0;
     }
+
     li {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #555;
-      margin-bottom: 3px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
   }
 
+  /* Lista de productos */
   .order-items-list {
     ul {
-      list-style: none;
       padding: 0;
       margin: 0;
+      list-style: none;
     }
+
     .item-line {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 0;
+      gap: 12px;
+      padding: 10px 0;
       border-bottom: 1px dashed #f0f0f0;
 
       &:last-child {
@@ -176,94 +198,44 @@
       }
 
       .product-thumb {
-        width: 50px;
-        height: 50px;
+        width: 56px;
+        height: 56px;
         object-fit: contain;
         border-radius: 8px;
         border: 1px solid #eee;
         flex-shrink: 0;
       }
+
       .item-info {
         flex-grow: 1;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         color: #333;
       }
+
       .item-total-line {
-        font-weight: bold;
+        font-weight: 700;
         color: #28a745;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         flex-shrink: 0;
+        white-space: nowrap;
       }
     }
   }
 
-  /* La sección de empaquetado fue eliminada del HTML del usuario, por lo que este CSS ya no aplicaría.
-     Lo mantengo aquí comentado por si acaso se reintroduce o tienes otras secciones similares.
-  .packaging-boxes-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .packaging-card-sm {
-    background-color: #e6f7ff;
-    border: 1px dashed #007bff;
-    border-radius: 8px;
-    padding: 10px 12px;
-    flex: 1 1 calc(50% - 10px);
-    box-sizing: border-box;
-
-    h5 {
-      font-size: 0.95rem;
-      color: #0056b3;
-      margin-bottom: 6px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid #cce5ff;
-    }
-    p {
-      font-size: 0.8rem;
-      margin: 2px 0;
-      color: #444;
-    }
-    .tight-fit-warning {
-      color: #dc3545;
-      font-weight: bold;
-      font-size: 0.75rem;
-      margin-top: 5px;
-    }
-    .packed-products-sm {
-      margin-top: 8px;
-      border-top: 1px dashed #cce5ff;
-      padding-top: 6px;
-
-      ul {
-        list-style: disc;
-        padding-left: 18px;
-      }
-      li {
-        font-size: 0.75rem;
-        color: #666;
-        margin-bottom: 2px;
-      }
-    }
-  }
-  */
-
+  /* Botón de repetir pedido */
   .btn-repeat-order {
-    display: block;
-    width: calc(100% - 40px);
-    margin: 15px 20px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: bold;
+    margin: 15px 20px 20px;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
     background-color: #28a745;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-top: auto; /* Empuja el botón hacia la parte inferior */
+    transition: background-color 0.25s ease;
+    align-self: stretch;
+    text-align: center;
 
     &:hover {
       background-color: #218838;
@@ -271,24 +243,87 @@
   }
 }
 
-// Responsive adjustments
+/* Mensaje para cuando no hay pedidos */
+.sin-pedidos {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 25px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  text-align: center;
+  font-size: 18px;
+
+  .icon {
+    font-size: 50px;
+    color: #ffa500;
+    animation: pulse 2s infinite ease-in-out;
+  }
+
+  .btn-explore {
+    padding: 10px 22px;
+    background-color: #3483fa;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+
+    &:hover {
+      background-color: #2968c8;
+    }
+  }
+}
+
+/* Animación para icono */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Responsividad */
 @media (max-width: 768px) {
   .orders-grid {
     grid-template-columns: 1fr;
-    padding: 15px;
+    padding: 0 15px 30px;
   }
+
   .order-card {
-    .order-header, .order-section {
+    .order-header,
+    .order-section {
       padding: 15px;
     }
+
+    .btn-repeat-order {
+      margin: 15px 15px 20px;
+      font-size: 1rem;
+    }
   }
-  /*
-  .packaging-card-sm {
-    flex: 1 1 100%;
-  }
-  */
-  .btn-repeat-order {
-    width: calc(100% - 30px);
-    margin: 15px;
+
+  .sin-pedidos {
+    font-size: 16px;
+
+    .icon {
+      font-size: 36px;
+    }
+
+    .btn-explore {
+      font-size: 14px;
+      padding: 8px 18px;
+    }
   }
 }

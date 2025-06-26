@@ -8,34 +8,55 @@
 
 <div *ngIf="product" class="detail-container">
   <div class="left-section">
-    <img *ngIf="selectedImage" [src]="'http://127.0.0.1:8000/storage/' + selectedImage" alt="Imagen seleccionada" class="main-image" />
-      <div class="thumbnails">
-        <!-- Imagen principal -->
-        <img 
-          *ngIf="product.image" 
-          [src]="'http://127.0.0.1:8000/storage/' + product.image" 
-          alt="Principal" 
-          class="thumb" 
-          [class.active]="selectedImage === product.image"
-          (click)="selectedImage = product.image"
-        />
+    <div class="image-wrapper">
+      <img *ngIf="selectedImage" [src]="'http://127.0.0.1:8000/storage/' + selectedImage" alt="Imagen seleccionada" class="main-image" />
 
-        <!-- Galería -->
-        <img 
-          *ngFor="let img of product.images" 
-          [src]="'http://127.0.0.1:8000/storage/' + img.image" 
-          alt="Galería" 
-          class="thumb" 
-          [class.active]="selectedImage === img.image"
-          (click)="selectedImage = img.image"
-        />
-      </div>
+      <button class="btn-favorite" (click)="toggleFavorite()" title="Favorito">
+        <svg *ngIf="isFavorite" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="red" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                  2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 
+                  4.5 2.09C13.09 3.81 14.76 3 
+                  16.5 3 19.58 3 22 5.42 
+                  22 8.5c0 3.78-3.4 6.86-8.55 
+                  11.54L12 21.35z"/>
+        </svg>
+
+        <svg *ngIf="!isFavorite" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+                   5.5 0 0 0-7.78 7.78l1.06 
+                   1.06L12 21.23l7.78-7.78 
+                   1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="thumbnails">
+      <!-- Imagen principal -->
+      <img 
+        *ngIf="product.image" 
+        [src]="'http://127.0.0.1:8000/storage/' + product.image" 
+        alt="Principal" 
+        class="thumb" 
+        [class.active]="selectedImage === product.image"
+        (click)="selectedImage = product.image"
+      />
+
+      <!-- Galería -->
+      <img 
+        *ngFor="let img of product.images" 
+        [src]="'http://127.0.0.1:8000/storage/' + img.image" 
+        alt="Galería" 
+        class="thumb" 
+        [class.active]="selectedImage === img.image"
+        (click)="selectedImage = img.image"
+      />
+    </div>
   </div>
 
-  <!-- AÑADIDO: Clase 'out-of-stock' cuando el producto no tiene stock -->
-  <!-- NUEVO: Clase 'product-paused' cuando el producto está pausado -->
   <div class="right-section" [class.out-of-stock]="isProductOutOfStock" [class.product-paused]="isProductPaused">
     <h2>{{ product.name }}</h2>
+
     <p class="price">$ {{ product.price | number:'1.0-2' }} mx</p>
 
     <div class="description">
@@ -43,7 +64,6 @@
     </div>
 
     <div class="quantity-selector">
-      <!-- DESHABILITAR botones de cantidad si la cantidad es 1, el producto está agotado O PAUSADO -->
       <button class="btn-quantity" (click)="decrementQuantity()" [disabled]="quantity === 1 || isProductOutOfStock || isProductPaused">-</button>
       <input 
         type="number" 
@@ -58,7 +78,6 @@
       <button class="btn-quantity" (click)="incrementQuantity()" [disabled]="quantity >= product?.stock || isProductOutOfStock || isProductPaused">+</button>
     </div>
 
-    <!-- AÑADIDO: Mensaje de stock/estado -->
     <p *ngIf="stockMessage" 
        class="stock-message" 
        [ngClass]="{
@@ -69,10 +88,39 @@
       {{ stockMessage }}
     </p>
 
-    <!-- DESHABILITAR el botón de agregar al carrito si el producto está agotado O PAUSADO -->
     <button class="btn-cart" (click)="agregarAlCarrito()" [disabled]="isProductOutOfStock || isProductPaused">
-      <!-- NUEVO: Mensaje del botón según el estado -->
       {{ isProductPaused ? 'Producto Pausado' : (isProductOutOfStock ? 'Producto Agotado' : 'Agregar al carrito') }}
     </button>
+
+    <div class="review-section">
+      <h3>Comentarios</h3>
+
+      <div *ngIf="authService.isLoggedIn()" class="review-form">
+        <div class="star-rating">
+          <span *ngFor="let star of [1,2,3,4,5]" (click)="setRating(star)" style="cursor:pointer;">
+            <i [ngClass]="star <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
+          </span>
+        </div>
+
+        <textarea [(ngModel)]="review.comment" placeholder="Escribe un comentario..."></textarea>
+        <div *ngIf="reviewError" style="color: red; margin-top: 5px;">
+          {{ reviewError }}
+        </div>
+        
+        <button (click)="submitReview()">Enviar</button>
+      </div>
+
+      <div class="review-list">
+        <div *ngFor="let r of reviews" class="review-item">
+          <strong>{{ r.user.name }}</strong>
+          <small class="review-date">{{ r.created_at | date:'dd/MM/yyyy HH:mm' }}</small>
+          <div class="stars">
+            <i *ngFor="let s of [1,2,3,4,5]" [ngClass]="s <= r.rating ? 'fas fa-star' : 'far fa-star'"></i>
+          </div>
+          <p>{{ r.comment }}</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

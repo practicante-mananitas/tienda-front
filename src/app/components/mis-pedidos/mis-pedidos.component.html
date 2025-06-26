@@ -1,4 +1,4 @@
-<div class="back-btn-container">
+  <div class="back-btn-container">
   <button class="back-btn" (click)="volver()">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
@@ -6,8 +6,9 @@
     </svg>
     Volver
   </button>
+  </div>
 
-<h2 class="title">Mis Pedidos</h2>
+  <h2 class="title">Mis Pedidos</h2>
 
 <div class="loading-spinner" *ngIf="loading">
   Cargando tus pedidos...
@@ -41,7 +42,7 @@
       </div> -->
       <div class="line">
         <span class="label">Estado:</span>
-        <span class="value">{{ order.shipment_status | titlecase }}</span>
+        <span class="value-estado">{{ order.shipment_status | titlecase }}</span>
       </div>
       <div class="line" *ngIf="order.fecha_maxima_entrega">
         <span class="label">Fecha Máx. Entrega:</span>
@@ -98,5 +99,10 @@
 </div>
 
 <ng-template #sinPedidos>
-  <p style="text-align: center; font-style: italic;" *ngIf="!loading">No tienes pedidos aprobados aún.</p>
+  <div class="sin-pedidos" *ngIf="!loading">
+    <div class="icon">📦</div>
+    <p>No tienes pedidos aprobados aún.</p>
+    <button class="btn-explore" (click)="irATienda()">Explorar productos</button>
+  </div>
 </ng-template>
+

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
+import { FavoriteService } from '../../services/favorite.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,18 +17,26 @@ import { AuthService } from '../../services/auth.service';
 export class ProductDetailComponent implements OnInit {
   product: any;
   quantity: number = 1;
-  isProductOutOfStock: boolean = false; // Indica si el producto está agotado (stock <= 0)
-  isProductPaused: boolean = false;    // NUEVO: Indica si el producto está pausado (status === 'paused')
+  isProductOutOfStock: boolean = false;
+  isProductPaused: boolean = false;
   stockMessage: string = '';
-  selectedImage: string = ''; // Imagen grande que se está mostrando
+  selectedImage: string = '';
+  isFavorite: boolean = false;
+  review = {
+    rating: 0,
+    comment: ''
+  };
+  reviews: any[] = [];
+  reviewError: string = '';  // <-- propiedad para mostrar error en el formulario de review
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
     private cartService: CartService,
-    private location: Location,
-    private authService: AuthService
+    public authService: AuthService, // público para usar en template
+    private favoriteService: FavoriteService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -37,25 +46,29 @@ export class ProductDetailComponent implements OnInit {
         this.productService.getProduct(Number(productId)).subscribe({
           next: (data) => {
             this.product = data;
+            this.loadReviews();
 
-            // ✅ Imagen seleccionada por defecto
-            if (this.product.images && this.product.images.length > 0) {
-              this.selectedImage = this.product.images[0].image;
-            } else {
-              this.selectedImage = this.product.image;
-            }
+            this.selectedImage = this.product.images?.[0]?.image || this.product.image;
 
-            // Estado de producto
             this.isProductPaused = this.product.status === 'paused';
             this.isProductOutOfStock = this.product.stock <= 0;
-
-            // Cantidad inicial
             this.quantity = (this.isProductPaused || this.isProductOutOfStock) ? 0 : 1;
-
             this.updateDisplayStatus();
+
+            if (this.authService.isLoggedIn()) {
+              this.favoriteService.isFavorite(this.product.id).subscribe({
+                next: (isFav: boolean) => {
+                  this.isFavorite = isFav;
+                },
+                error: () => {
+                  this.isFavorite = false;
+                }
+              });
+            } else {
+              this.isFavorite = false;
+            }
           },
-          error: (err) => {
-            console.error('Error al cargar detalles del producto:', err);
+          error: () => {
             alert('Error al cargar los detalles del producto.');
             this.router.navigate(['/productos']);
           }
@@ -64,127 +77,166 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-
   volver(): void {
     this.location.back();
   }
 
-  /**
-   * Actualiza los mensajes y el estado general de visualización (habilitación de botones, etc.).
-   * La lógica de "pausado" tiene prioridad sobre "agotado".
-   */
   updateDisplayStatus(): void {
     if (this.product && typeof this.product.stock === 'number') {
-        // La bandera 'isProductPaused' ya debe estar actualizada desde ngOnInit o la recarga
-        // Si el producto está pausado, anula la lógica de stock para la compra
-        if (this.isProductPaused) {
-            this.stockMessage = 'Producto pausado, pronto se reanudará.';
-            this.isProductOutOfStock = true; // Tratamos un producto pausado como "agotado para la compra"
-            this.quantity = 0; // Aseguramos que la cantidad sea 0
+      if (this.isProductPaused) {
+        this.stockMessage = 'Producto pausado, pronto se reanudará.';
+        this.isProductOutOfStock = true;
+        this.quantity = 0;
+      } else {
+        this.isProductOutOfStock = this.product.stock <= 0;
+
+        if (this.isProductOutOfStock) {
+          this.stockMessage = 'Producto agotado.';
+          this.quantity = 0;
+        } else if (this.product.stock <= 5) {
+          this.stockMessage = `¡Solo quedan ${this.product.stock} en stock!`;
         } else {
-            // Si no está pausado, evaluamos el stock real
-            this.isProductOutOfStock = this.product.stock <= 0;
-
-            if (this.isProductOutOfStock) {
-                this.stockMessage = 'Producto agotado.';
-                this.quantity = 0; // Si agotado, cantidad 0
-            } else if (this.product.stock > 0 && this.product.stock <= 5) {
-                this.stockMessage = `¡Solo quedan ${this.product.stock} en stock!`;
-            } else {
-                this.stockMessage = `Disponible: ${this.product.stock} unidades.`;
-            }
-
-            // Asegurarse de que la cantidad seleccionada no exceda el stock real si no está agotado
-            if (!this.isProductOutOfStock && this.quantity > this.product.stock) {
-                this.quantity = this.product.stock;
-            }
-            // Asegurarse de que la cantidad sea al menos 1 si hay stock disponible
-            if (!this.isProductOutOfStock && this.quantity === 0) {
-                this.quantity = 1;
-            }
+          this.stockMessage = `Disponible: ${this.product.stock} unidades.`;
         }
+
+        if (!this.isProductOutOfStock && this.quantity > this.product.stock) {
+          this.quantity = this.product.stock;
+        }
+
+        if (!this.isProductOutOfStock && this.quantity === 0) {
+          this.quantity = 1;
+        }
+      }
     } else {
-      // Fallback para cuando no hay datos de producto o stock es inválido
       this.isProductOutOfStock = true;
-      this.isProductPaused = false; // No puede estar pausado si no hay datos de producto válidos
+      this.isProductPaused = false;
       this.stockMessage = 'Stock no disponible.';
       this.quantity = 0;
     }
   }
 
   incrementQuantity(): void {
-    // No permitir incrementar si está pausado o agotado
     if (this.isProductPaused || this.isProductOutOfStock) return;
-
     if (this.product && this.quantity < this.product.stock) {
       this.quantity++;
-    } else if (this.product && this.quantity >= this.product.stock) {
-      alert(`No puedes añadir más de ${this.product.stock} unidades. Es todo lo que queda en stock.`);
+    } else {
+      alert(`No puedes añadir más de ${this.product.stock} unidades.`);
     }
   }
 
   decrementQuantity(): void {
-    // No permitir decrementar si está pausado o agotado (la cantidad ya debe ser 0)
     if (this.isProductPaused || this.isProductOutOfStock) return;
-
-    if (this.quantity > 1) { // No permitir bajar de 1 si el producto está disponible
+    if (this.quantity > 1) {
       this.quantity--;
     }
   }
 
   onQuantityChange(event: Event): void {
-    // Si está pausado o agotado, no permitir cambiar la cantidad desde el input
     if (this.isProductPaused || this.isProductOutOfStock) {
-        (event.target as HTMLInputElement).value = this.quantity.toString(); // Restablecer visualmente el input
-        return;
+      (event.target as HTMLInputElement).value = this.quantity.toString();
+      return;
     }
 
     const inputElement = event.target as HTMLInputElement;
     let newQuantity = Number(inputElement.value);
 
-    // Validar que la cantidad sea un número válido y no sea menor que 1
-    if (isNaN(newQuantity) || newQuantity < 1) {
-      newQuantity = 1;
-    }
-
-    // Asegurarse de que la cantidad no exceda el stock disponible
+    if (isNaN(newQuantity) || newQuantity < 1) newQuantity = 1;
     if (this.product && newQuantity > this.product.stock) {
       newQuantity = this.product.stock;
-      alert(`Solo quedan ${this.product.stock} unidades en stock. Se ha ajustado la cantidad.`);
+      alert(`Solo quedan ${this.product.stock} unidades.`);
     }
-    
+
     this.quantity = newQuantity;
-    inputElement.value = this.quantity.toString(); // Actualizar el valor del input visualmente
-    this.updateDisplayStatus(); // Re-evaluar el mensaje y estado
+    inputElement.value = this.quantity.toString();
+    this.updateDisplayStatus();
   }
 
   agregarAlCarrito(): void {
-    // Verificar autenticación
     if (!this.authService.isLoggedIn()) {
-      alert('Debes iniciar sesión para continuar.'); // ✅ Muestra el mensaje
+      alert('Debes iniciar sesión para continuar.');
       localStorage.setItem('redirectAfterLogin', this.router.url);
       this.router.navigate(['/login']);
       return;
     }
 
-    // No permitir agregar al carrito si el producto está pausado, agotado o la cantidad es 0
     if (!this.product || this.isProductPaused || this.isProductOutOfStock || this.quantity <= 0) {
-      alert('No se puede agregar este producto al carrito en este momento.');
+      alert('No se puede agregar este producto al carrito.');
       return;
     }
 
     this.cartService.addToCart(this.product.id, this.quantity).subscribe({
       next: () => {
         alert(`${this.quantity} x "${this.product.name}" añadido(s) al carrito.`);
-        // Después de añadir al carrito, es buena práctica volver a cargar los detalles
-        // del producto para reflejar el stock actualizado en la UI si el backend lo descuenta.
         this.productService.getProduct(this.product.id).subscribe(data => {
-            this.product = data;
-            this.updateDisplayStatus(); // Vuelve a actualizar el estado de visualización
+          this.product = data;
+          this.updateDisplayStatus();
         });
       },
       error: (err) => {
         console.error('Error al añadir al carrito:', err);
+      }
+    });
+  }
+
+  toggleFavorite(): void {
+    if (!this.authService.isLoggedIn()) {
+      alert('Debes iniciar sesión para guardar productos como favoritos.');
+      return;
+    }
+
+    if (this.isFavorite) {
+      this.favoriteService.removeFavorite(this.product.id).subscribe({
+        next: () => this.isFavorite = false,
+        error: () => alert('No se pudo quitar de favoritos.')
+      });
+    } else {
+      this.favoriteService.addFavorite(this.product.id).subscribe({
+        next: () => this.isFavorite = true,
+        error: () => alert('No se pudo añadir a favoritos.')
+      });
+    }
+  }
+
+  setRating(stars: number): void {
+    this.review.rating = stars;
+  }
+
+  loadReviews(): void {
+    if (!this.product?.id) return;
+
+    this.productService.getReviews(this.product.id).subscribe({
+      next: (data) => {
+        this.reviews = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar comentarios:', err);
+      }
+    });
+  }
+
+  submitReview(): void {
+    if (!this.authService.isLoggedIn()) {
+      alert('Debes iniciar sesión para comentar.');
+      return;
+    }
+
+    const payload = { ...this.review };
+
+    this.productService.addReview(this.product.id, payload).subscribe({
+      next: () => {
+        this.review = { rating: 0, comment: '' };
+        this.reviewError = '';
+        this.loadReviews();
+      },
+      error: (err) => {
+        if (err.error?.errors?.rating) {
+          // Mensaje en español personalizado:
+          this.reviewError = 'La calificación debe ser al menos 1.';
+        } else if (err.error?.message) {
+          this.reviewError = err.error.message;
+        } else {
+          this.reviewError = 'No se pudo enviar tu comentario.';
+        }
       }
     });
   }

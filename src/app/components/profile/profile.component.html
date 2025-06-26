@@ -9,12 +9,12 @@
     <ul>
       <li routerLink="/tienda"><i>🛒</i> Tienda</li>
       <li routerLink="/mis-pedidos"><i>📦</i> Mis Compras</li>
-      <li><i>📊</i> Marketing</li> <!-- gráfico de barras para campañas -->
-      <li><i>❤️</i> Favoritos</li> <!-- corazón, símbolo universal de "favorito" -->
+      <!-- <li><i>📊</i> Marketing</li>  -->
+      <li routerLink="/favoritos"><i>❤️</i> Favoritos</li> <!-- corazón, símbolo universal de "favorito" -->
       <li><i>📞</i> Contacto</li>  <!-- teléfono, más directo que la campana -->
-      <li><i>📜</i> Términos y Condiciones</li> <!-- documento enrollado o contrato -->
-      <li><i>🚪</i> Cerrar sesión</li> <!-- puerta como símbolo de "salir" -->
-      <li><i>⚙️</i> Configuración</li> <!-- este ya está bien -->
+      <li routerLink="/soporte"><i>📜</i> Soporte / FAQ</li> <!-- documento enrollado o contrato -->
+      <li (click)="logout()"><i>🚪</i> Cerrar sesión</li>
+      <!-- <li><i>⚙️</i> Configuración</li>  -->
     </ul>
   </aside>
 

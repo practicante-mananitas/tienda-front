@@ -1,0 +1,51 @@
+  <div class="back-btn-container">
+  <button class="back-btn" (click)="volver()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Volver
+  </button>
+  </div>
+
+
+<div class="support-container">
+  <h2>Preguntas Frecuentes (FAQ)</h2>
+  <ul>
+    <li><strong>¿Cómo cambio mi contraseña?</strong><br>Ve a Seguridad en tu perfil y sigue las instrucciones.</li>
+    <li><strong>¿Cuánto tarda un pedido?</strong><br>Generalmente entre 3 y 5 días hábiles.</li>
+    <li><strong>¿Puedo devolver un producto?</strong><br>Sí, tienes 30 días para solicitar una devolución.</li>
+  </ul>
+
+  <h2>Contacto</h2>
+  <p>Si no encuentras respuesta aquí, escríbenos:</p>
+  <form (ngSubmit)="enviarConsulta()" #form="ngForm">
+    <input
+      type="text"
+      placeholder="Tu nombre"
+      required
+      name="nombre"
+      [(ngModel)]="nombre"
+    />
+    <input
+      type="email"
+      placeholder="Tu correo"
+      required
+      name="correo"
+      [(ngModel)]="correo"
+    />
+    <textarea
+      placeholder="Describe tu consulta"
+      required
+      name="mensaje"
+      [(ngModel)]="mensaje"
+    ></textarea>
+    <button type="submit" [disabled]="form.invalid">Enviar</button>
+  </form>
+
+  <h2>Guías rápidas</h2>
+  <ul>
+    <li><a routerLink="/guia-pedidos">Cómo hacer un pedido</a></li>
+    <li><a routerLink="/guia-datos">Actualizar datos personales</a></li>
+  </ul>
+</div>

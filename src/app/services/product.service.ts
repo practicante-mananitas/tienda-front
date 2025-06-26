@@ -79,4 +79,16 @@ export class ProductService {
     return this.http.get<any[]>(`${this.apiUrl}/categories/${categoryId}/featured-only-products`);
   }
 
+  getReviews(productId: number) {
+    return this.http.get<any[]>(`${this.apiUrl}/products/${productId}/reviews`);
+  }
+
+  addReview(productId: number, payload: { rating: number, comment?: string }) {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    };
+    return this.http.post(`${this.apiUrl}/products/${productId}/reviews`, payload, { headers });
+  }
+
+
 }

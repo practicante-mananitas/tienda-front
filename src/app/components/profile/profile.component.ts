@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +15,9 @@ export class ProfileComponent implements OnInit {
   user: any = null;
   sidebarOpen = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.authService.getProfile().subscribe({
@@ -29,4 +31,18 @@ export class ProfileComponent implements OnInit {
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
   }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        // Sesión cerrada correctamente
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Aunque falle la petición, limpiamos local y redirigimos
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
 }

@@ -91,4 +91,9 @@ export class MisPedidosComponent implements OnInit {
       }
     });
   }
+
+  irATienda() {
+    this.router.navigate(['/tienda']); // Cambia la ruta según tu app
+  }
+
 }

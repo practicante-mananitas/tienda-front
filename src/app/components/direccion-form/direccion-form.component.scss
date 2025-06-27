@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 20px; /* Manteniendo el margen original */
+  margin: 20px;
   background: none;
   border: none;
   color: #3483fa;
@@ -11,12 +11,11 @@
   font-weight: bold;
   transition: color 0.2s ease;
 
-    .back-btn-container {
+  .back-btn-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px 20px 0; // iguala el padding del .seguridad-container
+    padding: 20px 20px 0;
   }
-
 
   svg {
     stroke: #3483fa;
@@ -24,16 +23,12 @@
   }
 
   &:hover {
-    // color: #0056b3;
-
     svg {
       transform: translateX(-2px);
       stroke: #0056b3;
     }
   }
 }
-
-
 
 form {
   max-width: 600px;
@@ -59,6 +54,7 @@ label {
   flex-direction: column;
   font-weight: 500;
   color: #333;
+  position: relative; // Necesario para posicionar las sugerencias
 
   input,
   select,
@@ -98,6 +94,33 @@ button:not(.back-btn) {
   }
 }
 
+/* Estilo mejorado para sugerencias */
+.sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  list-style: none;
+  padding: 0;
+  max-height: 180px;
+  overflow-y: auto;
+
+  li {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+  }
+}
 
 /* --- NUEVO ESTILO PARA LA INFO EXTRA --- */
 

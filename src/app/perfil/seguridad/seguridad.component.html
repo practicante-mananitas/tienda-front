@@ -19,7 +19,18 @@
 
       <label>
         Contraseña actual:
-        <input type="password" formControlName="password_actual" />
+        <div class="input-con-icono">
+          <input [type]="mostrarPasswordActual ? 'text' : 'password'" formControlName="password_actual" />
+          <button type="button" (click)="toggleMostrarPasswordActual()" class="btn-ojo" aria-label="Mostrar u ocultar contraseña actual">
+            <svg *ngIf="!mostrarPasswordActual" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 10s4-7 9-7 9 7 9 7-4 7-9 7-9-7-9-7z"/>
+              <circle cx="10" cy="10" r="3"/>
+            </svg>
+            <svg *ngIf="mostrarPasswordActual" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 17L3 3M1 10s4-7 9-7 9 7 9 7-1.73 2.52-4.43 3.86"/>
+            </svg>
+          </button>
+        </div>
       </label>
       <div *ngIf="passwordForm.get('password_actual')?.touched && passwordForm.get('password_actual')?.invalid" class="error">
         La contraseña actual es obligatoria.
@@ -27,17 +38,39 @@
 
       <label>
         Nueva contraseña:
-        <input type="password" formControlName="nueva_password" />
+        <div class="input-con-icono">
+          <input [type]="mostrarNuevaPassword ? 'text' : 'password'" formControlName="nueva_password" />
+          <button type="button" (click)="toggleMostrarNuevaPassword()" class="btn-ojo" aria-label="Mostrar u ocultar nueva contraseña">
+            <svg *ngIf="!mostrarNuevaPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 10s4-7 9-7 9 7 9 7-4 7-9 7-9-7-9-7z"/>
+              <circle cx="10" cy="10" r="3"/>
+            </svg>
+            <svg *ngIf="mostrarNuevaPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 17L3 3M1 10s4-7 9-7 9 7 9 7-1.73 2.52-4.43 3.86"/>
+            </svg>
+          </button>
+        </div>
       </label>
       <div *ngIf="passwordForm.get('nueva_password')?.touched && passwordForm.get('nueva_password')?.errors" class="error">
         <div *ngIf="passwordForm.get('nueva_password')?.errors?.['required']">La nueva contraseña es obligatoria.</div>
-        <div *ngIf="passwordForm.get('nueva_password')?.errors?.['minlength']">Debe tener al menos 6 caracteres.</div>
+        <div *ngIf="passwordForm.get('nueva_password')?.errors?.['minlength']">Debe tener al menos 8 caracteres.</div>
         <div *ngIf="passwordForm.get('nueva_password')?.errors?.['pattern']">Debe incluir mayúscula, número y carácter especial.</div>
       </div>
 
       <label>
         Confirmar nueva contraseña:
-        <input type="password" formControlName="nueva_password_confirmation" />
+        <div class="input-con-icono">
+          <input [type]="mostrarConfirmarPassword ? 'text' : 'password'" formControlName="nueva_password_confirmation" />
+          <button type="button" (click)="toggleMostrarConfirmarPassword()" class="btn-ojo" aria-label="Mostrar u ocultar confirmación de contraseña">
+            <svg *ngIf="!mostrarConfirmarPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 10s4-7 9-7 9 7 9 7-4 7-9 7-9-7-9-7z"/>
+              <circle cx="10" cy="10" r="3"/>
+            </svg>
+            <svg *ngIf="mostrarConfirmarPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 17L3 3M1 10s4-7 9-7 9 7 9 7-1.73 2.52-4.43 3.86"/>
+            </svg>
+          </button>
+        </div>
       </label>
       <div *ngIf="passwordForm.errors?.['noMatch'] && passwordForm.get('nueva_password_confirmation')?.touched" class="error">
         Las contraseñas no coinciden.

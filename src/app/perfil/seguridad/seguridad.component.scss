@@ -160,3 +160,33 @@
     }
   }
 }
+
+.input-con-icono {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-con-icono input {
+  flex: 1;
+  padding-right: 2.5rem; /* espacio para el botón del ojo */
+}
+
+.btn-ojo {
+  position: absolute;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+.btn-ojo:hover {
+  color: #007bff;
+}

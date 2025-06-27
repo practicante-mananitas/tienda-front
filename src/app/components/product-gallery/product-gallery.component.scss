@@ -5,15 +5,13 @@
 
 .product-section {
   background: white;
-  // margin: 30px;
-  margin-left: 80px;
-  margin-right: 80px;
-  margin-top: 40px;
+  margin: 40px auto;
   padding: 20px 40px;
   border-radius: 12px;
-  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.247);
   position: relative;
   overflow: hidden;
+  max-width: 1200px;
+  width: 90%;
 }
 
 .product-section:not(:last-child)::after {
@@ -40,7 +38,35 @@
   }
 }
 
-/* Contenedor con botones */
+.category-header {
+  display: flex;
+  align-items: center;    // centrado vertical
+  justify-content: flex-start;  // quitar espacio entre extremos
+  gap: 12px;  // espacio entre título y botón
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #222;
+  }
+
+  .go-to-category {
+    padding: 6px 14px;
+    font-size: 13px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+
 .carousel-wrapper {
   position: relative;
   display: flex;
@@ -54,7 +80,7 @@
     z-index: 10;
     padding: 10px;
     border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: background 0.3s ease;
     position: absolute;
     top: 50%;
@@ -82,7 +108,7 @@
   gap: 15px;
   padding: 10px 20px;
   scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;  // Scroll snap horizontal obligatorio
+  scroll-snap-type: x mandatory;
   margin: 0 20px;
 
   &::-webkit-scrollbar {
@@ -91,11 +117,11 @@
 
   .card {
     flex: 0 0 auto;
-    scroll-snap-align: center; // Cada card "encaja" al inicio del scroll
+    scroll-snap-align: center;
     background: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     width: 170px;
     padding: 10px;
     text-align: center;
@@ -141,7 +167,6 @@
   }
 }
 
-// Promo Banners
 .promo-section {
   padding: 20px;
 
@@ -157,7 +182,7 @@
       max-width: 500px;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
       img {
         width: 100%;
@@ -168,11 +193,11 @@
   }
 
   .promo-single {
-    max-width: 1040px; // 2x520 aprox (como las 2 promos de arriba)
+    max-width: 1040px;
     margin: 0 auto;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
     img {
       width: 100%;
@@ -267,7 +292,6 @@
   }
 }
 
-// Categorias por punto
 .category-showcase {
   padding: 40px 20px;
   text-align: center;
@@ -302,7 +326,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
       img {
         width: 60px;
@@ -324,7 +348,22 @@
   }
 }
 
-// Lo mas buscado
+.go-to-category {
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
 .most-wanted-block {
   padding: 40px 30px;
   text-align: center;
@@ -394,7 +433,6 @@
   }
 }
 
-// Mini-banner
 .mini-banner-section {
   padding: 40px 20px;
   text-align: center;
@@ -453,25 +491,14 @@
 
 // 🎯 Responsive para móviles
 @media (max-width: 767px) {
-  .carousel-wrapper {
-    .nav {
-      display: none; // Oculta flechas en pantallas pequeñas
-    }
+  .carousel-wrapper .nav {
+    display: none;
   }
 
   .gallery {
     margin: 0;
     padding: 10px;
     gap: 12px;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 
     .card {
       width: 150px;
@@ -479,17 +506,24 @@
   }
 
   .product-section {
-    margin-left: 10px;
-    margin-right: 10px;
+    width: 95%;
+    margin: 20px auto;
     padding: 15px;
   }
 
-  .most-wanted-carousel {
-    flex-wrap: nowrap;
-    overflow-x: auto;
+  .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
 
-    .product-card {
-      flex: 0 0 120px;
+    h2 {
+      font-size: 16px;
+    }
+
+    .go-to-category {
+      font-size: 12px;
+      padding: 5px 12px;
+      margin-top: 4px;
     }
   }
 }

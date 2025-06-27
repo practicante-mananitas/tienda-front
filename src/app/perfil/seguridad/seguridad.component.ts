@@ -19,6 +19,9 @@ export class SeguridadComponent implements OnInit {
   error = '';
   actividades: any[] = [];
   errorActividad = '';
+  mostrarPasswordActual = false;
+  mostrarNuevaPassword = false;
+  mostrarConfirmarPassword = false;
 
   sesionesActivas: any[] = [];
   errorSesiones = '';
@@ -48,7 +51,7 @@ export class SeguridadComponent implements OnInit {
       password_actual: ['', Validators.required],
       nueva_password: ['', [
         Validators.required,
-        Validators.minLength(6),
+        Validators.minLength(8),
         Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/)
       ]],
       nueva_password_confirmation: ['', Validators.required]
@@ -61,7 +64,7 @@ export class SeguridadComponent implements OnInit {
     return pass === confirm ? null : { noMatch: true };
   }
 
-  cambiarContrasena() {
+  cambiarContrasena() { 
     this.mensaje = '';
     this.error = '';
 
@@ -103,5 +106,17 @@ export class SeguridadComponent implements OnInit {
 
     volver() {
     this.location.back();
+  }
+
+   toggleMostrarPasswordActual() {
+    this.mostrarPasswordActual = !this.mostrarPasswordActual;
+  }
+
+  toggleMostrarNuevaPassword() {
+    this.mostrarNuevaPassword = !this.mostrarNuevaPassword;
+  }
+
+  toggleMostrarConfirmarPassword() {
+    this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword;
   }
 }

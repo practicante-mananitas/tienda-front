@@ -35,7 +35,12 @@
   <ng-container *ngFor="let category of categories; let i = index">
     <div class="product-section" [attr.data-category-id]="category.id">
       <div class="category-title">
-        <h2> Favoritos en {{ category.name }}</h2>
+        <div class="category-header">
+          <h2>Favoritos en {{ category.name }}</h2>
+          <button class="go-to-category" [routerLink]="['/categoria', category.id]">
+            Ir a {{ category.name }}
+          </button>
+        </div>
         <p>Relacionado con tus visitas recientes</p>
       </div>
       <div class="carousel-wrapper">

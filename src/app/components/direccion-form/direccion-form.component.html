@@ -6,10 +6,10 @@
     </svg>
     Volver
   </button>
+</div>
 
 <form *ngIf="!mostrarExtraInfo && !soloExtra" (ngSubmit)="onSubmit()" #form="ngForm">
-<h2>{{ modoEdicion ? 'Editar Dirección' : 'Nueva Dirección' }}</h2>
-
+  <h2>{{ modoEdicion ? 'Editar Dirección' : 'Nueva Dirección' }}</h2>
 
   <label>
     Calle:
@@ -17,29 +17,42 @@
   </label>
 
   <label>
-    Código Postal:
-    <input type="text" name="codigo_postal" [(ngModel)]="direccion.codigo_postal" required>
+    Estado:
+    <select name="state" [(ngModel)]="direccion.estado" (change)="onEstadoChange($event)" required>
+      <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.name }}</option>
+    </select>
   </label>
 
-  <label>Estado:</label>
-<select name="state" [(ngModel)]="direccion.estado" (change)="onEstadoChange($event)" required>
-  <option *ngFor="let estado of estados" [value]="estado.id">{{ estado.name }}</option>
-</select>
+  <label>
+    Municipio:
+    <input type="text" name="municipio" [(ngModel)]="direccion.municipio" (input)="filtrarMunicipios()" autocomplete="off" required>
+    <ul *ngIf="sugerenciasMunicipios.length > 0" class="sugerencias">
+      <li *ngFor="let sugerencia of sugerenciasMunicipios" (click)="seleccionarMunicipio(sugerencia)">{{ sugerencia }}</li>
+    </ul>
+  </label>
 
-  <label>Municipio:</label>
-  <select [(ngModel)]="direccion.municipio" name="municipio" required>
-    <option value="" disabled selected>Selecciona un municipio</option>
-    <option *ngFor="let m of municipios" [value]="m.name">{{ m.name }}</option>
-  </select>
+  <label>
+    Código Postal:
+    <input type="text" name="codigo_postal" [(ngModel)]="direccion.codigo_postal" (input)="filtrarCPs()" autocomplete="off" required>
+    <ul *ngIf="sugerenciasCP.length > 0" class="sugerencias">
+      <li *ngFor="let sugerencia of sugerenciasCP" (click)="seleccionarCP(sugerencia)">{{ sugerencia }}</li>
+    </ul>
+  </label>
 
   <label>
     Localidad:
-    <input type="text" name="localidad" [(ngModel)]="direccion.localidad" required>
+    <input type="text" name="localidad" [(ngModel)]="direccion.localidad" (input)="filtrarLocalidades()" autocomplete="off" required>
+    <ul *ngIf="sugerenciasLocalidades.length > 0" class="sugerencias">
+      <li *ngFor="let sugerencia of sugerenciasLocalidades" (click)="seleccionarLocalidad(sugerencia)">{{ sugerencia }}</li>
+    </ul>
   </label>
 
   <label>
     Colonia / Barrio:
-    <input type="text" name="colonia" [(ngModel)]="direccion.colonia" required>
+    <input type="text" name="colonia" [(ngModel)]="direccion.colonia" (input)="filtrarColonias()" autocomplete="off" required>
+    <ul *ngIf="sugerenciasColonias.length > 0" class="sugerencias">
+      <li *ngFor="let sugerencia of sugerenciasColonias" (click)="seleccionarColonia(sugerencia)">{{ sugerencia }}</li>
+    </ul>
   </label>
 
   <label>
@@ -61,9 +74,9 @@
     </select>
   </label>
 
-<button type="submit">{{ modoEdicion ? 'Actualizar Dirección' : 'Guardar Dirección' }}</button>
-
+  <button type="submit">{{ modoEdicion ? 'Actualizar Dirección' : 'Guardar Dirección' }}</button>
 </form>
+
 
 <!-- Resumen de dirección -->
 <div *ngIf="mostrarExtraInfo" class="card-resumen">

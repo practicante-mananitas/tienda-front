@@ -64,4 +64,9 @@ export class AddressService {
       headers: this.getAuthHeaders()
     });
   }
+
+  getSepomexPorEstado(idEstado: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/sepomex/estado/${idEstado}`);
+  }
+
 }

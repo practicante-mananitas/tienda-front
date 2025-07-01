@@ -31,8 +31,8 @@
   </div>
 
   <div class="right-section">
-  <a class="nav-link rastreo-link" href="#">
-    📍 <span class="rastreo-texto">Rastrear pedido</span>
+  <a class="nav-link rastreo-link" routerLink="/mis-pedidos">
+    📍 <span class="rastreo-texto" >Mis pedidos</span>
   </a>
     <!-- <a class="nav-link" routerLink="/profile" *ngIf="authService.isLoggedIn()">👤</a> -->
     <!-- navbar.component.html -->
@@ -46,7 +46,7 @@
  <div class="profile-menu" *ngIf="showProfileMenu && (isLoggedIn() || isGuest())">
     <ul>
      <!-- Mostrar solo si el usuario está autenticado -->
-        <li *ngIf="isLoggedIn()"><a routerLink="/mis-pedidos">Mis pedidos</a></li>
+        <li *ngIf="isLoggedIn()"><a routerLink="/favoritos">Mis likes</a></li>
         <li *ngIf="isLoggedIn()"><a routerLink="/profile">Mi perfil</a></li>
         <li *ngIf="isLoggedIn()"><button (click)="logout()">Cerrar sesión</button></li>
 

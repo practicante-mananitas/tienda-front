@@ -245,31 +245,28 @@ input[type='radio'] {
 /* BOTÓN VOLVER FIJO SOBRE EL FONDO GRIS */
 
 .back-btn-container {
-  position: fixed;
-  top: 80px;
-  left: 20px;
-  z-index: 1000; /* Que esté encima de todo */
-  background: transparent;
-  margin: 0;
-  padding: 0;
-  max-width: none;
+  // max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  display: flex;
+  justify-content: flex-start; /* Alinea contenido a la izquierda */
+  background-color: #f5f5f5;
 }
 
+/* Botón Volver */
 .back-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: transparent;
+  background: none;
   border: none;
   color: #3483fa;
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: bold;
   transition: color 0.2s ease;
-  padding: 0;
-  user-select: none;
 
-  svg {
+  svg.icon {
     stroke: #3483fa;
     transition: transform 0.2s ease;
   }
@@ -277,8 +274,8 @@ input[type='radio'] {
   &:hover {
     color: #0056b3;
 
-    svg {
-      transform: translateX(-2px);
+    svg.icon {
+      transform: translateX(-4px);
       stroke: #0056b3;
     }
   }
@@ -288,30 +285,32 @@ input[type='radio'] {
 @media (max-width: 768px) {
   .checkout-container {
     padding: 1rem;
-    padding-top: 70px; /* Mantener espacio para el botón fijo */
-    gap: 1.5rem;
+    padding-top: 70px;
+    gap: 1rem; /* Ajustado para no exagerar la separación */
   }
 
   .checkout-left,
   .checkout-right {
     padding: 1rem;
-    flex: 1 1 100%; /* En móviles, ambas columnas ocupan el 100% de ancho */
-    max-width: 100%; /* Remueve el max-width para móvil */
+    flex: 1 1 100%;
+    max-width: 100%;
+    margin: 0; /* Elimina márgenes por si los había */
   }
 
   .checkout-right {
-    order: -1; /* Mueve el resumen al inicio en móviles para mejor UX */
+    order: -1;
+    margin-bottom: 1rem; /* Añade separación controlada debajo */
   }
 
   .shipping-option {
-    flex-direction: column; /* Apila los elementos de la opción de envío */
+    flex-direction: column;
     align-items: flex-start;
     padding: 0.8rem;
   }
 
   input[type='radio'] {
     margin-right: 0;
-    margin-bottom: 0.5rem; /* Espacio debajo del radio button si está apilado */
+    margin-bottom: 0.5rem;
   }
 
   .dias-entrega {
@@ -321,11 +320,12 @@ input[type='radio'] {
 
   .modal-direcciones {
     padding: 1rem;
-    top: 5vh; /* Ajusta la posición del modal */
+    top: 5vh;
     max-height: 90vh;
   }
 
   .modal-content {
-    padding-right: 0; /* No es necesario en móviles si no hay scrollbar nativa visible */
+    padding-right: 0;
   }
 }
+

@@ -52,6 +52,36 @@ form {
     }
   }
 
+  // Contenedor para la contraseña + botón ojo
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      flex: 1;
+      padding-right: 40px; // espacio para el botón ojo
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      font-size: 18px;
+      color: #888;
+      padding: 0;
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        color: #3483fa;
+      }
+    }
+  }
+
   // Mensaje después del registro
   .success-message {
     text-align: center;

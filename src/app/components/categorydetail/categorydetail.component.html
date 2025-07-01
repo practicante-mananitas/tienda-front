@@ -1,9 +1,15 @@
-<app-slider></app-slider>
+<div class="loading-overlay" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Cargando productos...</p>
+</div>
+
+<app-category-slider [images]="categorySliderImages"></app-category-slider>
+
 
 <div class="background-gradient" *ngIf="category">
 
   <!-- Promos iniciales -->
-  <div class="promo-section">
+  <div class="promo-section" *ngIf="promos.length >= 4">
     <div class="promo-row">
       <div class="promo-box" *ngFor="let promo of promos.slice(0,2)">
         <img [src]="promo.image" [alt]="promo.alt" />
@@ -12,7 +18,7 @@
     <div class="promo-single">
       <img [src]="promos[2].image" [alt]="promos[2].alt" />
     </div>
-    <br>
+    <br />
     <div class="promo-single">
       <img [src]="promos[3].image" [alt]="promos[3].alt" />
     </div>
@@ -35,7 +41,6 @@
     <h1>{{ category.name }}</h1>
     <p *ngIf="category.description">{{ category.description }}</p>
 
-    <!-- 🔁 Carrusel por subcategoría -->
     <div class="subcategory-section" [attr.data-subcategory-id]="subcat.id"
          [class.no-divider]="i === 1"
          *ngFor="let subcat of subcategories; let i = index">
@@ -67,11 +72,10 @@
                 (click)="scrollRight(subcat.id)">❯</button>
       </div>
 
-      <!-- DIVISOR visible solo antes del minibanner en i === 1 -->
-      <div *ngIf="i === 1 && mostWanted.length" class="divider-before-minibanner"></div>
-
       <!-- Mostrar mini banners después de la segunda subcategoría -->
-      <div *ngIf="i === 1 && mostWanted.length" class="mini-banner-section">
+      <div *ngIf="i === 1 && mostWanted.length && miniBanners.length >= 5" class="divider-before-minibanner"></div>
+
+      <div *ngIf="i === 1 && mostWanted.length && miniBanners.length >= 5" class="mini-banner-section">
         <div class="mini-banner-top-row">
           <div class="mini-banner-large" *ngFor="let banner of miniBanners.slice(0,2)">
             <img [src]="banner.image" [alt]="banner.alt" />

@@ -1,3 +1,40 @@
+.back-btn-container {
+  // max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  display: flex;
+  justify-content: flex-start; /* Alinea contenido a la izquierda */
+  background-color: #ffffff;
+}
+
+/* Botón Volver */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #3483fa;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  svg.icon {
+    stroke: #3483fa;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: #0056b3;
+
+    svg.icon {
+      transform: translateX(-4px);
+      stroke: #0056b3;
+    }
+  }
+}
+
 .terminos-container {
   max-width: 720px;
   margin: 3rem auto;

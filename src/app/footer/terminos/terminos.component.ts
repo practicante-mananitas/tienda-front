@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrl: './terminos.component.scss'
 })
 export class TerminosComponent {
+
+  constructor(
+    private location: Location
+  ){}
+
+  volver() {
+    this.location.back();
+  }
 
 }

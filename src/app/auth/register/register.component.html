@@ -1,16 +1,30 @@
-
 <form (ngSubmit)="onRegister()" #form="ngForm">
   <h2>Registro</h2>
+
   <input type="text" name="name" [(ngModel)]="name" placeholder="Nombre Completo" required>
   <input type="text" name="phone" [(ngModel)]="phone" placeholder="Teléfono celular" required>
   <!-- <input type="text" name="address" [(ngModel)]="address" placeholder="Dirección de envío" required> -->
   <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required>
-  <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
+
+  <div class="password-wrapper">
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      name="password"
+      [(ngModel)]="password"
+      placeholder="Contraseña"
+      required
+    />
+    <button type="button" class="eye-btn" (click)="toggleShowPassword()" tabindex="-1" aria-label="Mostrar contraseña">
+      <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+    </button>
+  </div>
+
   <div *ngIf="password && !esPasswordValida(password)" class="error">
     La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo.
   </div>
+
   <input type="hidden" name="latitude" [(ngModel)]="latitude">
   <input type="hidden" name="longitude" [(ngModel)]="longitude">
+
   <button type="submit">Registrarse</button>
 </form>
- 

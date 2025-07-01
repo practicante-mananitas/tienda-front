@@ -1,21 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-slider',
+  selector: 'app-category-slider',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+  templateUrl: './category-slider.component.html',
+  styleUrls: ['./category-slider.component.scss']
 })
-export class SliderComponent implements OnInit, OnDestroy {
-  images = [
-    'assets/banners/prueba5.png',
-    'assets/banners/prueba6.png',
-    'assets/banners/prueba7.png'
-  ];
+export class CategorySliderComponent implements OnInit, OnDestroy {
+  @Input() images: string[] = [];
 
-  currentIndex = 1; // empezamos en el primer slide real
+  currentIndex = 1; // empezamos en el PRIMER slide real
   intervalId: any;
 
   startX = 0;
@@ -59,6 +55,7 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   onTransitionEnd() {
+    // salto invisible si estamos en clon
     if (this.currentIndex === 0) {
       this.transitionStyle = 'none';
       this.currentIndex = this.images.length;
@@ -95,7 +92,7 @@ export class SliderComponent implements OnInit, OnDestroy {
     } else if (deltaX < -threshold) {
       this.goTo(this.currentIndex + 1);
     } else {
-      this.goTo(this.currentIndex);
+      this.goTo(this.currentIndex); // volver
     }
 
     this.isDragging = false;

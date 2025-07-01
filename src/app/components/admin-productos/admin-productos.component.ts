@@ -100,7 +100,9 @@ export class AdminProductosComponent implements OnInit {
   }
 
   editar(id: number) {
-    this.router.navigate(['/admin-panel/productos/editar', id]);
+    this.router.navigate(['/admin-panel/productos/editar', id]).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   eliminar(id: number) {

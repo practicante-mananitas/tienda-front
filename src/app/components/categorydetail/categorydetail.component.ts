@@ -5,10 +5,12 @@ import { CategoryService } from '../../services/category.service';
 import { SubcategoryService } from '../../services/subcategory.service';
 import { SliderComponent } from '../slider/slider.component';
 import { CommonModule } from '@angular/common';
+import { CategorySliderComponent } from '../category-slider/category-slider.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-category-detail',
-  imports: [SliderComponent, RouterLink, CommonModule],
+  imports: [CategorySliderComponent, RouterLink, CommonModule],
   templateUrl: './categorydetail.component.html',
   styleUrls: ['./categorydetail.component.scss'],
   standalone: true
@@ -17,21 +19,17 @@ export class CategoryDetailComponent implements OnInit {
   category: any;
   subcategories: any[] = [];
   products: any[] = [];
-  
+  loading: boolean = true;
+
   // Imágenes para categorías (si las usas)
   categoryCircleImages: { [key: number]: string } = {};
-
-  // Imágenes para subcategorías (nuevo)
   subcategoryCircleImages: { [key: number]: string } = {};
+  categorySliderImages: string[] = [];
 
   private scrollIndexMap: { [key: number]: number } = {};
 
-  promos = [
-    { image: 'assets/banner-promo/promo2.png', alt: '10% en moda' },
-    { image: 'assets/banner-promo/promo3.png', alt: '15% en deportes' },
-    { image: 'assets/banner-promo/promo4.png', alt: '15% en deportes' },
-    { image: 'assets/banner-promo/promo5.png', alt: '20% en deportes' }
-  ];
+  promos: any[] = [];
+  miniBanners: any[] = [];
 
   mostWanted = [
     { name: 'iPhone 14 Pro', image: 'iphone14.png', discount: 15 },
@@ -42,13 +40,42 @@ export class CategoryDetailComponent implements OnInit {
     { name: 'Cerveza Tecate', image: 'tecate.png', discount: 20 }
   ];
 
-  miniBanners = [
-    { image: 'assets/mini-banners/1.png', alt: 'Inmuebles' },
-    { image: 'assets/mini-banners/2.png', alt: 'Vehículos' },
-    { image: 'assets/mini-banners/3.png', alt: 'Seguros' },
-    { image: 'assets/mini-banners/4.png', alt: 'Viajes' },
-    { image: 'assets/mini-banners/5.png', alt: 'Electrónica' }
-  ];
+  promoImagesByCategory: { [key: number]: any[] } = {
+    1: [
+      { image: 'assets/banner-promo/promo2.png', alt: '10% en moda' },
+      { image: 'assets/banner-promo/promo3.png', alt: '15% en deportes' },
+      { image: 'assets/banner-promo/promo4.png', alt: '15% en deportes' },
+      { image: 'assets/banner-promo/promo5.png', alt: '20% en deportes' }
+    ],
+    2: [],
+    3: []
+  };
+
+  miniBannersByCategory: { [key: number]: any[] } = {
+    1: [
+      { image: 'assets/mini-banners/1.png', alt: 'Inmuebles' },
+      { image: 'assets/mini-banners/2.png', alt: 'Vehículos' },
+      { image: 'assets/mini-banners/3.png', alt: 'Seguros' },
+      { image: 'assets/mini-banners/4.png', alt: 'Viajes' },
+      { image: 'assets/mini-banners/5.png', alt: 'Electrónica' }
+    ],
+    2: [],
+    3: []
+  };
+
+  sliderImagesByCategory: { [key: number]: string[] } = {
+    1: [
+      'assets/banners/prueba5.png',
+      'assets/banners/cat1-2.png',
+      'assets/banners/cat1-3.png'
+    ],
+    2: [
+      'assets/banners/prueba6.png',
+      'assets/banners/cat2-2.png',
+      'assets/banners/cat2-3.png'
+    ],
+    3: []
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -61,43 +88,38 @@ export class CategoryDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const categoryId = +params['id'];
-      this.loadCategory(categoryId);
-      this.loadSubcategories(categoryId);
-      this.loadProducts(categoryId);
-    });
-  }
+      this.loading = true; // activar loader
 
-  loadCategory(id: number) {
-    this.categoryService.getCategory(id).subscribe(cat => this.category = cat);
-  }
+      forkJoin({
+        category: this.categoryService.getCategory(categoryId),
+        subcategories: this.subcategoryService.getByCategory(categoryId),
+        products: this.productService.getProductsByCategory(categoryId)
+      }).subscribe({
+        next: ({ category, subcategories, products }) => {
+          this.category = category;
+          this.subcategories = subcategories;
+          this.products = products;
 
-  loadSubcategories(categoryId: number) {
-    this.subcategoryService.getByCategory(categoryId).subscribe(subcats => {
-      this.subcategories = subcats;
+          this.promos = this.promoImagesByCategory[categoryId] || [];
+          this.miniBanners = this.miniBannersByCategory[categoryId] || [];
+          this.categorySliderImages = this.sliderImagesByCategory[categoryId] || [];
 
-      subcats.forEach(sub => {
-        this.scrollIndexMap[sub.id] = 0;
+          this.subcategories.forEach(sub => this.scrollIndexMap[sub.id] = 0);
+
+          this.assignSubcategoryImages();
+
+          this.loading = false; // desactivar loader
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.error('Error cargando datos:', err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
       });
-
-      // Intentar asignar imágenes si productos ya están cargados
-      if(this.products.length > 0) {
-        this.assignSubcategoryImages();
-      }
     });
   }
 
-  loadProducts(categoryId: number) {
-    this.productService.getProductsByCategory(categoryId).subscribe(products => {
-      this.products = products;
-
-      // Intentar asignar imágenes si subcategorías ya están cargadas
-      if(this.subcategories.length > 0) {
-        this.assignSubcategoryImages();
-      }
-    });
-  }
-
-  // Asignar imágenes aleatorias para cada subcategoría
   assignSubcategoryImages() {
     this.subcategoryCircleImages = {};
 
@@ -151,7 +173,6 @@ export class CategoryDetailComponent implements OnInit {
   }
 
   get showMiniBanners(): boolean {
-    // Mostrar solo si hay al menos 2 subcategorías y mostWanted no está vacío
     return this.subcategories.length > 1 && this.mostWanted.length > 0;
   }
 

@@ -15,13 +15,12 @@ export class ProductGalleryComponent implements OnInit {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
 
   categories: any[] = [];
-  allProducts: any[] = [];  // Todos los productos
+  allProducts: any[] = [];
   highlightSections: any[] = [];
   categoryCircleImages: { [key: number]: string } = {};
   private scrollIndexMap: { [key: number]: number } = {};
-
-  // Productos destacados por categoría para sliders/carouseles
   featuredProductsByCategory: { [categoryId: number]: any[] } = {};
+  loading: boolean = true;
 
   promos = [
     { image: 'assets/banner-promo/promo2.png', alt: '10% en moda' },
@@ -57,12 +56,10 @@ export class ProductGalleryComponent implements OnInit {
     this.productService.getCategories().subscribe(categories => {
       this.categories = categories;
 
-      // Cargar todos los productos para uso en círculos y sección "descubre"
       this.productService.getProducts().subscribe({
         next: (products) => {
           this.allProducts = products;
 
-          // Asignar imagen círculo por categoría usando cualquier producto de esa categoría
           this.categories.forEach(cat => {
             const productosDeCategoria = this.allProducts.filter(p => p.category_id === cat.id);
 
@@ -74,32 +71,49 @@ export class ProductGalleryComponent implements OnInit {
             }
 
             this.scrollIndexMap[cat.id] = 0;
+
+            this.productService.getFeaturedOnlyProductsByCategory(cat.id).subscribe({
+              next: (featuredProducts) => {
+                this.featuredProductsByCategory[cat.id] = featuredProducts;
+                this.checkIfLoadingIsDone();
+              },
+              error: () => {
+                this.featuredProductsByCategory[cat.id] = [];
+                this.checkIfLoadingIsDone();
+              }
+            });
           });
 
           this.cdr.detectChanges();
         },
-        error: err => console.error('Error cargando productos', err)
+        error: err => {
+          console.error('Error cargando productos', err);
+          this.loading = false;
+        }
       });
 
-      // Cargar productos destacados (para sliders)
-      this.categories.forEach(cat => {
-        this.productService.getFeaturedOnlyProductsByCategory(cat.id).subscribe({
-          next: (featuredProducts) => {
-            this.featuredProductsByCategory[cat.id] = featuredProducts;
-            this.cdr.detectChanges();
-          },
-          error: err => {
-            console.error(`Error cargando productos destacados para categoría ${cat.id}`, err);
-            this.featuredProductsByCategory[cat.id] = [];
-          }
-        });
+      this.productService.getHighlightSections().subscribe({
+        next: data => {
+          this.highlightSections = data;
+          this.checkIfLoadingIsDone();
+        },
+        error: err => {
+          console.error('Error cargando secciones destacadas', err);
+          this.checkIfLoadingIsDone();
+        }
       });
     });
+  }
 
-    this.productService.getHighlightSections().subscribe({
-      next: data => this.highlightSections = data,
-      error: err => console.error('Error cargando secciones destacadas', err)
-    });
+  checkIfLoadingIsDone() {
+    const allFeaturedLoaded = Object.keys(this.featuredProductsByCategory).length === this.categories.length;
+    const hasHighlights = this.highlightSections.length > 0;
+    const hasProducts = this.allProducts.length > 0;
+
+    if (allFeaturedLoaded && hasHighlights && hasProducts) {
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
   }
 
   scrollToProduct(categoryId: number, index: number) {
@@ -163,12 +177,10 @@ export class ProductGalleryComponent implements OnInit {
     return !hasScrollableContent || isAtEnd;
   }
 
-  // Devuelve sólo productos destacados para los sliders/carouseles
   getProductsByCategory(categoryId: number) {
     return this.featuredProductsByCategory[categoryId] || [];
   }
 
-  // Devuelve todos los productos de la categoría para otras secciones (ej. los círculos)
   getAllProductsByCategory(categoryId: number) {
     return this.allProducts.filter(p => p.category_id === categoryId);
   }

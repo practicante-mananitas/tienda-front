@@ -33,7 +33,7 @@ export class CategorySliderComponent implements OnInit, OnDestroy {
     this.stopAutoSlide();
     this.intervalId = setInterval(() => {
       this.goTo(this.currentIndex + 1);
-    }, 4000);
+    }, 6000);
   }
 
   stopAutoSlide() {

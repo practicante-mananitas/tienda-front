@@ -11,10 +11,38 @@
 
   img {
     width: 100%;
+    height: auto;
     flex-shrink: 0;
     user-select: none;
     pointer-events: none;
-    height: auto;
     object-fit: cover;
+
+    // 👇 Solución al espacio invisible que deja línea blanca
+    display: block;
+    vertical-align: top;
+    line-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// 👇 Ajustes adicionales solo para responsive
+@media (max-width: 768px) {
+  .slider,
+  .slider-track,
+  .slider img {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  // 👇 Si aún se ve un microgap, este parche visual lo elimina
+  :host::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #c10606; // Mismo fondo que el slider
+    margin-top: -1px;
   }
 }

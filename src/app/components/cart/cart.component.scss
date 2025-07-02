@@ -43,8 +43,11 @@
   .product-image {
     width: 100px;
     height: 100px;
-    object-fit: cover; /* Recortar la imagen para que cubra el área */
-    border-radius: 8px; /* Bordes redondeados */
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    background-color: #fff;
+    border-radius: 8px;
   }
 
   .product-info {
@@ -286,8 +289,13 @@
   gap: 15px; /* Ajuste de gap */
 
   .product-image {
-    width: 80px; /* Imágenes más pequeñas en modal */
+    width: 80px;
     height: 80px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    background-color: #fff;
+    border-radius: 8px;
   }
 
   .product-info {

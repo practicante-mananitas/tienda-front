@@ -66,8 +66,8 @@ export class CategoryDetailComponent implements OnInit {
   sliderImagesByCategory: { [key: number]: string[] } = {
     1: [
       'assets/banners/prueba5.png',
-      'assets/banners/cat1-2.png',
-      'assets/banners/cat1-3.png'
+      'assets/banners/prueba6.png',
+      'assets/banners/prueba7.png'
     ],
     2: [
       'assets/banners/prueba6.png',

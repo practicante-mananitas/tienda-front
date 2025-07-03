@@ -1,18 +1,58 @@
-.slider {
+.swiper-container-category {
   width: 100%;
+  height: auto;
   overflow: hidden;
   position: relative;
   touch-action: pan-y;
+  background-color: #c10606; /* o el color que predomine en tus imágenes */
+}
 
-  .slider-track {
-    display: flex;
-    width: 100%;
-  }
+.swiper-wrapper {
+  display: flex;
+  width: 100%;
+  gap: 0;        // elimina gaps entre slides
+  font-size: 0;  // elimina espacios en línea si los hubiera
+  will-change: transform;
+}
+
+.swiper-slide {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: initial; // restaura font-size para el contenido
 
   img {
     width: 100%;
-    flex-shrink: 0;
+    height: auto;
+    object-fit: cover;
     user-select: none;
     pointer-events: none;
+    display: block;      // evita espacios debajo de la imagen
+    vertical-align: top;
+    line-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// Opcional: ajustes responsive
+@media (max-width: 768px) {
+  .swiper-container-category,
+  .swiper-wrapper,
+  .swiper-slide img {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  :host::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #c10606;
+    margin-top: -1px;
   }
 }

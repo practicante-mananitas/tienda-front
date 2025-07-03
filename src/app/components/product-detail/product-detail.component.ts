@@ -48,7 +48,7 @@ export class ProductDetailComponent implements OnInit {
             this.product = data;
             this.loadReviews();
 
-            this.selectedImage = this.product.images?.[0]?.image || this.product.image;
+            this.selectedImage = this.product.image;
 
             this.isProductPaused = this.product.status === 'paused';
             this.isProductOutOfStock = this.product.stock <= 0;

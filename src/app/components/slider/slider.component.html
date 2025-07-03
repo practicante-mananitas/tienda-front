@@ -1,22 +1,14 @@
-<div 
-  class="slider"
-  (mouseenter)="stopAutoSlide()" 
-  (mouseleave)="startAutoSlide()"
-  (touchstart)="onTouchStart($event)"
-  (touchmove)="onTouchMove($event)"
-  (touchend)="onTouchEnd()"
-  (mousedown)="onDragStart($event)"
-  (mousemove)="onDragMove($event)"
-  (mouseup)="onDragEnd()"
-  (mouseleave)="onDragEnd()"
->
-  <div 
-    class="slider-track" 
-    [ngStyle]="{ transform: trackTransform, transition: transitionStyle }"
-    (transitionend)="onTransitionEnd()"
-  >
-    <img [src]="images[images.length - 1]" alt="Clon último" />
-    <img *ngFor="let image of images" [src]="image" alt="Slide" />
-    <img [src]="images[0]" alt="Clon primero" />
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" *ngFor="let image of images">
+      <img [src]="image" alt="Slide" />
+    </div>
   </div>
+
+  <!-- Opcional: paginación -->
+  <div class="swiper-pagination"></div>
+
+  <!-- Opcional: flechas -->
+  <!-- <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div> -->
 </div>

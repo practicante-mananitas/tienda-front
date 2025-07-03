@@ -1,23 +1,38 @@
-.slider {
+.swiper-container {
   width: 100%;
+  height: auto;   /* <-- Cambiado de 100% a auto */
   overflow: hidden;
   position: relative;
   touch-action: pan-y;
+  background-color: #c10606; /* Fondo para disimular salto */
+}
 
-  .slider-track {
-    display: flex;
-    width: 100%;
-  }
+.swiper-wrapper {
+  display: flex;
+  width: 100%;
+  gap: 0;
+  font-size: 0;
+  will-change: transform; /* ayuda a que la transición sea suave */
+}
+
+.swiper-slide {
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: initial;
 
   img {
     width: 100%;
     height: auto;
-    flex-shrink: 0;
-    user-select: none;
-    pointer-events: none;
     object-fit: cover;
 
-    // 👇 Solución al espacio invisible que deja línea blanca
+    user-select: none;
+    pointer-events: none;
+
     display: block;
     vertical-align: top;
     line-height: 0;
@@ -27,22 +42,21 @@
   }
 }
 
-// 👇 Ajustes adicionales solo para responsive
+// Opcional: ajustes responsive
 @media (max-width: 768px) {
-  .slider,
-  .slider-track,
-  .slider img {
+  .swiper-container,
+  .swiper-wrapper,
+  .swiper-slide img {
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
   }
 
-  // 👇 Si aún se ve un microgap, este parche visual lo elimina
   :host::after {
     content: '';
     display: block;
     height: 1px;
-    background: #c10606; // Mismo fondo que el slider
+    background: #c10606;
     margin-top: -1px;
   }
 }

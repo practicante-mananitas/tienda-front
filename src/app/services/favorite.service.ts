@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FavoriteService {
-  private baseUrl = 'http://127.0.0.1:8000/api/favorites';
+  private baseUrl = `${environment.apiUrl}/favorites`;
 
   constructor(private http: HttpClient) {}
 

@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-email-verify',
-  imports:[CommonModule],
+  imports: [CommonModule],
   templateUrl: './email-verify.component.html',
   styleUrls: ['./email-verify.component.scss']
 })
@@ -31,7 +32,7 @@ export class EmailVerifyComponent implements OnInit {
       return;
     }
 
-    const url = `http://localhost:8000/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`;
+    const url = `${environment.apiUrl}/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`;
 
     this.http.get(url).subscribe({
       next: () => {

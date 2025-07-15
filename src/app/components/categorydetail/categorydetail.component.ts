@@ -3,9 +3,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
 import { SubcategoryService } from '../../services/subcategory.service';
-import { SliderComponent } from '../slider/slider.component';
-import { CommonModule } from '@angular/common';
 import { CategorySliderComponent } from '../category-slider/category-slider.component';
+import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment'; // <-- Importar environment
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -21,7 +21,6 @@ export class CategoryDetailComponent implements OnInit {
   products: any[] = [];
   loading: boolean = true;
 
-  // Imágenes para categorías (si las usas)
   categoryCircleImages: { [key: number]: string } = {};
   subcategoryCircleImages: { [key: number]: string } = {};
   categorySliderImages: string[] = [];
@@ -88,7 +87,7 @@ export class CategoryDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const categoryId = +params['id'];
-      this.loading = true; // activar loader
+      this.loading = true;
 
       forkJoin({
         category: this.categoryService.getCategory(categoryId),
@@ -108,7 +107,7 @@ export class CategoryDetailComponent implements OnInit {
 
           this.assignSubcategoryImages();
 
-          this.loading = false; // desactivar loader
+          this.loading = false;
           this.cdr.detectChanges();
         },
         error: err => {
@@ -127,7 +126,8 @@ export class CategoryDetailComponent implements OnInit {
       const productos = this.products.filter(p => p.subcategory_id === subcat.id);
       if (productos.length > 0) {
         const rand = Math.floor(Math.random() * productos.length);
-        this.subcategoryCircleImages[subcat.id] = 'http://127.0.0.1:8000/storage/' + productos[rand].image;
+        // Aquí uso environment.apiUrl para la base del storage:
+        this.subcategoryCircleImages[subcat.id] = `${environment.apiUrl}/storage/${productos[rand].image}`;
       } else {
         this.subcategoryCircleImages[subcat.id] = '/assets/categorias/default.png';
       }

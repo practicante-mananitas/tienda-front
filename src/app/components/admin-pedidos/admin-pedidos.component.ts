@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faTruck, faBox, faCheckCircle, faTimesCircle, faEye } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin-pedidos',
@@ -33,16 +34,19 @@ export class AdminPedidosComponent implements OnInit {
   // Íconos FontAwesome
   faSpinner = faSpinner;
   faEye = faEye;
+  faTruck = faTruck;
+  faCheckCircle = faCheckCircle;
+  faTimesCircle = faTimesCircle;
 
   // Estados de envío con íconos y estilos
   getShipmentStatusInfo(status: string) {
     const info: any = {
-      'in_process': { text: 'En Proceso', icon: faSpinner, colorClass: 'text-blue' },
-      'sent': { text: 'Enviado', icon: faTruck, colorClass: 'text-orange' },
-      'delivered': { text: 'Entregado', icon: faCheckCircle, colorClass: 'text-green' },
-      'cancelled': { text: 'Cancelado', icon: faTimesCircle, colorClass: 'text-red' }
+      'in_process': { text: 'En Proceso', icon: this.faSpinner, colorClass: 'text-blue' },
+      'sent': { text: 'Enviado', icon: this.faTruck, colorClass: 'text-orange' },
+      'delivered': { text: 'Entregado', icon: this.faCheckCircle, colorClass: 'text-green' },
+      'cancelled': { text: 'Cancelado', icon: this.faTimesCircle, colorClass: 'text-red' }
     };
-    return info[status] || { text: 'Desconocido', icon: faTimesCircle, colorClass: 'text-gray' };
+    return info[status] || { text: 'Desconocido', icon: this.faTimesCircle, colorClass: 'text-gray' };
   }
 
   statesMap: { [key: string]: string } = {
@@ -57,57 +61,50 @@ export class AdminPedidosComponent implements OnInit {
     '31': 'Yucatán', '32': 'Zacatecas'
   };
 
-  constructor(private http: HttpClient,
+  private apiBase = `${environment.apiUrl}/admin/pedidos`;
+
+  constructor(
+    private http: HttpClient,
     private route: ActivatedRoute,
     private viewportScroller: ViewportScroller
   ) {}
 
-    ngOnInit(): void {
-        this.cargarPedidos();
+  ngOnInit(): void {
+    this.cargarPedidos();
 
-        this.route.queryParams.subscribe(params => {
-          const scrollToId = params['scrollTo'];
-          if (scrollToId) {
-            // Esperamos un poco a que se cargue el HTML y luego hacemos scroll
-            setTimeout(() => {
-              const element = document.getElementById('pedido-' + scrollToId);
-              if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Le agregamos la clase resaltado por unos segundos
-                  element.classList.add('resaltado');
-                  setTimeout(() => {
-                    element.classList.remove('resaltado');
-                  }, 10000); // se borra después de 2 segundos
-              }
-            }, 500); // espera medio segundo para asegurar que el DOM esté listo
+    this.route.queryParams.subscribe(params => {
+      const scrollToId = params['scrollTo'];
+      if (scrollToId) {
+        setTimeout(() => {
+          const element = document.getElementById('pedido-' + scrollToId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('resaltado');
+            setTimeout(() => element.classList.remove('resaltado'), 10000);
           }
+        }, 500);
+      }
+    });
+  }
+
+  cargarPedidos() {
+    this.isLoadingPedidos = true;
+    this.http.get<any[]>(this.apiBase).subscribe({
+      next: (data) => {
+        this.pedidos = data.filter(pedido => pedido.shipment_status === 'in_process');
+        this.pedidos.forEach(pedido => {
+          this.pedidoItemsVisibles[pedido.id] = false;
+          pedido.isUpdatingShipmentStatus = false;
         });
-     }
-
-
-cargarPedidos() {
-  this.isLoadingPedidos = true;
-  this.http.get<any[]>('http://127.0.0.1:8000/api/admin/pedidos').subscribe({
-    next: (data) => {
-      // Filtrar para que solo queden los pedidos con shipment_status 'in_process' o 'sent'
-      this.pedidos = data.filter(pedido => 
-        pedido.shipment_status === 'in_process' 
-      );
-
-      this.pedidos.forEach(pedido => {
-        this.pedidoItemsVisibles[pedido.id] = false;
-        pedido.isUpdatingShipmentStatus = false;
-      });
-      this.isLoadingPedidos = false;
-    },
-    error: (err: HttpErrorResponse) => {
-      console.error('Error al cargar pedidos:', err);
-      this.isLoadingPedidos = false;
-      alert('Error al cargar los pedidos.');
-    }
-  });
-}
-
+        this.isLoadingPedidos = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar pedidos:', err);
+        this.isLoadingPedidos = false;
+        alert('Error al cargar los pedidos.');
+      }
+    });
+  }
 
   getStateName(stateId: string | number): string {
     return this.statesMap[String(stateId)] || 'Desconocido';
@@ -120,7 +117,7 @@ cargarPedidos() {
     }
 
     if (!this.pedidoItems[pedidoId]) {
-      this.http.get<any[]>(`http://127.0.0.1:8000/api/admin/pedidos/${pedidoId}/items`).subscribe({
+      this.http.get<any[]>(`${this.apiBase}/${pedidoId}/items`).subscribe({
         next: (data) => {
           this.pedidoItems[pedidoId] = data;
           this.pedidoItemsVisibles[pedidoId] = true;
@@ -134,34 +131,31 @@ cargarPedidos() {
     }
   }
 
-openPedidoDetailsModal(pedidoId: number) {
-  this.showDetailsModal = true;
-  this.selectedPedido = null;
-  this.loadingDetails = true;
-  this.detailsError = null;
+  openPedidoDetailsModal(pedidoId: number) {
+    this.showDetailsModal = true;
+    this.selectedPedido = null;
+    this.loadingDetails = true;
+    this.detailsError = null;
 
-  // Hacemos scroll al pedido correspondiente
-  setTimeout(() => {
-    const target = document.getElementById('pedido-' + pedidoId);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, 0);
+    setTimeout(() => {
+      const target = document.getElementById('pedido-' + pedidoId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 0);
 
-  // Carga los detalles completos del pedido desde la API
-  this.http.get<any>(`http://127.0.0.1:8000/api/admin/pedidos/${pedidoId}/details`).subscribe({
-    next: (data) => {
-      this.selectedPedido = data;
-      this.loadingDetails = false;
-    },
-    error: (err: HttpErrorResponse) => {
-      console.error('Error al cargar detalles completos del pedido:', err);
-      this.loadingDetails = false;
-      this.detailsError = 'Error al cargar los detalles del pedido. Por favor, intenta de nuevo.';
-    }
-  });
-}
-
+    this.http.get<any>(`${this.apiBase}/${pedidoId}/details`).subscribe({
+      next: (data) => {
+        this.selectedPedido = data;
+        this.loadingDetails = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error al cargar detalles completos del pedido:', err);
+        this.loadingDetails = false;
+        this.detailsError = 'Error al cargar los detalles del pedido. Por favor, intenta de nuevo.';
+      }
+    });
+  }
 
   closeDetailsModal() {
     this.showDetailsModal = false;
@@ -172,7 +166,7 @@ openPedidoDetailsModal(pedidoId: number) {
   updateShipmentStatus(pedido: any, nuevoStatus: string) {
     pedido.isUpdatingShipmentStatus = true;
 
-    this.http.put(`http://127.0.0.1:8000/api/admin/pedidos/${pedido.id}/shipment-status`, {
+    this.http.put(`${this.apiBase}/${pedido.id}/shipment-status`, {
       shipment_status: nuevoStatus
     }).subscribe({
       next: () => {
@@ -186,5 +180,4 @@ openPedidoDetailsModal(pedidoId: number) {
       }
     });
   }
-
 }

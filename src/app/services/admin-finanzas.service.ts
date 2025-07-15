@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface ResumenFinanzas {
   resumen_general: {
@@ -21,7 +22,7 @@ interface ResumenFinanzas {
   providedIn: 'root'
 })
 export class AdminFinanzasService {
-  private apiUrl = 'http://localhost:8000/api/admin/finanzas/resumen'; // Cambia si usas otro dominio
+  private apiUrl = `${environment.apiUrl}/admin/finanzas/resumen`;
 
   constructor(private http: HttpClient) {}
 

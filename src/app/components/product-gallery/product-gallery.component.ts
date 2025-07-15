@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SliderComponent } from '../slider/slider.component';
+import { environment } from '../../../environments/environment'; // <-- Importa environment
 
 @Component({
   selector: 'app-product-gallery',
@@ -65,7 +66,7 @@ export class ProductGalleryComponent implements OnInit {
 
             if (productosDeCategoria.length > 0) {
               const rand = Math.floor(Math.random() * productosDeCategoria.length);
-              this.categoryCircleImages[cat.id] = 'http://127.0.0.1:8000/storage/' + productosDeCategoria[rand].image;
+              this.categoryCircleImages[cat.id] = `${environment.apiUrl}/storage/${productosDeCategoria[rand].image}`;
             } else {
               this.categoryCircleImages[cat.id] = '/assets/categorias/default.png';
             }

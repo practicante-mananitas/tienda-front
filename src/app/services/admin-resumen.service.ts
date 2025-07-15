@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminResumenService {
-  private API_BASE = 'http://localhost:8000/api/admin/resumen'; // Ajusta según tu backend
+  private API_BASE = `${environment.apiUrl}/admin/resumen`;
 
   constructor(private http: HttpClient) {}
 

@@ -90,6 +90,17 @@
   position: relative;
   font-size: 18px;
   cursor: pointer;
+  
+  display: flex;           // para alinear hijos horizontalmente
+  align-items: center;     // centrar verticalmente el SVG y el badge
+
+  svg {
+    display: block;        // evitar espacios blancos extra
+    width: 24px;           // tamaño consistente (puedes ajustar)
+    height: 24px;
+    stroke-width: 2;       // si quieres enfatizar el borde
+    color: #333;           // color base, igual que texto, puedes personalizar
+  }
 }
 
 .cart-badge {
@@ -106,7 +117,9 @@
   line-height: 18px;
   text-align: center;
   box-shadow: 0 0 0 2px white;
+  pointer-events: none;   // para que no interfiera con clics
 }
+
 
 .logout {
   background: none;

@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SoporteService {
-  private apiUrl = 'http://127.0.0.1:8000/api'; // Ajusta si usas otro hostend real
+    private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

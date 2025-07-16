@@ -13,9 +13,9 @@ import 'swiper/swiper-bundle.css';
 })
 export class SliderComponent implements AfterViewInit, OnDestroy {
   images = [
-    'assets/banners/prueba5.png',
-    'assets/banners/prueba6.png',
-    'assets/banners/prueba7.png'
+    'assets/banners/prueba5.webp',
+    'assets/banners/prueba6.webp',
+    'assets/banners/prueba7.webp'
   ];
 
   swiper!: Swiper;

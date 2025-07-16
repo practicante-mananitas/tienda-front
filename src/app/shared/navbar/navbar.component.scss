@@ -192,6 +192,51 @@
   min-height: 0 !important;
 }
 
+.rastreo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  position: relative;
+
+  svg {
+    display: block;
+    width: 24px !important;
+    height: 24px !important;
+    fill: #333 !important;
+    stroke: none !important;
+    vertical-align: middle;
+    transition: fill 0.3s ease;
+  }
+
+  .rastreo-texto {
+    overflow: hidden;
+    max-width: 0;
+    opacity: 0;
+    white-space: nowrap;
+    transition: max-width 0.3s ease, opacity 0.3s ease;
+  }
+
+  // Mostrar texto solo al hacer hover sobre el enlace (o el SVG)
+  &:hover .rastreo-texto {
+    max-width: 150px;  // ancho suficiente para mostrar el texto completo
+    opacity: 1;
+  }
+
+  &:hover {
+    color: #f44336;
+
+    svg {
+      fill: #f44336 !important;
+    }
+  }
+}
+
+
+
+
 // 🔽 RESPONSIVE
 @media (max-width: 768px) {
   .navbar {

@@ -1,9 +1,8 @@
 .back-btn-container {
-  // max-width: 800px;
   margin: 0 auto;
   padding: 20px 20px 0;
   display: flex;
-  justify-content: flex-start; /* Alinea contenido a la izquierda */
+  justify-content: flex-start;
 }
 
 /* Botón Volver */
@@ -34,7 +33,77 @@
   }
 }
 
+/* ======================
+   Buscador con lupa
+   ====================== */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
+  .search-input {
+    flex: 1;
+    max-width: 300px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  .search-icon {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    color: #666;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #333;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+// Estado activo opcional (por ejemplo cuando se abre en mobile)
+.search-box.active {
+  .search-input {
+    border-color: #3483fa;
+    box-shadow: 0 0 0 2px rgba(52, 131, 250, 0.2);
+  }
+
+  .search-icon {
+    color: #3483fa;
+  }
+}
+
+// Responsive: en móviles el input se oculta si no está activo
+@media (max-width: 768px) {
+  .search-box {
+    .search-input {
+      &.hidden {
+        display: none;
+      }
+
+      max-width: 100%;
+    }
+  }
+}
+
+/* ======================
+   Favoritos
+   ====================== */
 .favorites-container {
   padding: 20px;
   max-width: 800px;
@@ -53,7 +122,7 @@
     padding: 0;
     margin: 0;
 
-    max-height: 600px; // límite altura para scroll si hay muchos productos
+    max-height: 600px;
     overflow-y: auto;
 
     .favorite-item {
@@ -166,7 +235,9 @@
   }
 }
 
-/* Responsive para pantallas pequeñas */
+/* ======================
+   Responsive ajustes
+   ====================== */
 @media (max-width: 480px) {
   .favorites-container {
     padding: 15px;

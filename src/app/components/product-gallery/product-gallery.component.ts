@@ -68,7 +68,7 @@ export class ProductGalleryComponent implements OnInit {
 
             if (productosDeCategoria.length > 0) {
               const rand = Math.floor(Math.random() * productosDeCategoria.length);
-              this.categoryCircleImages[cat.id] = `${environment.apiUrl}/storage/${productosDeCategoria[rand].image}`;
+              this.categoryCircleImages[cat.id] = `${environment.storageUrl}/${productosDeCategoria[rand].image}`;
             } else {
               this.categoryCircleImages[cat.id] = '/assets/categorias/default.png';
             }

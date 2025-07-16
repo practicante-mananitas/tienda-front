@@ -129,7 +129,7 @@ export class CategoryDetailComponent implements OnInit {
       if (productos.length > 0) {
         const rand = Math.floor(Math.random() * productos.length);
         // Aquí uso environment.apiUrl para la base del storage:
-        this.subcategoryCircleImages[subcat.id] = `${environment.apiUrl}/storage/${productos[rand].image}`;
+        this.subcategoryCircleImages[subcat.id] = `${environment.storageUrl}${productos[rand].image}`;
       } else {
         this.subcategoryCircleImages[subcat.id] = '/assets/categorias/default.png';
       }

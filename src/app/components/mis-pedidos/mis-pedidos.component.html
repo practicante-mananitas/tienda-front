@@ -78,7 +78,7 @@
       <ul>
         <li *ngFor="let item of order.items" class="item-line">
           <img
-            [src]="item.product?.image ? 'http://127.0.0.1:8000/storage/' + item.product.image : 'assets/default-product.jpg'"
+            [src]="item.product?.image ? storageUrl + item.product.image : 'assets/default-product.jpg'"
             alt="{{ item.product?.name || 'Producto' }}"
             class="product-thumb"
           />

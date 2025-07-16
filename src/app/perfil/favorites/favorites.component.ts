@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FavoriteService } from '../../services/favorite.service';
 import { Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-favorites',
@@ -12,6 +13,8 @@ import { CommonModule, Location } from '@angular/common';
 })
 export class FavoritesComponent implements OnInit {
   favorites: any[] = [];
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
+  
 
   constructor(
     private favoriteService: FavoriteService,

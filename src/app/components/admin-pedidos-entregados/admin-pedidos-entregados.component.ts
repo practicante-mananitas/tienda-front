@@ -62,6 +62,8 @@ export class AdminPedidosEntregadosComponent implements OnInit {
   };
 
   private apiBase = `${environment.apiUrl}/admin/pedidos`;
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
+
 
   constructor(
     private http: HttpClient,

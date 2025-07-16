@@ -9,7 +9,7 @@
 <div *ngIf="product" class="detail-container">
   <div class="left-section">
     <div class="image-wrapper">
-      <img *ngIf="selectedImage" [src]="'http://127.0.0.1:8000/storage/' + selectedImage" alt="Imagen seleccionada" class="main-image" />
+      <img *ngIf="selectedImage" [src]="storageUrl + selectedImage" alt="Imagen seleccionada" class="main-image" />
 
       <button class="btn-favorite" (click)="toggleFavorite()" title="Favorito">
         <svg *ngIf="isFavorite" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="red" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@
       <!-- Imagen principal -->
       <img 
         *ngIf="product.image" 
-        [src]="'http://127.0.0.1:8000/storage/' + product.image" 
+        [src]="storageUrl + product.image" 
         alt="Principal" 
         class="thumb" 
         [class.active]="selectedImage === product.image"
@@ -45,7 +45,7 @@
       <!-- Galería -->
       <img 
         *ngFor="let img of product.images" 
-        [src]="'http://127.0.0.1:8000/storage/' + img.image" 
+        [src]="storageUrl + img.image" 
         alt="Galería" 
         class="thumb" 
         [class.active]="selectedImage === img.image"

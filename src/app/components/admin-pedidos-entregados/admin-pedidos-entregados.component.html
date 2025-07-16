@@ -79,7 +79,7 @@
             <tr *ngFor="let item of pedidoItems[pedido.id]">
               <td>{{ item.product?.name || 'N/A' }}</td>
               <td>
-                <img [src]="'http://127.0.0.1:8000/storage/' + item.product?.image" width="60" alt="Producto" />
+                <img [src]="storageUrl + item.product?.image" width="60" alt="Producto" />
               </td>
               <td>{{ item.cantidad }}</td>
               <td>${{ item.precio_unitario | number:'1.2-2' }}</td>
@@ -171,7 +171,7 @@
           <h3>Productos del Pedido</h3>
           <div class="productos-scroll-container">
             <div class="producto-card-modal" *ngFor="let item of selectedPedido.items">
-              <img [src]="'http://127.0.0.1:8000/storage/' + item.product?.image" alt="{{ item.product?.name || 'N/A' }}">
+              <img [src]="storageUrl + item.product?.image" alt="{{ item.product?.name || 'N/A' }}">
               <div class="info-producto">
                 <strong>{{ item.product?.name || 'Producto Desconocido' }}</strong>
                 <span>Cantidad: {{ item.cantidad }}</span>

@@ -22,7 +22,7 @@
               *ngFor="let producto of sub.products"
               [id]="'producto-' + producto.id"
             >
-              <img [src]="'http://127.0.0.1:8000/storage/' + producto.image" alt="{{ producto.name }}" />
+              <img [src]="storageUrl + producto.image" alt="{{ producto.name }}" />
               <h3>{{ producto.name }}</h3>
               <p>${{ producto.price }}</p>
 

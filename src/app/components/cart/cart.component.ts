@@ -4,6 +4,7 @@ import { CartService } from '../../services/cart.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs'; // Importar Subscription para manejar la suscripción
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-cart',
@@ -17,6 +18,8 @@ export class CartComponent implements OnInit, OnDestroy { // Implementar OnDestr
   modalAbierto = false;
   hasOutOfStockItems: boolean = false;
   private cartSubscription: Subscription | undefined; // Propiedad para guardar la suscripción
+   storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
+  
 
   constructor(
     private cartService: CartService, 

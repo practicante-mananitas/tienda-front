@@ -8,7 +8,7 @@
   
 <div class="search-results-container" *ngIf="resultados.length > 0; else noResults">
     <div class="product-card" *ngFor="let product of resultados" [routerLink]="['/tienda', product.id]">
-      <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="{{ product.name }}" />
+      <img [src]="storageUrl + product.image" alt="{{ product.name }}" />
       <div class="info">
         <h3>{{ product.name }}</h3>
         <div class="price">$ {{ product.price }}</div>

@@ -61,7 +61,7 @@
           <div class="card" *ngFor="let product of getProductsByCategory(category.id); let i = index"
               [id]="'producto-' + category.id + '-' + i"
               [routerLink]="['/tienda', product.id]">
-            <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
+            <img [src]="storageUrl + product.image" alt="imagen" />
             <div class="info">
               <h3>{{ product.name }}</h3>
               <p class="price">$ {{ product.price }}</p>
@@ -89,7 +89,7 @@
             *ngFor="let product of getHighlightSection(i).productos"
             [routerLink]="['/tienda', product.id]"
             style="cursor: pointer">
-          <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="producto" />
+          <img [src]="storageUrl + product.image" alt="producto" />
           <div class="text">
             <h3>{{ product.name }}</h3>
             <p class="price">$ {{ product.price }}</p>

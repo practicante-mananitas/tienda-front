@@ -4,6 +4,7 @@ import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service'; // Asegúrate de que OrderService exista y lo estés usando para misPedidos
 import { Router, RouterLink } from '@angular/router'; // Importar RouterLink para los botones
 import { PedidoService } from '../../services/pedido.service'; // Este es el que usarás para getMisPedidos
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-mis-pedidos',
@@ -23,6 +24,7 @@ export class MisPedidosComponent implements OnInit {
   orders: any[] = [];
   loading: boolean = true;
   error: string | null = null;
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
 
   // NUEVO: Mapa de estados de México
   statesMap: { [key: string]: string } = {

@@ -4,6 +4,7 @@ import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-search-results',
@@ -14,8 +15,11 @@ import { Location } from '@angular/common';
 })
 export class SearchResultsComponent implements OnInit {
   resultados: any[] = [];
+  apiUrl = environment.apiUrl; // 👈 Aquí guardamos la URL base
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private productService: ProductService,
     private location: Location
   ) {}

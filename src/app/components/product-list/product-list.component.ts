@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule } from '@angular/router';
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-product-list',
@@ -12,6 +13,8 @@ import { RouterLink, RouterModule } from '@angular/router';
 })
 export class ProductListComponent implements OnInit {
   products: any[] = [];
+  apiUrl = environment.apiUrl;
+  storageUrl = environment.storageUrl;
 
   constructor(private productService: ProductService) {}
 

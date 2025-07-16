@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faEdit, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-admin-productos',
@@ -21,6 +22,8 @@ export class AdminProductosComponent implements OnInit {
   faArrowRight = faArrowRight;
 
   scrollToId: string | null = null;
+
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
 
   constructor(
     private adminService: AdminService, 

@@ -76,6 +76,8 @@ export class CategoryDetailComponent implements OnInit {
     3: []
   };
 
+   storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,

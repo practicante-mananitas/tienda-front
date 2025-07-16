@@ -35,6 +35,9 @@ export class AdminPedidosEnviadosComponent implements OnInit {
   faSpinner = faSpinner;
   faEye = faEye;
 
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
+
+
   // Estados de envío con íconos y estilos
   getShipmentStatusInfo(status: string) {
     const info: any = {

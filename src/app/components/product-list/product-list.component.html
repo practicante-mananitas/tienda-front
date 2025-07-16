@@ -14,7 +14,7 @@
     <tr *ngFor="let product of products">
       <td>
         <img *ngIf="product.image"
-             [src]="'http://127.0.0.1:8000/storage/' + product.image"
+             [src]="storageUrl + product.image"
              alt="Producto"
              width="80"
              height="80">

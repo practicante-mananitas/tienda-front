@@ -14,7 +14,7 @@
   <div *ngIf="favorites.length > 0; else noFavorites">
     <ul class="favorites-list">
       <li *ngFor="let product of favorites" (click)="irADetalle(product.id)" tabindex="0" role="button" class="favorite-item">
-        <img [src]="'http://127.0.0.1:8000/storage/' + (product.images?.[0]?.image || product.image)" alt="{{ product.name }}" class="fav-img" />
+        <img [src]="storageUrl + (product.images?.[0]?.image || product.image)" alt="{{ product.name }}" class="fav-img" />
         <div class="fav-info">
           <h3>{{ product.name }}</h3>
           <p class="price">$ {{ product.price | number:'1.2-2' }} mx</p>

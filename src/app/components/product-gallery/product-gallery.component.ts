@@ -22,6 +22,8 @@ export class ProductGalleryComponent implements OnInit {
   private scrollIndexMap: { [key: number]: number } = {};
   featuredProductsByCategory: { [categoryId: number]: any[] } = {};
   loading: boolean = true;
+  apiUrl = environment.apiUrl;
+  storageUrl = environment.storageUrl;
 
   promos = [
     { image: 'assets/banner-promo/promo2.png', alt: '10% en moda' },

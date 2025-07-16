@@ -59,7 +59,7 @@
               *ngFor="let product of getProductsBySubcategory(subcat.id); let j = index"
               [id]="'product-' + subcat.id + '-' + j"
               [routerLink]="['/tienda', product.id]">
-            <img [src]="'http://127.0.0.1:8000/storage/' + product.image" alt="imagen" />
+            <img [src]="storageUrl + product.image" alt="imagen" />
             <div class="info">
               <h3>{{ product.name }}</h3>
               <p class="price">$ {{ product.price }}</p>

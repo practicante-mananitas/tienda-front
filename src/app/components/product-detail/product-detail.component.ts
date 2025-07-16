@@ -6,6 +6,7 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { FavoriteService } from '../../services/favorite.service';
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-product-detail',
@@ -28,6 +29,8 @@ export class ProductDetailComponent implements OnInit {
   };
   reviews: any[] = [];
   reviewError: string = '';  // <-- propiedad para mostrar error en el formulario de review
+  apiUrl = environment.apiUrl; // 👈 Aquí guardamos la URL base
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
 
   constructor(
     private route: ActivatedRoute,

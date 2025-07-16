@@ -13,7 +13,7 @@
   <div class="cart-items">
     <ng-container *ngIf="isMobile(); else todosLosProductos">
       <div class="cart-item" *ngFor="let item of visibleItems">
-        <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+        <img class="product-image" [src]="storageUrl + item.product.image" alt="Imagen">
         <div class="product-info">
           <h3>{{ item.product.name }}</h3>
           <p class="price">$ {{ item.product.price }}</p>
@@ -43,7 +43,7 @@
 
     <ng-template #todosLosProductos>
       <div class="cart-item" *ngFor="let item of cartItems">
-        <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+        <img class="product-image" [src]="storageUrl + item.product.image" alt="Imagen">
         <div class="product-info">
           <h3>{{ item.product.name }}</h3>
           <p class="price">$ {{ item.product.price }}</p>
@@ -89,7 +89,7 @@
 
     <div class="modal-items">
       <div class="cart-item" *ngFor="let item of cartItems">
-        <img class="product-image" [src]="'http://127.0.0.1:8000/storage/' + item.product.image" alt="Imagen">
+        <img class="product-image" [src]="storageUrl + item.product.image" alt="Imagen">
         <div class="product-info">
           <h3>{{ item.product.name }}</h3>
           <p class="price">$ {{ item.product.price }}</p>

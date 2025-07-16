@@ -38,6 +38,9 @@ export class AdminPedidosComponent implements OnInit {
   faCheckCircle = faCheckCircle;
   faTimesCircle = faTimesCircle;
 
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
+
+
   // Estados de envío con íconos y estilos
   getShipmentStatusInfo(status: string) {
     const info: any = {

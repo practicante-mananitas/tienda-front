@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { SubcategoryService } from '../../services/subcategory.service';
+import { environment } from '../../../environments/environment'; // 👈 ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-product-edit',
@@ -33,6 +34,8 @@ export class ProductEditComponent implements OnInit {
   galleryFiles: File[] = []; // Nuevas imágenes para subir
   selectedFile: File | null = null; // Imagen principal nueva
   productId: number = 0;
+  apiUrl = environment.apiUrl; // 👈 Aquí guardamos la URL base
+  storageUrl = environment.storageUrl; // 👈 Aquí guardamos la URL base
 
   constructor(
     private route: ActivatedRoute,

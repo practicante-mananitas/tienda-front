@@ -71,10 +71,12 @@
   }
 
   .admin-dashboard .sidebar {
-    position: relative; // que no quede fija en móvil
+    position: relative; // ya no es fija
+    top: 0;             // evita espacio entre navbar y sidebar
+    left: 0;
     width: 100%;
     height: auto;
-    max-height: 200px;
+    max-height: none;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
@@ -101,8 +103,8 @@
   }
 
   .admin-dashboard .admin-content {
-    margin-left: 0; // sin margen porque sidebar no es fija
-    padding-top: 20px; // menos padding porque navbar no es fija
+    margin-left: 0; // ya no hay sidebar fija
+    padding-top: 20px; // navbar no deja espacio
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 20px;

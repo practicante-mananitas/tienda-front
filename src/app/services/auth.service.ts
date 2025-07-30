@@ -144,4 +144,13 @@ login(data: { email: string; password: string }): Observable<any> {
     localStorage.removeItem('usuario');
     localStorage.removeItem('refresh_token');
   }
+
+  forgotPassword(email: string) {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(data: any) {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
+  }
+
 }
